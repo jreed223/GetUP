@@ -1,17 +1,8 @@
-# getup_csc450
+# Overview
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# csc450-sp23-project-team-5
+ Get UP! is a productivity app built with [Flutter](https://flutter.dev/?gclid=CjwKCAiAioifBhAXEiwApzCztruhhC6Wp281ENBwH0oSvjTvKbz8Dz_kP6xWDI1ojDVCzD-StwflNhoCmU0QAvD_BwE&gclsrc=aw.ds). The app allows you to create and complete goals while
+ monitoring your progress and completions over time.
+ 
+ ## Architecture
+ 
+ In progres...
