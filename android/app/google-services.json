@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "883727246703",
+    "project_id": "getup-csc45",
+    "storage_bucket": "getup-csc45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883727246703:android:6c2c5a55719d711429349a",
+        "android_client_info": {
+          "package_name": "com.example.getup_csc450"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883727246703-adcp4ubb63116sb2sl45c4ionvuc2svs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXYe2Uwgmu4GcA-C17UCQHgrTpwehj4NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883727246703-adcp4ubb63116sb2sl45c4ionvuc2svs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
