@@ -9,3 +9,4 @@ monitoring your progress and completions over time.
 -   Cole Roberts
 -   Aaron Ayris
 -   Jonathan Reed
+-   Lukas Becker
