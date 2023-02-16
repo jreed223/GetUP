@@ -29,6 +29,13 @@
             {
               "client_id": "883727246703-adcp4ubb63116sb2sl45c4ionvuc2svs.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "883727246703-e6m6smv2jhm9hjjk0dfvcmchtm31530v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.getupCsc450.RunnerTests"
+              }
             }
           ]
         }
