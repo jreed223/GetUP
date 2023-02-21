@@ -13,8 +13,8 @@ monitoring your progress and completions over time.
 
 ### Component Responsibilities
 
-Login Screen - Aaron Ayris
-Home Page - 
-Goals - 
-Metrics - 
-Profile - 
+- Login Screen - Aaron Ayris
+- Home Page - 
+- Goals - 
+- Metrics - 
+- Profile - 
