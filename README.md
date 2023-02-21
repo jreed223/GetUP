@@ -10,3 +10,11 @@ monitoring your progress and completions over time.
 -   Aaron Ayris
 -   Jonathan Reed
 -   Lukas Becker
+
+### Component Responsibilities
+
+Login Screen - Aaron Ayris
+Home Page - 
+Goals - 
+Metrics - 
+Profile - 
