@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// The goal class is the base class for all goals.
 /// It requires the following parameters:
 ///
@@ -7,19 +5,11 @@ import 'package:flutter/foundation.dart';
 ///
 /// The class has a value called isCompleted that is set to false by default.
 ///
-/// The class has a factory constructor called longterm that creates a LongTermGoal.
-///
-/// Here is an example of how to use the longterm constructor:
-/// ```
-/// Goal myLongTermGoal = Goal.longterm(title: 'Learn Flutter', duration: 20);
-/// ```
-///
 /// Here are a list of Goal methods:
 ///
 /// * goalTitle: gets the title of the goal
 /// * goalStatus: gets the status of the goal
 /// * sampleGoalList: gets a list of sample goals
-
 class Goal {
   /// The title of the goal.
   final String title;
@@ -29,20 +19,15 @@ class Goal {
 
   Goal({required this.title, isCompleted = false});
 
-  /// Creates a LongTermGoal.
-  factory Goal.longterm({required String title, required int duration}) {
-    return LongTermGoal(title: title, duration: duration);
-  }
-
   /// A list <of type Goal> of sample goals.
   final List<Goal> _sampleGoals = [
-    Goal.longterm(title: 'Learn Flutter', duration: 20),
+    LongTermGoal(title: 'Learn Flutter', duration: 20),
     Goal(title: 'Go to grocery store'),
-    Goal.longterm(title: 'Read', duration: 5),
+    LongTermGoal(title: 'Read', duration: 5),
     Goal(title: 'Go to the gym'),
-    Goal.longterm(title: 'Learn Dart', duration: 10),
+    LongTermGoal(title: 'Learn Dart', duration: 10),
     Goal(title: 'Go to the dentist'),
-    Goal.longterm(title: 'Learn Python', duration: 15),
+    LongTermGoal(title: 'Learn Python', duration: 15),
   ];
 
   /// Gets the title of the goal.
@@ -53,14 +38,6 @@ class Goal {
 
   /// Gets the sample goals.
   List<Goal> get sampleGoalList => _sampleGoals;
-
-  /// Because goal does not have a duration value, this method throws an error.
-  int get goalDuration => throw ErrorHint(
-      'This type of goal does not have a duration value. Try changing the type of goal to LongTermGoal.');
-
-  /// Because goal does not have a progress value, this method throws an error.
-  double get goalProgress => throw ErrorHint(
-      'This type goal does not have a progress value. Try changing the type of goal to LongTermGoal.');
 }
 
 /// A subclass of Goal that represents a long term goal.
@@ -87,12 +64,8 @@ class LongTermGoal extends Goal {
       : super(title: title, isCompleted: false);
 
   /// Gets the duration of the goal.
-  @override
   int get goalDuration => duration;
 
   /// Gets the progress of the goal.
-  @override
   double get goalProgress => progress;
 }
-
-Goal myLongTermGoal = Goal.longterm(title: 'Learn Flutter', duration: 20);
