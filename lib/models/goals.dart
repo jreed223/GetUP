@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// The goal class is the base class for all goals.
 /// It requires the following parameters:
 ///
@@ -53,11 +55,11 @@ class Goal {
   List<Goal> get sampleGoalList => _sampleGoals;
 
   /// Because goal does not have a duration value, this method throws an error.
-  int get goalDuration => throw UnimplementedError(
+  int get goalDuration => throw ErrorHint(
       'This type of goal does not have a duration value. Try changing the type of goal to LongTermGoal.');
 
   /// Because goal does not have a progress value, this method throws an error.
-  double get goalProgress => throw UnimplementedError(
+  double get goalProgress => throw ErrorHint(
       'This type goal does not have a progress value. Try changing the type of goal to LongTermGoal.');
 }
 
