@@ -1,7 +1,12 @@
 class User {
-  String firstName = '';
-  String lastName = '';
-  String userName = '';
+  /// User class to set a first name, last name, and user name with each user.
 
-  User(this.firstName, this.lastName, this.userName);
+  final String firstName;
+  final String lastName;
+  final String userName;
+
+  User(
+      {required this.firstName,
+      required this.lastName,
+      required this.userName});
 }
