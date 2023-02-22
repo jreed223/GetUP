@@ -23,9 +23,9 @@ class Goal {
   final String title;
 
   /// Whether the goal is completed.
-  bool isCompleted = false;
+  late bool isCompleted;
 
-  Goal({required this.title});
+  Goal({required this.title, isCompleted = false});
 
   /// Creates a LongTermGoal.
   factory Goal.longterm({required String title, required int duration}) {
@@ -51,6 +51,14 @@ class Goal {
 
   /// Gets the sample goals.
   List<Goal> get sampleGoalList => _sampleGoals;
+
+  /// Because goal does not have a duration value, this method throws an error.
+  int get goalDuration => throw UnimplementedError(
+      'This type of goal does not have a duration value. Try changing the type of goal to LongTermGoal.');
+
+  /// Because goal does not have a progress value, this method throws an error.
+  double get goalProgress => throw UnimplementedError(
+      'This type goal does not have a progress value. Try changing the type of goal to LongTermGoal.');
 }
 
 /// A subclass of Goal that represents a long term goal.
@@ -74,11 +82,15 @@ class LongTermGoal extends Goal {
   double progress = 0.0;
 
   LongTermGoal({required String title, required this.duration})
-      : super(title: title);
+      : super(title: title, isCompleted: false);
 
   /// Gets the duration of the goal.
+  @override
   int get goalDuration => duration;
 
   /// Gets the progress of the goal.
+  @override
   double get goalProgress => progress;
 }
+
+Goal myLongTermGoal = Goal.longterm(title: 'Learn Flutter', duration: 20);
