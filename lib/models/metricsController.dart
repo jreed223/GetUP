@@ -1,52 +1,88 @@
-import 'package:getup_csc450/models/goals.dart';
+///Class holds data needed to create visualizations for goal Data
+class metricsData {
+  int goalsCompleted;
+  int totalGoals;
+  double actTime; //actual time spent in hours
+  double expTime; //expected time spent in hours
+  String date;
 
-/// Metrics class to display data and goal progress by group and/or time
-class Metrics extends Goal {
-  Duration timePeriod = Duration(
-      days: 1); //Specifies the time period the data is from(defaults 1 day)
-  String groupSelection =
-      "All"; //Specifies data of a specific goal category(defaults all categories)
-  double
-      goalPrcnt; //calculates progress for each goal (actualTime/ExpectedTime)
+  ///initializes data
+  metricsData(
+      {required this.goalsCompleted,
+      required this.totalGoals,
+      required this.actTime,
+      required this.expTime,
+      required this.date});
 
-  ///Initializes Metrics class
-  Metrics(
-      {required this.groupSelection,
-      required this.timePeriod,
-      required this.goalPrcnt,
-      required super.title});
+  ///Creates a list of objects containing data for each day of the week
+  static List<metricsData> dailyData = [
+    metricsData(
+        goalsCompleted: 1,
+        totalGoals: 4,
+        actTime: 1.0,
+        expTime: 3.0,
+        date: 'Mon'),
+    metricsData(
+        goalsCompleted: 3,
+        totalGoals: 5,
+        actTime: 2.0,
+        expTime: 2.0,
+        date: "Tues"),
+    metricsData(
+        goalsCompleted: 2,
+        totalGoals: 5,
+        actTime: 1.0,
+        expTime: 3.0,
+        date: "Wed"),
+    metricsData(
+        goalsCompleted: 6,
+        totalGoals: 6,
+        actTime: 4.0,
+        expTime: 4.0,
+        date: "Thurs"),
+    metricsData(
+        goalsCompleted: 4,
+        totalGoals: 5,
+        actTime: 3.0,
+        expTime: 4.0,
+        date: "Fri"),
+    metricsData(
+        goalsCompleted: 8,
+        totalGoals: 8,
+        actTime: 6.0,
+        expTime: 6.0,
+        date: "Sat"),
+    metricsData(
+        goalsCompleted: 5,
+        totalGoals: 7,
+        actTime: 3.0,
+        expTime: 4.0,
+        date: "Sun"),
+  ];
+}
 
-  ///Sets category of goals
-  set group(String goalCat) {
-    groupSelection = goalCat;
+///Class used to calculate data received in the MetricsData class
+class metricsController {
+  double timePrcntg;
+  double completionPrcntg;
+
+  metricsController({required this.timePrcntg, required this.completionPrcntg});
+
+  double prcntTime(actTime, expTime) {
+    // method measures progress by comparing time spent to the expected time spent
+    timePrcntg = actTime / expTime;
+    return timePrcntg;
   }
 
-  ///sets how many days of data to be displayed
-  set time(int days) {
-    timePeriod = Duration(days: days);
+  double prcntComplete(goalsCompleted, totalGoals) {
+    // method measures progress by comparing goals completed to the amount of goals created
+    completionPrcntg = goalsCompleted / totalGoals;
+    return completionPrcntg;
   }
 
-  //returns percentage of progress completed for each goal
-  double get prcntProgress {
-    return goalPrcnt;
-  }
+  double get timeProgress =>
+      timePrcntg; //getter that retrieves percentage of progress based on time
 
-  //method for calculating progress percentage
-  double prcnt(actTime, expTime) {
-    goalPrcnt = actTime / expTime;
-    return goalPrcnt;
-  }
-
-  //Example Goals
-  final goal1 = Metrics(
-      timePeriod: Duration(days: 7),
-      groupSelection: "Fitness",
-      goalPrcnt: 80.0,
-      title: 'Workout an hour each day');
-
-  final goal2 = Metrics(
-      timePeriod: Duration(days: 1),
-      groupSelection: "Education",
-      goalPrcnt: 100.0,
-      title: 'Read a chapter each day');
+  double get completedProgress =>
+      completionPrcntg; //getter that retrieves percentage of goals fully completed
 }
