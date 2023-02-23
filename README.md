@@ -13,7 +13,7 @@ monitoring your progress and completions over time.
 
 ### Component Responsibilities
 
--   User - Aaron Ayris
+-   User - Cole Roberts
 -   Goals (Goal and LongTermGoal) - Cullin Capps
 -   MetricsHandler -
 -   Challenge - Cullin Capps
