@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             // Add your name here :)
             // Dont forget to add your name to the readme.md file
             Text(
-              'Created by Cullin Capps, Aaron Ayris, Lukas Becker',
+              'Created by Cullin Capps, Aaron Ayris, Lukas Becker, Cole Roberts',
               style: Theme.of(context).textTheme.displayMedium,
             ),
           ],
