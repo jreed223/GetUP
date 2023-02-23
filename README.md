@@ -17,5 +17,5 @@ monitoring your progress and completions over time.
 -   Goals (Goal and LongTermGoal) - Cullin Capps
 -   MetricsHandler -
 -   Challenge - Cullin Capps
--   DataPoints -
+-   DataPoints - Lukas Becker
 -   Database - Cullin Capps
