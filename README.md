@@ -13,8 +13,9 @@ monitoring your progress and completions over time.
 
 ### Component Responsibilities
 
-- Login Screen - Aaron Ayris
-- Home Page - 
-- Goals - 
-- Metrics - 
-- Profile - 
+-   User - Aaron Ayris
+-   Goals (Goal and LongTermGoal) - Cullin Capps
+-   MetricsHandler -
+-   Challenge - Cullin Capps
+-   DataPoints -
+-   Database - Cullin Capps
