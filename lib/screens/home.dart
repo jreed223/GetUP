@@ -13,15 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  /// This is the animation controller for the form
-  late final AnimationController _goalSlideInController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1500),
-  );
-
-  /// This is the animation for the form
-  late final Animation<Offset> _goalSlideInAnimation;
-
   /// This boolean will determine if the goal is long term or short term
   bool _isLongTermGoal = false;
 
@@ -50,19 +41,6 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _iconIsVisisble = true;
-    _goalSlideInAnimation = Tween<Offset>(
-      begin: const Offset(-20, 0),
-      end: const Offset(0, 0),
-    ).animate(CurvedAnimation(
-      parent: _goalSlideInController,
-      curve: Curves.easeOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _goalSlideInController.dispose();
-    super.dispose();
   }
 
   /// This is the function that will fade out the icon
@@ -101,11 +79,6 @@ class _HomePageState extends State<HomePage>
     setState(() {
       bottomPositionVal = 275;
     });
-  }
-
-  /// This function initiates the form animation
-  void formSlideUp() {
-    _goalSlideInController.forward();
   }
 
   void formDiagonalDown() {
