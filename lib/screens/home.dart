@@ -196,6 +196,7 @@ class _HomePageState extends State<HomePage>
                           padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
+                              /// This is the title for the form
                               AnimatedOpacity(
                                 opacity: _isButtonForm ? 1.0 : 0.0,
                                 duration: Duration(
@@ -210,6 +211,8 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               const SizedBox(height: 10),
+
+                              /// This is the first text field for the form
                               AnimatedOpacity(
                                 opacity: _isButtonForm ? 1.0 : 0.0,
                                 duration: Duration(
@@ -225,6 +228,7 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               const SizedBox(height: 20),
+
                               Column(
                                 children: [
                                   Row(
@@ -244,6 +248,8 @@ class _HomePageState extends State<HomePage>
                                         ),
                                       ),
                                       const SizedBox(width: 10),
+
+                                      /// This determines if the goal is long term
                                       AnimatedOpacity(
                                         opacity: _isButtonForm ? 1.0 : 0.0,
                                         duration: Duration(
@@ -262,6 +268,8 @@ class _HomePageState extends State<HomePage>
                                       ),
                                     ],
                                   ),
+
+                                  /// If the checkbox is checked, this text field will appear
                                   AnimatedOpacity(
                                     opacity: _isLongTermGoal ? 1.0 : 0.0,
                                     duration: const Duration(milliseconds: 500),
@@ -278,6 +286,8 @@ class _HomePageState extends State<HomePage>
                                   const SizedBox(
                                     height: 10,
                                   ),
+
+                                  /// This is the button that will submit the form
                                   MaterialButton(
                                       onPressed: () {
                                         shapeShift();
