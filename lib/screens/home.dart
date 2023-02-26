@@ -22,6 +22,9 @@ class _HomePageState extends State<HomePage>
   /// This is the animation for the form
   late final Animation<Offset> _goalSlideInAnimation;
 
+  /// This boolean will determine if the goal is long term or short term
+  bool _isLongTermGoal = false;
+
   /// This is the boolean that will determine if the button is in the form shape
   bool _isButtonForm = false;
 
@@ -79,10 +82,17 @@ class _HomePageState extends State<HomePage>
   /// This is the function that will change the button from a circle to a square
   void shapeShift() {
     setState(() {
-      _buttonWidth = widget.getScreenWidth * 0.27;
-      _buttonHeight = widget.getScreenHeight * 0.1;
-      _buttonBorderRadius = 20;
-      _isButtonForm = true;
+      if (!_isButtonForm) {
+        _buttonWidth = widget.getScreenWidth * 0.27;
+        _buttonHeight = widget.getScreenHeight * 0.1;
+        _buttonBorderRadius = 20;
+        _isButtonForm = true;
+      } else {
+        _buttonWidth = 75;
+        _buttonHeight = 75;
+        _buttonBorderRadius = 50;
+        _isButtonForm = false;
+      }
     });
   }
 
@@ -94,107 +104,205 @@ class _HomePageState extends State<HomePage>
   }
 
   /// This function initiates the form animation
-  void formSlide() {
+  void formSlideUp() {
     _goalSlideInController.forward();
+  }
+
+  void formDiagonalDown() {
+    setState(() {
+      bottomPositionVal = 60;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-        ),
-        body: Stack(
-          children: [
-            /// This is the floating action button
-            /// It is positioned at the bottom right of the screen
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: Stack(
+        children: [
+          /// This is the floating action button
+          /// It is positioned at the bottom right of the screen
 
-            /// When the user taps the button, it will animate to the center
-            /// The button will also animate from a circle to a square
+          /// When the user taps the button, it will animate to the center
+          /// The button will also animate from a circle to a square
 
-            /// When the button arrives in the center, a form will appear inside
-            AnimatedPositioned(
-                duration: const Duration(milliseconds: 700),
-                curve: Curves.easeInBack,
-                bottom: bottomPositionVal,
-                right: rightPositionVal,
-                child: InkWell(
-                  customBorder: CircleBorder(),
-                  onTap: () {
-                    foudOutIcon();
-                    shapeShift();
-                    moveDiagonalUp();
-                    formSlide();
-                  },
+          /// When the button arrives in the center, a form will appear inside
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 700),
+            curve: Curves.easeInBack,
+            bottom: bottomPositionVal,
+            right: rightPositionVal,
+            child: InkWell(
+              customBorder: CircleBorder(),
+              onTap: () {
+                foudOutIcon();
+                shapeShift();
+                moveDiagonalUp();
 
-                  /// This is the button itself
-                  /// It is animated to change shape and size
-                  child: AnimatedContainer(
-                      curve: Curves.easeInOutBack,
-                      duration: const Duration(seconds: 1),
-                      width: _buttonWidth,
-                      height: _buttonHeight,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(_buttonBorderRadius))),
+                ///formSlideUp();
+              },
 
-                      /// This is the child of the button
-                      /// It is animated to fade in and out
-                      /// The stack is used to position the icon and text consistently
-                      child: Stack(children: [
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          bottom: 0,
-                          right: 0,
-                          child: Center(
-                            child: AnimatedOpacity(
-                              opacity: _iconIsVisisble ? 1.0 : 0.0,
-                              duration: const Duration(milliseconds: 500),
+              /// This is the button itself
+              /// It is animated to change shape and size
+              child: SingleChildScrollView(
+                child: AnimatedContainer(
+                  curve: Curves.easeInOutBack,
+                  duration: const Duration(seconds: 1),
+                  width: _buttonWidth,
+                  height: _buttonHeight,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(_buttonBorderRadius),
+                    ),
+                  ),
 
-                              /// This is the icon that will be animated
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 30,
-                              ),
+                  /// This is the child of the button
+                  /// It is animated to fade in and out
+                  /// The stack is used to position the icon and text consistently
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        child: Center(
+                          child: AnimatedOpacity(
+                            opacity: _iconIsVisisble ? 1.0 : 0.0,
+                            curve: Curves.easeInOutBack,
+                            duration: Duration(
+                                milliseconds: _isButtonForm ? 1000 : 2000),
+
+                            /// This is the icon that will be animated
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 30,
                             ),
                           ),
                         ),
+                      ),
 
-                        /// This is the text for the form that will be animated
-                        AnimatedOpacity(
-                          opacity: _isButtonForm ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 5000),
-                          curve: Curves.easeInOutBack,
+                      /// This is the text for the form that will be animated
+                      AnimatedOpacity(
+                        opacity: _isButtonForm ? 1.0 : 0.0,
+                        duration:
+                            Duration(milliseconds: _isButtonForm ? 3000 : 300),
+                        curve: Curves.easeInOutBack,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
-                              const Text(
-                                'Add',
-                                style: TextStyle(
+                              AnimatedOpacity(
+                                opacity: _isButtonForm ? 1.0 : 0.0,
+                                duration: Duration(
+                                    milliseconds: _isButtonForm ? 3000 : 300),
+                                curve: Curves.easeOutExpo,
+                                child: const Text(
+                                  'Add a goal',
+                                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(
-                                width: 5,
+                              const SizedBox(height: 10),
+                              AnimatedOpacity(
+                                opacity: _isButtonForm ? 1.0 : 0.0,
+                                duration: Duration(
+                                    milliseconds: _isButtonForm ? 3000 : 300),
+                                curve: Curves.easeOutCubic,
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'Title',
+                                    hintStyle: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              const Text(
-                                'Goal',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
+                              const SizedBox(height: 20),
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      AnimatedOpacity(
+                                        opacity: _isButtonForm ? 1.0 : 0.0,
+                                        duration: Duration(
+                                            milliseconds:
+                                                _isButtonForm ? 3000 : 300),
+                                        curve: Curves.easeOutCubic,
+                                        child: const Text(
+                                          'Is this a long term goal?',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      AnimatedOpacity(
+                                        opacity: _isButtonForm ? 1.0 : 0.0,
+                                        duration: Duration(
+                                            milliseconds:
+                                                _isButtonForm ? 3000 : 300),
+                                        curve: Curves.easeOutCubic,
+                                        child: Checkbox(
+                                          value: _isLongTermGoal,
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              _isLongTermGoal =
+                                                  !_isLongTermGoal;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  AnimatedOpacity(
+                                    opacity: _isLongTermGoal ? 1.0 : 0.0,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInBack,
+                                    child: TextFormField(
+                                      decoration: const InputDecoration(
+                                        hintText: 'Hours to deditcate',
+                                        hintStyle: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  MaterialButton(
+                                      onPressed: () {
+                                        shapeShift();
+                                        formDiagonalDown();
+                                        fadeInIcon();
+                                      },
+                                      color: Colors.white,
+                                      textColor: Colors.blue,
+                                      child: const Text('Add goal')),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      ])),
-                  // Todo: Add the rest of the animation process here
-                  // Todo: Add the rest of the home screen UI widgets her
-                ))
-          ],
-        ));
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Todo: Add the rest of the animation process here
+              // Todo: Add the rest of the home screen UI widgets her
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
