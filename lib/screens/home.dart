@@ -17,10 +17,10 @@ class _HomePageState extends State<HomePage>
   bool _isButtonForm = false;
 
   /// This is the border radius for the button
-  late double _buttonBorderRadius = screen.displayHeight(context) * 0.6;
+  late double _buttonBorderRadius = screen.displayHeight(context) * 0.05;
 
-  /// This is the position of the button from the bottom of the screen LATE
-  late double bottomPositionVal = screen.displayHeight(context) / 15;
+  /// This is the position of the button from the bottom of the screen
+  late double bottomPositionVal = screen.displayHeight(context) / 20;
 
   /// This is the position of the button from the right of the screen
   late double rightPositionVal = screen.displayWidth(context) / 15;
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage>
 
   void formDiagonalDown() {
     setState(() {
-      bottomPositionVal = screen.displayHeight(context) / 15;
+      bottomPositionVal = screen.displayHeight(context) / 20;
     });
   }
 
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage>
             child: InkWell(
               customBorder: const CircleBorder(),
 
-              /// This is the function for the button that will animate the button
+              /// This is the function that will animate the button
               onTap: () {
                 /// This is the function that will animate the button
                 /// If all of the animations are not wrapped in a function, the button will not animate
@@ -139,8 +139,8 @@ class _HomePageState extends State<HomePage>
                     ),
                   ),
 
-                  /// This is the child of the button
-                  /// It is animated to fade in and out
+                  /// These are the children of the button
+                  /// They are animated to fade in and out
                   /// The stack is used to position the icon and text consistently
                   child: Stack(
                     children: [
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage>
                             opacity: _iconIsVisisble ? 1.0 : 0.0,
                             curve: Curves.easeInOutBack,
                             duration: Duration(
-                                milliseconds: _isButtonForm ? 1000 : 2000),
+                                milliseconds: _isButtonForm ? 800 : 2000),
 
                             /// This is the icon that will be animated
                             child: const Icon(
@@ -167,119 +167,139 @@ class _HomePageState extends State<HomePage>
                       ),
 
                       /// This is the text for the form that will be animated
-                      AnimatedOpacity(
-                        opacity: _isButtonForm ? 1.0 : 0.0,
-                        duration:
-                            Duration(milliseconds: _isButtonForm ? 3000 : 300),
-                        curve: Curves.easeInOutBack,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              /// This is the title for the form
-                              AnimatedOpacity(
-                                opacity: _isButtonForm ? 1.0 : 0.0,
-                                duration: Duration(
-                                    milliseconds: _isButtonForm ? 3000 : 300),
-                                curve: Curves.easeOutExpo,
-                                child: const Text(
-                                  'Add a goal',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-
-                              /// This is the first text field for the form
-                              AnimatedOpacity(
-                                opacity: _isButtonForm ? 1.0 : 0.0,
-                                duration: Duration(
-                                    milliseconds: _isButtonForm ? 3000 : 300),
-                                curve: Curves.easeOutCubic,
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: 'Title',
-                                    hintStyle: TextStyle(
+                      Form(
+                        child: AnimatedOpacity(
+                          opacity: _isButtonForm ? 1.0 : 0.0,
+                          duration: Duration(
+                              milliseconds: _isButtonForm ? 3000 : 300),
+                          curve: Curves.easeInOutBack,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                /// This is the title for the form
+                                AnimatedOpacity(
+                                  opacity: _isButtonForm ? 1.0 : 0.0,
+                                  duration: Duration(
+                                      milliseconds: _isButtonForm ? 3000 : 300),
+                                  curve: Curves.easeOutExpo,
+                                  child: const Text(
+                                    'Add a goal',
+                                    style: TextStyle(
                                       color: Colors.white,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 20),
+                                const SizedBox(height: 10),
 
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      AnimatedOpacity(
-                                        opacity: _isButtonForm ? 1.0 : 0.0,
-                                        duration: Duration(
-                                            milliseconds:
-                                                _isButtonForm ? 3000 : 300),
-                                        curve: Curves.easeOutCubic,
-                                        child: const Text(
-                                          'Is this a long term goal?',
-                                          style: TextStyle(
+                                /// This is the first text field for the form
+                                AnimatedOpacity(
+                                  opacity: _isButtonForm ? 1.0 : 0.0,
+                                  duration: Duration(
+                                      milliseconds: _isButtonForm ? 3000 : 300),
+                                  curve: Curves.easeOutCubic,
+                                  // TODO: Ensure that tile is not empty
+                                  // TODO: Ensure title doesnt already exist in goals
+                                  // TODO: Add save the title to a variable
+                                  child: TextFormField(
+                                    validator: (title) {
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                      hintText: 'Title',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        AnimatedOpacity(
+                                          opacity: _isButtonForm ? 1.0 : 0.0,
+                                          duration: Duration(
+                                              milliseconds:
+                                                  _isButtonForm ? 3000 : 300),
+                                          curve: Curves.easeOutCubic,
+                                          child: const Text(
+                                            'Is this a long term goal?',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+
+                                        /// This determines if the goal is long term
+                                        AnimatedOpacity(
+                                          opacity: _isButtonForm ? 1.0 : 0.0,
+                                          duration: Duration(
+                                              milliseconds:
+                                                  _isButtonForm ? 3000 : 300),
+                                          curve: Curves.easeOutCubic,
+
+                                          /// This is the checkbox that will determine if the goal is long term
+                                          child: Checkbox(
+                                            value: _isLongTermGoal,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                _isLongTermGoal =
+                                                    !_isLongTermGoal;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    /// If the checkbox is checked, this text field will appear
+                                    AnimatedOpacity(
+                                      opacity: _isLongTermGoal ? 1.0 : 0.0,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeInBack,
+                                      // TODO: Ensure that the input is a number
+                                      // TODO: Ensure that the input is not empty
+                                      // TODO: Add save the input to a variable
+                                      // TODO: Ensure that if button is unckecked, the input is cleared
+                                      child: TextFormField(
+                                        validator: (hours) {
+                                          return null;
+                                        },
+                                        decoration: const InputDecoration(
+                                          hintText: 'Hours to deditcate',
+                                          hintStyle: TextStyle(
                                             color: Colors.white,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
-
-                                      /// This determines if the goal is long term
-                                      AnimatedOpacity(
-                                        opacity: _isButtonForm ? 1.0 : 0.0,
-                                        duration: Duration(
-                                            milliseconds:
-                                                _isButtonForm ? 3000 : 300),
-                                        curve: Curves.easeOutCubic,
-                                        child: Checkbox(
-                                          value: _isLongTermGoal,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              _isLongTermGoal =
-                                                  !_isLongTermGoal;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  /// If the checkbox is checked, this text field will appear
-                                  AnimatedOpacity(
-                                    opacity: _isLongTermGoal ? 1.0 : 0.0,
-                                    duration: const Duration(milliseconds: 500),
-                                    curve: Curves.easeInBack,
-                                    child: TextFormField(
-                                      decoration: const InputDecoration(
-                                        hintText: 'Hours to deditcate',
-                                        hintStyle: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
 
-                                  /// This is the button that will submit the form
-                                  MaterialButton(
-                                      onPressed: () {
-                                        shapeShift();
-                                        formDiagonalDown();
-                                        fadeInIcon();
-                                      },
-                                      color: Colors.white,
-                                      textColor: Colors.blue,
-                                      child: const Text('Add goal')),
-                                ],
-                              ),
-                            ],
+                                    /// This is the button that will submit the form
+                                    MaterialButton(
+                                        // TODO: Add a function to the onPressed that will create a goal
+                                        onPressed: () {
+                                          shapeShift();
+                                          formDiagonalDown();
+                                          fadeInIcon();
+                                        },
+                                        color: Colors.white,
+                                        textColor: Colors.blue,
+                                        child: const Text('Add goal')),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -287,8 +307,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
               ),
-              // TODO: Add the rest of the animation process here
-              // TODO: Add the rest of the home screen UI widgets her
+              // TODO: Add the rest of the home screen UI widgets here
             ),
           ),
         ],
