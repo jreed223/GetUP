@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage>
   /// This is the border radius for the button
   late double _buttonBorderRadius = screen.displayHeight(context) * 0.6;
 
-  /// This is the position of the button from the bottom of the screen
+  /// This is the position of the button from the bottom of the screen LATE
   late double bottomPositionVal = screen.displayHeight(context) / 15;
 
   /// This is the position of the button from the right of the screen
@@ -84,6 +84,16 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  /// This function is the entire animation
+  /// It will call all the other functions that will animate the button
+  /// The functions need to wrapped due to dart's syntax
+  /// See the onTap function in the button
+  void goalCreationAninmation() {
+    shapeShift();
+    moveDiagonalUp();
+    foudOutIcon();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,13 +115,13 @@ class _HomePageState extends State<HomePage>
             bottom: bottomPositionVal,
             right: rightPositionVal,
             child: InkWell(
-              customBorder: CircleBorder(),
-              onTap: () {
-                foudOutIcon();
-                shapeShift();
-                moveDiagonalUp();
+              customBorder: const CircleBorder(),
 
-                ///formSlideUp();
+              /// This is the function for the button that will animate the button
+              onTap: () {
+                /// This is the function that will animate the button
+                /// If all of the animations are not wrapped in a function, the button will not animate
+                _isButtonForm ? null : goalCreationAninmation();
               },
 
               /// This is the button itself
@@ -277,8 +287,8 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
               ),
-              // Todo: Add the rest of the animation process here
-              // Todo: Add the rest of the home screen UI widgets her
+              // TODO: Add the rest of the animation process here
+              // TODO: Add the rest of the home screen UI widgets her
             ),
           ),
         ],
