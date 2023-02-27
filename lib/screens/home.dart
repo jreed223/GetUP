@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 
 class HomePage extends StatefulWidget {
-  double get getScreenWidth =>
-      WidgetsBinding.instance.window.physicalSize.width;
-  double get getScreenHeight =>
-      WidgetsBinding.instance.window.physicalSize.height;
   const HomePage({super.key});
 
   @override
@@ -20,19 +17,19 @@ class _HomePageState extends State<HomePage>
   bool _isButtonForm = false;
 
   /// This is the border radius for the button
-  double _buttonBorderRadius = 50;
+  late double _buttonBorderRadius = screen.displayHeight(context) * 0.6;
 
   /// This is the position of the button from the bottom of the screen
-  double bottomPositionVal = 60;
+  late double bottomPositionVal = screen.displayHeight(context) / 15;
 
   /// This is the position of the button from the right of the screen
-  double rightPositionVal = 42;
+  late double rightPositionVal = screen.displayWidth(context) / 15;
 
   /// This is the width of the button
-  late double _buttonWidth = 75;
+  late double _buttonWidth = screen.displayWidth(context) / 7;
 
   /// This is the height of the button
-  late double _buttonHeight = 75;
+  late double _buttonHeight = screen.displayHeight(context) / 15;
 
   /// This is the boolean that will determine if the icon is visible
   late bool _iconIsVisisble;
@@ -61,14 +58,14 @@ class _HomePageState extends State<HomePage>
   void shapeShift() {
     setState(() {
       if (!_isButtonForm) {
-        _buttonWidth = widget.getScreenWidth * 0.27;
-        _buttonHeight = widget.getScreenHeight * 0.1;
-        _buttonBorderRadius = 20;
+        _buttonWidth = screen.displayWidth(context) / 1.15;
+        _buttonHeight = screen.displayHeight(context) / 3;
+        _buttonBorderRadius = screen.displayHeight(context) * 0.05;
         _isButtonForm = true;
       } else {
-        _buttonWidth = 75;
-        _buttonHeight = 75;
-        _buttonBorderRadius = 50;
+        _buttonWidth = screen.displayWidth(context) / 7;
+        _buttonHeight = screen.displayHeight(context) / 15;
+        _buttonBorderRadius = screen.displayHeight(context) * 0.05;
         _isButtonForm = false;
       }
     });
@@ -77,13 +74,13 @@ class _HomePageState extends State<HomePage>
   /// This fucntion will move the button to the center of the screen
   void moveDiagonalUp() {
     setState(() {
-      bottomPositionVal = 275;
+      bottomPositionVal = screen.displayHeight(context) / 3;
     });
   }
 
   void formDiagonalDown() {
     setState(() {
-      bottomPositionVal = 60;
+      bottomPositionVal = screen.displayHeight(context) / 15;
     });
   }
 
