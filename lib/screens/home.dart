@@ -121,6 +121,9 @@ class _HomePageState extends State<HomePage>
               onTap: () {
                 /// This is the function that will animate the button
                 /// If all of the animations are not wrapped in a function, the button will not animate
+
+                /// If the button is in the form shape, it is not clickable
+                /// This ensures that if the user clicks the background of the form, it will not animate
                 _isButtonForm ? null : goalCreationAninmation();
               },
 
@@ -141,7 +144,7 @@ class _HomePageState extends State<HomePage>
 
                   /// These are the children of the button
                   /// They are animated to fade in and out
-                  /// The stack is used to position the icon and text consistently
+                  /// The stack is used to position the icon and form text consistently
                   child: Stack(
                     children: [
                       Positioned(
@@ -191,6 +194,7 @@ class _HomePageState extends State<HomePage>
                                     ),
                                   ),
                                 ),
+
                                 const SizedBox(height: 10),
 
                                 /// This is the first text field for the form
@@ -214,6 +218,7 @@ class _HomePageState extends State<HomePage>
                                     ),
                                   ),
                                 ),
+
                                 const SizedBox(height: 20),
 
                                 Column(
@@ -235,6 +240,7 @@ class _HomePageState extends State<HomePage>
                                             ),
                                           ),
                                         ),
+
                                         const SizedBox(width: 10),
 
                                         /// This determines if the goal is long term
@@ -281,9 +287,8 @@ class _HomePageState extends State<HomePage>
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
+
+                                    const SizedBox(height: 10),
 
                                     /// This is the button that will submit the form
                                     MaterialButton(

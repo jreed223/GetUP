@@ -15,9 +15,9 @@ class Goal {
   final String title;
 
   /// Whether the goal is completed.
-  late bool isCompleted;
+  late bool isCompleted = false;
 
-  Goal({required this.title, isCompleted = false});
+  Goal({required this.title});
 
   /// A list <of type Goal> of sample goals.
   final List<Goal> _sampleGoals = [
@@ -61,7 +61,7 @@ class LongTermGoal extends Goal {
   double progress = 0.0;
 
   LongTermGoal({required String title, required this.duration})
-      : super(title: title, isCompleted: false);
+      : super(title: title);
 
   /// Gets the duration of the goal.
   int get goalDuration => duration;
