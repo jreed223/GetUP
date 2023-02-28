@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
+import 'dart:developer';
+import 'package:flutter/foundation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +17,22 @@ class _HomePageState extends State<HomePage>
 
   /// This is the boolean that will determine if the button is in the form shape
   bool _isButtonForm = false;
+
+  /// This is the title of the goal that will capture the user input
+  String _goalTitle = "";
+
+  /// This is the duration of the goal that will capture the user input
+  String _goalDuration = "";
+
+  /// This is the key for the form
+  /// It is used to validate and check the state of the form
+  final GlobalKey<FormState> _goalFormKey = GlobalKey<FormState>();
+
+  /// This is the controller for the goal title
+  final TextEditingController _goalTitleController = TextEditingController();
+
+  /// This is the controller for the goal duration
+  final TextEditingController _goalDurationController = TextEditingController();
 
   /// This is the border radius for the button
   late double _buttonBorderRadius = screen.displayHeight(context) * 0.05;
@@ -41,7 +59,7 @@ class _HomePageState extends State<HomePage>
   }
 
   /// This is the function that will fade out the icon
-  void foudOutIcon() {
+  void fadeOutIcon() {
     setState(() {
       _iconIsVisisble = false;
     });
@@ -59,7 +77,7 @@ class _HomePageState extends State<HomePage>
     setState(() {
       if (!_isButtonForm) {
         _buttonWidth = screen.displayWidth(context) / 1.15;
-        _buttonHeight = screen.displayHeight(context) / 3;
+        _buttonHeight = screen.displayHeight(context) / 2.5;
         _buttonBorderRadius = screen.displayHeight(context) * 0.05;
         _isButtonForm = true;
       } else {
@@ -78,7 +96,8 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  void formDiagonalDown() {
+  /// This function will move the button to the bottom right of the screen
+  void moveDiagonalDown() {
     setState(() {
       bottomPositionVal = screen.displayHeight(context) / 20;
     });
@@ -91,7 +110,7 @@ class _HomePageState extends State<HomePage>
   void goalCreationAninmation() {
     shapeShift();
     moveDiagonalUp();
-    foudOutIcon();
+    fadeOutIcon();
   }
 
   @override
@@ -171,6 +190,7 @@ class _HomePageState extends State<HomePage>
 
                       /// This is the text for the form that will be animated
                       Form(
+                        key: _goalFormKey,
                         child: AnimatedOpacity(
                           opacity: _isButtonForm ? 1.0 : 0.0,
                           duration: Duration(
@@ -179,6 +199,7 @@ class _HomePageState extends State<HomePage>
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 /// This is the title for the form
                                 AnimatedOpacity(
@@ -195,7 +216,8 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
 
-                                const SizedBox(height: 10),
+                                /// TODO: Make this space relative to the screen size
+                                const SizedBox(height: 5),
 
                                 /// This is the first text field for the form
                                 AnimatedOpacity(
@@ -203,12 +225,19 @@ class _HomePageState extends State<HomePage>
                                   duration: Duration(
                                       milliseconds: _isButtonForm ? 3000 : 300),
                                   curve: Curves.easeOutCubic,
-                                  // TODO: Ensure that tile is not empty
                                   // TODO: Ensure title doesnt already exist in goals
-                                  // TODO: Add save the title to a variable
                                   child: TextFormField(
-                                    validator: (title) {
+                                    /// This ensures that the title is not empty
+                                    validator: (input) {
+                                      if (input!.isEmpty) {
+                                        return 'Please enter a title for your goal';
+                                      }
                                       return null;
+                                    },
+
+                                    /// This saves the title to a variable
+                                    onChanged: (input) {
+                                      setState(() => _goalTitle = input);
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Title',
@@ -219,6 +248,7 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
 
+                                // TODO: Make this space relative to the screen size
                                 const SizedBox(height: 20),
 
                                 Column(
@@ -241,6 +271,7 @@ class _HomePageState extends State<HomePage>
                                           ),
                                         ),
 
+                                        // TODO: Make this space relative to the screen size
                                         const SizedBox(width: 10),
 
                                         /// This determines if the goal is long term
@@ -276,8 +307,19 @@ class _HomePageState extends State<HomePage>
                                       // TODO: Add save the input to a variable
                                       // TODO: Ensure that if button is unckecked, the input is cleared
                                       child: TextFormField(
-                                        validator: (hours) {
+                                        validator: (input) {
+                                          /// This ensures the validation only occurs if the checkbox is checked
+                                          if (_isLongTermGoal) {
+                                            if (input!.isEmpty) {
+                                              return 'Please enter a number of hours to dedicate to this goal';
+                                            }
+                                          }
                                           return null;
+                                        },
+
+                                        /// This saves the input to a variable
+                                        onChanged: (input) {
+                                          setState(() => _goalDuration = input);
                                         },
                                         decoration: const InputDecoration(
                                           hintText: 'Hours to deditcate',
@@ -288,15 +330,22 @@ class _HomePageState extends State<HomePage>
                                       ),
                                     ),
 
+                                    //TODO: Make this space relative to the screen size
                                     const SizedBox(height: 10),
 
                                     /// This is the button that will submit the form
                                     MaterialButton(
                                         // TODO: Add a function to the onPressed that will create a goal
                                         onPressed: () {
-                                          shapeShift();
-                                          formDiagonalDown();
-                                          fadeInIcon();
+                                          if (_goalFormKey.currentState!
+                                              .validate()) {
+                                            _goalFormKey.currentState!.save();
+                                            shapeShift();
+                                            moveDiagonalDown();
+                                            fadeInIcon();
+                                          }
+
+                                          // TODO: Add a function that will reset checkbox and text field
                                         },
                                         color: Colors.white,
                                         textColor: Colors.blue,
