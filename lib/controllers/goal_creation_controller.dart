@@ -1,6 +1,8 @@
 /// These class are responsible for the creation of a new goal.
 
 import 'package:getup_csc450/models/goals.dart';
+import 'package:getup_csc450/models/firebaseController.dart';
+import 'package:getup_csc450/models/authController.dart';
 
 /// The [GoalCreationController] class is the base class for all goal creation
 ///
@@ -13,6 +15,7 @@ import 'package:getup_csc450/models/goals.dart';
 /// * createGoal: creates a new goal
 class GoalCreationController {
   String goalTitle;
+  final uid = AuthController().getUserId;
 
   GoalCreationController({required this.goalTitle});
 
@@ -33,8 +36,10 @@ class ShortTermGoalCreator extends GoalCreationController {
       : super(goalTitle: goalTitle);
 
   @override
-  Goal createGoal() {
-    return Goal(title: goalTitle);
+  Future createGoal() async {
+    Goal newGoal = Goal(title: goalTitle);
+    await FirestoreController.pushGoal(newGoal, false, uid);
+    return newGoal;
   }
 }
 
@@ -55,7 +60,9 @@ class LongTermGoalCreator extends GoalCreationController {
       : super(goalTitle: goalTitle);
 
   @override
-  Goal createGoal() {
-    return LongTermGoal(title: goalTitle, duration: duration);
+  Future createGoal() async {
+    LongTermGoal newGoal = LongTermGoal(title: goalTitle, duration: duration);
+    FirestoreController.pushGoal(newGoal, true, uid);
+    return newGoal;
   }
 }

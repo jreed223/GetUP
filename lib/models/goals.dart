@@ -17,6 +17,12 @@ class Goal {
   /// Whether the goal is completed.
   late bool isCompleted = false;
 
+  /// The date the goal was created.
+  late DateTime dateCreated = DateTime.now();
+
+  /// The date the goal was completed.
+  late DateTime dateCompleted = DateTime.now();
+
   Goal({required this.title});
 
   /// A list <of type Goal> of sample goals.
@@ -38,6 +44,18 @@ class Goal {
 
   /// Gets the sample goals.
   List<Goal> get sampleGoalList => _sampleGoals;
+
+  /// Gets the date the goal was created.
+  DateTime get goalCreationDate => dateCreated;
+
+  /// Gets the date the goal was completed.
+  DateTime get goalCompletionDate => dateCompleted;
+
+  /// Gets the duration of the goal.
+  get goalDuration {}
+
+  /// Gets the progress of the goal.
+  get goalProgress {}
 }
 
 /// A subclass of Goal that represents a long term goal.
@@ -64,8 +82,10 @@ class LongTermGoal extends Goal {
       : super(title: title);
 
   /// Gets the duration of the goal.
+  @override
   int get goalDuration => duration;
 
   /// Gets the progress of the goal.
+  @override
   double get goalProgress => progress;
 }

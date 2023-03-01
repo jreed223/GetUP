@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
-import 'dart:developer';
-import 'package:flutter/foundation.dart';
+import 'package:getup_csc450/models/authController.dart';
+import 'package:getup_csc450/models/firebaseController.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +24,9 @@ class _HomePageState extends State<HomePage>
 
   /// This is the duration of the goal that will capture the user input
   String _goalDuration = "";
+
+  /// This is the controller for database access
+  final FirestoreController _firestoreDatabase = FirestoreController();
 
   /// This is the key for the form
   /// It is used to validate and check the state of the form
@@ -52,10 +56,35 @@ class _HomePageState extends State<HomePage>
   /// This is the boolean that will determine if the icon is visible
   late bool _iconIsVisisble;
 
+  /// TODO: Remove this test user, varibales, and function
+  /// BELOW IS FOR TESTING ONLY
+  /// These variables are the credentials for the test user
+  String EMAIL = "main-testing@test.com";
+  String PASS = "test1234";
+  AuthController authController = AuthController();
+
+  /// This function is used to help me test if the goals are being stored to the database
+  Future signInTestUser() async {
+    try {
+      final credential =
+          await authController.signInWithEmailAndPassword(EMAIL, PASS);
+      await FirestoreController.saveUserInfo(
+          EMAIL, "testuser12", "john doe", authController.getUser!.uid);
+      print("User information saved successfully");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _iconIsVisisble = true;
+    signInTestUser();
   }
 
   /// This is the function that will fade out the icon
@@ -103,6 +132,8 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  // TODO: Rename function to something more appropriate
+  // TODO: Add another function for the other half of the animation
   /// This function is the entire animation
   /// It will call all the other functions that will animate the button
   /// The functions need to wrapped due to dart's syntax
@@ -113,11 +144,13 @@ class _HomePageState extends State<HomePage>
     fadeOutIcon();
   }
 
+  Future _putGoalInDB() async {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text('${authController.getUser!.email}'),
       ),
       body: Stack(
         children: [
@@ -249,7 +282,7 @@ class _HomePageState extends State<HomePage>
                                 ),
 
                                 // TODO: Make this space relative to the screen size
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 10),
 
                                 Column(
                                   children: [
