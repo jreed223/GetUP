@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:getup_csc450/models/authController.dart';
 import 'package:getup_csc450/models/firebaseController.dart';
+import 'package:getup_csc450/models/goals.dart';
+import 'package:getup_csc450/widgets/checkmark.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  /// This boolean detmines if a checkmark is visible
+  bool _submitSuccessful = false;
+
+  /// This boolean determines if error animation is visible
+  bool _submitUnsuccessful = false;
+
   /// This boolean will determine if the goal is long term or short term
   bool _isLongTermGoal = false;
 
@@ -54,14 +62,15 @@ class _HomePageState extends State<HomePage>
   late double _buttonHeight = screen.displayHeight(context) / 15;
 
   /// This is the boolean that will determine if the icon is visible
-  late bool _iconIsVisisble;
+  late bool _iconIsVisible;
 
-  /// TODO: Remove this test user, varibales, and function
+  // TODO: Remove this test user, varibales, and function
   /// BELOW IS FOR TESTING ONLY
   /// These variables are the credentials for the test user
   String EMAIL = "main-testing@test.com";
   String PASS = "test1234";
   AuthController authController = AuthController();
+  FirestoreController firestoreController = FirestoreController();
 
   /// This function is used to help me test if the goals are being stored to the database
   Future signInTestUser() async {
@@ -69,7 +78,7 @@ class _HomePageState extends State<HomePage>
       final credential =
           await authController.signInWithEmailAndPassword(EMAIL, PASS);
       await FirestoreController.saveUserInfo(
-          EMAIL, "testuser12", "john doe", authController.getUser!.uid);
+          EMAIL, "newest", "yoooooo", authController.getUser!.uid);
       print("User information saved successfully");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -83,21 +92,35 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _iconIsVisisble = true;
+    _iconIsVisible = true;
     signInTestUser();
+  }
+
+  /// This is the function that will show the animated checkmark
+  void animatedCheckSwitch() {
+    setState(() {
+      _submitSuccessful = !_submitSuccessful;
+    });
+  }
+
+  /// This is the function that will show the animated error
+  void animatedErrorSwitch() {
+    setState(() {
+      _submitUnsuccessful = !_submitUnsuccessful;
+    });
   }
 
   /// This is the function that will fade out the icon
   void fadeOutIcon() {
     setState(() {
-      _iconIsVisisble = false;
+      _iconIsVisible = false;
     });
   }
 
   /// This is the function that will fade in the icon
   void fadeInIcon() {
     setState(() {
-      _iconIsVisisble = true;
+      _iconIsVisible = true;
     });
   }
 
@@ -144,13 +167,11 @@ class _HomePageState extends State<HomePage>
     fadeOutIcon();
   }
 
-  Future _putGoalInDB() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${authController.getUser!.email}'),
+        title: Text('${authController.getUser!.uid}'),
       ),
       body: Stack(
         children: [
@@ -206,18 +227,17 @@ class _HomePageState extends State<HomePage>
                         right: 0,
                         child: Center(
                           child: AnimatedOpacity(
-                            opacity: _iconIsVisisble ? 1.0 : 0.0,
-                            curve: Curves.easeInOutBack,
-                            duration: Duration(
-                                milliseconds: _isButtonForm ? 800 : 2000),
+                              opacity: _iconIsVisible ? 1.0 : 0.0,
+                              curve: Curves.easeInOutBack,
+                              duration: Duration(
+                                  milliseconds: _isButtonForm ? 800 : 2000),
 
-                            /// This is the icon that will be animated
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
+                              /// This is the icon that will be animated
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 30,
+                              )),
                         ),
                       ),
 
@@ -227,7 +247,7 @@ class _HomePageState extends State<HomePage>
                         child: AnimatedOpacity(
                           opacity: _isButtonForm ? 1.0 : 0.0,
                           duration: Duration(
-                              milliseconds: _isButtonForm ? 3000 : 300),
+                              milliseconds: _isButtonForm ? 3000 : 700),
                           curve: Curves.easeInOutBack,
                           child: Padding(
                             padding: const EdgeInsets.all(10),
@@ -238,7 +258,7 @@ class _HomePageState extends State<HomePage>
                                 AnimatedOpacity(
                                   opacity: _isButtonForm ? 1.0 : 0.0,
                                   duration: Duration(
-                                      milliseconds: _isButtonForm ? 3000 : 300),
+                                      milliseconds: _isButtonForm ? 3000 : 700),
                                   curve: Curves.easeOutExpo,
                                   child: const Text(
                                     'Add a goal',
@@ -256,10 +276,12 @@ class _HomePageState extends State<HomePage>
                                 AnimatedOpacity(
                                   opacity: _isButtonForm ? 1.0 : 0.0,
                                   duration: Duration(
-                                      milliseconds: _isButtonForm ? 3000 : 300),
+                                      milliseconds: _isButtonForm ? 3000 : 700),
                                   curve: Curves.easeOutCubic,
                                   // TODO: Ensure title doesnt already exist in goals
                                   child: TextFormField(
+                                    controller: _goalTitleController,
+
                                     /// This ensures that the title is not empty
                                     validator: (input) {
                                       if (input!.isEmpty) {
@@ -294,7 +316,7 @@ class _HomePageState extends State<HomePage>
                                           opacity: _isButtonForm ? 1.0 : 0.0,
                                           duration: Duration(
                                               milliseconds:
-                                                  _isButtonForm ? 3000 : 300),
+                                                  _isButtonForm ? 3000 : 1000),
                                           curve: Curves.easeOutCubic,
                                           child: const Text(
                                             'Is this a long term goal?',
@@ -312,7 +334,7 @@ class _HomePageState extends State<HomePage>
                                           opacity: _isButtonForm ? 1.0 : 0.0,
                                           duration: Duration(
                                               milliseconds:
-                                                  _isButtonForm ? 3000 : 300),
+                                                  _isButtonForm ? 3000 : 1000),
                                           curve: Curves.easeOutCubic,
 
                                           /// This is the checkbox that will determine if the goal is long term
@@ -340,6 +362,7 @@ class _HomePageState extends State<HomePage>
                                       // TODO: Add save the input to a variable
                                       // TODO: Ensure that if button is unckecked, the input is cleared
                                       child: TextFormField(
+                                        controller: _goalDurationController,
                                         validator: (input) {
                                           /// This ensures the validation only occurs if the checkbox is checked
                                           if (_isLongTermGoal) {
@@ -368,21 +391,84 @@ class _HomePageState extends State<HomePage>
 
                                     /// This is the button that will submit the form
                                     MaterialButton(
-                                        // TODO: Add a function to the onPressed that will create a goal
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          /// This ensures that the form is valid
                                           if (_goalFormKey.currentState!
                                               .validate()) {
-                                            _goalFormKey.currentState!.save();
-                                            shapeShift();
-                                            moveDiagonalDown();
-                                            fadeInIcon();
-                                          }
+                                            try {
+                                              /// This pushes a Goal or LongTermGoal to the database depending on if it is long term or not
+                                              _isLongTermGoal
+                                                  ? FirestoreController.pushGoal(
+                                                      LongTermGoal(
+                                                          title: _goalTitle,
+                                                          duration:
+                                                              _goalDuration),
+                                                      _isLongTermGoal,
+                                                      authController
+                                                          .getUser!.uid)
+                                                  : FirestoreController
+                                                      .pushGoal(
+                                                          Goal(
+                                                              title:
+                                                                  _goalTitle),
+                                                          false,
+                                                          authController
+                                                              .getUser!.uid);
 
+                                              /// This shows the checkmark
+                                              animatedCheckSwitch();
+
+                                              Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 2000), () {
+                                                shapeShift();
+                                                moveDiagonalDown();
+                                                fadeInIcon();
+                                              });
+                                            } catch (e) {
+                                              print(e);
+                                            }
+
+                                            /// clearing input fields after submit
+                                            Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 5000), () {
+                                              setState(() {
+                                                _goalDurationController.clear();
+                                                _goalTitleController.clear();
+                                                _isLongTermGoal = false;
+                                              });
+                                            });
+
+                                            /// resetting the checkmark
+                                            Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 3000), () {
+                                              setState(() {
+                                                animatedCheckSwitch();
+                                              });
+                                            });
+                                          }
                                           // TODO: Add a function that will reset checkbox and text field
                                         },
                                         color: Colors.white,
                                         textColor: Colors.blue,
-                                        child: const Text('Add goal')),
+                                        child: AnimatedCrossFade(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          firstChild: AnimatedCheckMark(
+                                            isFormValid: _submitSuccessful,
+                                          ),
+                                          secondChild: const Text(
+                                            'Submit',
+                                            style: TextStyle(
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          crossFadeState: _submitSuccessful
+                                              ? CrossFadeState.showFirst
+                                              : CrossFadeState.showSecond,
+                                        )),
                                   ],
                                 ),
                               ],

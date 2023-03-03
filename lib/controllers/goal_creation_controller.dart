@@ -15,7 +15,6 @@ import 'package:getup_csc450/models/authController.dart';
 /// * createGoal: creates a new goal
 class GoalCreationController {
   String goalTitle;
-  final uid = AuthController().getUserId;
 
   GoalCreationController({required this.goalTitle});
 
@@ -32,14 +31,24 @@ class GoalCreationController {
 ///
 /// * createGoal: creates a new short term goal
 class ShortTermGoalCreator extends GoalCreationController {
-  ShortTermGoalCreator({required String goalTitle})
-      : super(goalTitle: goalTitle);
+  final Goal goal;
+
+  ShortTermGoalCreator({required goalTitle})
+      : goal = Goal(title: goalTitle),
+        super(goalTitle: goalTitle);
 
   @override
-  Future createGoal() async {
-    Goal newGoal = Goal(title: goalTitle);
-    await FirestoreController.pushGoal(newGoal, false, uid);
-    return newGoal;
+  Goal createGoal() {
+    return goal;
+  }
+
+  Map toJson() {
+    return {
+      'title': goal.goalTitle,
+      'isCompleted': goal.goalStatus,
+      'dateCreated': goal.goalCreationDate,
+      'dateCompleted': 'N/A',
+    };
   }
 }
 
@@ -54,15 +63,14 @@ class ShortTermGoalCreator extends GoalCreationController {
 ///
 /// * createGoal: creates a new long term goal
 class LongTermGoalCreator extends GoalCreationController {
-  int duration;
+  String duration;
 
   LongTermGoalCreator({required String goalTitle, required this.duration})
       : super(goalTitle: goalTitle);
 
   @override
-  Future createGoal() async {
+  Goal createGoal() {
     LongTermGoal newGoal = LongTermGoal(title: goalTitle, duration: duration);
-    FirestoreController.pushGoal(newGoal, true, uid);
     return newGoal;
   }
 }
