@@ -70,26 +70,31 @@ class _AnimatedCheckMarkState extends State<AnimatedCheckMark>
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.network(
-        'https://assets3.lottiefiles.com/packages/lf20_QUlmCaIOR4.json',
-        width: 50,
-        height: 50,
-        controller: _controller, onLoaded: (composition) {
-      if (widget.isFormValid) {
-        /// If the animation is completed, reset the animation
-        if (_controller.status == AnimationStatus.completed) {
-          _controller.reset();
-        }
-        _controller
-          ..duration = composition.duration
-          ..forward();
+    return Center(
+      child: SizedBox(
+        width: 100,
+        height: 100,
+        child: Lottie.network(
+            'https://assets3.lottiefiles.com/packages/lf20_QUlmCaIOR4.json',
+            fit: BoxFit.cover,
+            controller: _controller, onLoaded: (composition) {
+          if (widget.isFormValid) {
+            /// If the animation is completed, reset the animation
+            if (_controller.status == AnimationStatus.completed) {
+              _controller.reset();
+            }
+            _controller
+              ..duration = composition.duration
+              ..forward();
 
-        /// If the form is not valid, reverse the animation
-      } else {
-        if (_controller.status == AnimationStatus.forward) {
-          _controller.reverse();
-        }
-      }
-    });
+            /// If the form is not valid, reverse the animation
+          } else {
+            if (_controller.status == AnimationStatus.forward) {
+              _controller.reverse();
+            }
+          }
+        }),
+      ),
+    );
   }
 }

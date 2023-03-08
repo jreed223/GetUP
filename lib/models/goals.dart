@@ -38,6 +38,15 @@ class Goal {
   //   LongTermGoal(title: 'Learn Python', duration: '20'),
   // ];
 
+  /// Get the ID of the goal.
+  /// The ID is in the format of goal_title-date_created.
+  /// For example, 'Go to the gym - 2021-09-01 12:00:00.000'.
+  String get goalID {
+    DateFormat formatter = DateFormat('EEEE, MMMM d, y - h:mm a');
+    String formattedTimestamp = formatter.format(dateCreated);
+    return '$title - $formattedTimestamp';
+  }
+
   /// Gets the title of the goal.
   String get goalTitle => title;
 
