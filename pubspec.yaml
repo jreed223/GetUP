@@ -42,8 +42,8 @@ dependencies:
     firebase_auth: ^4.2.6
     firebase_core: ^2.5.0
     lottie: ^2.2.0
-    flutter_clean_calendar: ^1.1.0
     intl: ^0.17.0
+    table_calendar: ^3.0.8
 
 dev_dependencies:
     flutter_test:

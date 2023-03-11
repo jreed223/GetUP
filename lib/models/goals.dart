@@ -57,7 +57,11 @@ class Goal {
   // List<Goal> get sampleGoalList => _sampleGoals;
 
   /// Gets the date the goal was created.
-  DateTime get goalCreationDate => dateCreated;
+  String get goalCreationDate {
+    DateFormat formatter = DateFormat.yMMMMd('en_US');
+    String formattedTimestamp = formatter.format(dateCreated);
+    return formattedTimestamp;
+  }
 
   /// Gets the date the goal was completed.
   DateTime? get goalCompletionDate => dateCompleted;
@@ -71,6 +75,9 @@ class Goal {
       'dateCompleted': goalCompletionDate,
     };
   }
+
+  /// This returns the goal in a JSON format.
+  /// This is used in the Firebase controller
 
   /// Gets the duration of the goal.
   get goalDuration {}

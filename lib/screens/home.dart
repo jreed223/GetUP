@@ -198,10 +198,15 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 248, 248, 248),
+      backgroundColor: Color(0xFFFBFCFA),
       appBar: AppBar(
-        title: Text('${authController.getUser!.uid}'),
-      ),
+          backgroundColor: Color(0xFFFBFCFA),
+          title: Text('O V E R V I E W',
+              style: TextStyle(
+                color: Color.fromARGB(132, 0, 0, 0),
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ))),
       body: Stack(
         children: [
           CalendarWidget(),
@@ -240,7 +245,15 @@ class _HomePageState extends State<HomePage>
                   width: _buttonWidth,
                   height: _buttonHeight,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black87.withOpacity(0.5),
+                        spreadRadius: .25,
+                        blurRadius: 20,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    color: _isButtonForm ? Colors.white : Colors.red,
                     borderRadius: BorderRadius.all(
                       Radius.circular(_buttonBorderRadius),
                     ),
@@ -294,7 +307,7 @@ class _HomePageState extends State<HomePage>
                                   child: const Text(
                                     'Add a goal',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black87,
                                       fontSize: 20,
                                     ),
                                   ),
@@ -311,6 +324,7 @@ class _HomePageState extends State<HomePage>
                                   curve: Curves.easeOutCubic,
                                   // TODO: Ensure title doesnt already exist in goals
                                   child: TextFormField(
+                                    cursorColor: Colors.black38,
                                     controller: _goalTitleController,
 
                                     /// This ensures that the title is not empty
@@ -326,16 +340,20 @@ class _HomePageState extends State<HomePage>
                                       setState(() => _goalTitle = input);
                                     },
                                     decoration: const InputDecoration(
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black54, width: 3),
+                                      ),
                                       hintText: 'Title',
                                       hintStyle: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.black38,
                                       ),
                                     ),
                                   ),
                                 ),
 
                                 // TODO: Make this space relative to the screen size
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 5),
 
                                 Column(
                                   children: [
@@ -352,13 +370,13 @@ class _HomePageState extends State<HomePage>
                                           child: const Text(
                                             'Is this a long term goal?',
                                             style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black38,
                                             ),
                                           ),
                                         ),
 
                                         // TODO: Make this space relative to the screen size
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 5),
 
                                         /// This determines if the goal is long term
                                         AnimatedOpacity(
@@ -370,6 +388,7 @@ class _HomePageState extends State<HomePage>
 
                                           /// This is the checkbox that will determine if the goal is long term
                                           child: Checkbox(
+                                            activeColor: Colors.black54,
                                             value: _isLongTermGoal,
                                             onChanged: (bool? value) {
                                               setState(() {
@@ -391,6 +410,7 @@ class _HomePageState extends State<HomePage>
                                       // TODO: Ensure that the input is a number
                                       // TODO: Ensure that if button is unckecked, the input is cleared
                                       child: TextFormField(
+                                        cursorColor: Colors.black12,
                                         controller: _goalDurationController,
                                         validator: (input) {
                                           /// This ensures the validation only occurs if the checkbox is checked
@@ -407,16 +427,21 @@ class _HomePageState extends State<HomePage>
                                           setState(() => _goalDuration = input);
                                         },
                                         decoration: const InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black54,
+                                                width: 3),
+                                          ),
                                           hintText: 'Hours to deditcate',
                                           hintStyle: TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black38,
                                           ),
                                         ),
                                       ),
                                     ),
 
                                     //TODO: Make this space relative to the screen size
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 30),
 
                                     /// This is the button that will submit the form
                                     // TODO: Make this button an animated container
@@ -490,13 +515,14 @@ class _HomePageState extends State<HomePage>
                                           decoration: BoxDecoration(
                                               color: _submitSuccessful
                                                   ? Colors.green
-                                                  : Colors.white,
+                                                  : Color.fromARGB(14, 0, 0, 0),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(
                                                       _submitButtonBorderRadius))),
                                           duration:
                                               const Duration(milliseconds: 500),
                                           child: AnimatedCrossFade(
+                                            alignment: Alignment.center,
                                             secondCurve: Curves.easeOut,
                                             duration: const Duration(
                                                 milliseconds: 200),
@@ -509,7 +535,7 @@ class _HomePageState extends State<HomePage>
                                               child: Text(
                                                 'Submit',
                                                 style: TextStyle(
-                                                  color: Colors.blue,
+                                                  color: Colors.black54,
                                                 ),
                                               ),
                                             ),
