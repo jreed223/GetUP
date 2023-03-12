@@ -100,7 +100,7 @@ class MetricsController {
         //adds the getter stored value to the progress counter
         totalProgress = totalProgress + currentGoal.goalProgress;
         //adds the getter stored value to the duration counter
-        totalDuration = totalDuration + currentGoal.goalDuration;
+        totalDuration = totalDuration + double.parse(currentGoal.goalDuration);
       }
     }
     double durationPrcnt =
@@ -126,7 +126,8 @@ class MetricsController {
       if (currentGoal is LongTermGoal) {
         //if statement targets each completed long term goal
         if (currentGoal.isCompleted == true ||
-            currentGoal.goalDuration == currentGoal.goalProgress) {
+            double.parse(currentGoal.goalDuration) ==
+                currentGoal.goalProgress) {
           overallCmpltCnt = overallCmpltCnt + 1;
         }
       } else if (currentGoal is Goal) {
@@ -151,13 +152,13 @@ class MetricsController {
 
 void metricsMain() {
   final List<Goal> _sampleGoals = [
-    LongTermGoal(title: 'Learn Flutter', duration: 20),
+    LongTermGoal(title: 'Learn Flutter', duration: '20'),
     Goal(title: 'Go to grocery store'),
-    LongTermGoal(title: 'Read', duration: 5),
+    LongTermGoal(title: 'Read', duration: '5'),
     Goal(title: 'Go to the gym'),
-    LongTermGoal(title: 'Learn Dart', duration: 10),
+    LongTermGoal(title: 'Learn Dart', duration: '10'),
     Goal(title: 'Go to the dentist'),
-    LongTermGoal(title: 'Learn Python', duration: 15),
+    LongTermGoal(title: 'Learn Python', duration: '15'),
   ];
   final sampleController = MetricsController(goalList: _sampleGoals);
   final sampleMData = MetricsData(
