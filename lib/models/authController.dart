@@ -24,5 +24,15 @@ class AuthController {
   }
 
   /// This method gets the current user.
-  User? get user => _auth.currentUser;
+  User? get getUser => _auth.currentUser;
+
+  /// This method gets the current user's ID.
+  get getUserId => _auth.currentUser!.uid;
+
+  /// This method signs in a user with email and password.
+  Future<UserCredential> signInWithEmailAndPassword(
+      String email, String password) async {
+    return await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
 }
