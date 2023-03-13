@@ -1,0 +1,188 @@
+import 'package:flutter/material.dart';
+import '../models/userController.dart';
+import '../models/profileController.dart';
+import '../helpers/themes.dart';
+
+class ProfileScreen extends StatefulWidget {
+  final Profile profile;
+
+  ProfileScreen({required this.profile});
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  // allows editable bio and interest
+  late TextEditingController _bioController;
+  late TextEditingController _interestsController;
+  // setting of the themes which can be changed
+  ThemeData _currentTheme = Themes.lightTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    _bioController = TextEditingController(text: widget.profile.userBio);
+    _interestsController =
+        TextEditingController(text: widget.profile.userInterests);
+  }
+
+  @override
+  void dispose() {
+    _bioController.dispose();
+    _interestsController.dispose();
+    super.dispose();
+  }
+
+  void _showThemeMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: const Text('Light Theme'),
+                onTap: () {
+                  setState(() {
+                    _currentTheme = Themes.lightTheme;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('Dark Theme'),
+                onTap: () {
+                  setState(() {
+                    _currentTheme = Themes.darkTheme;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: _currentTheme,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30.0,
+              )),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.color_lens),
+              onPressed: () {
+                _showThemeMenu(context);
+              },
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Display user's name
+              Text(
+                '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              const SizedBox(height: 20.0), // Space below name
+              const Text(
+                'About:', // User bio
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              TextField(
+                controller: _bioController,
+                decoration: InputDecoration(
+                  hintText: 'Write your bio!',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  border: OutlineInputBorder(),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 20.0), // Space below bio
+              const Text(
+                'Interests:', // User interests
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              TextField(
+                controller: _interestsController,
+                decoration: InputDecoration(
+                  hintText: 'Add your interests here!',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  border: OutlineInputBorder(),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  // Create sample data for testing
+  Profile.createSampleData();
+
+  // Get the first profile from the list of profiles
+  Profile profile = Profile.profiles[0];
+
+  // Run the app and display the ProfileScreen with the sample data
+  runApp(
+    MaterialApp(
+      home: ProfileScreen(profile: profile),
+    ),
+  );
+}
