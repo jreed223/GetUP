@@ -2,10 +2,33 @@ import 'package:flutter/material.dart';
 import '../models/userController.dart';
 import '../models/profileController.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final Profile profile;
 
   ProfileScreen({required this.profile});
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late TextEditingController _bioController;
+  late TextEditingController _interestsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _bioController = TextEditingController(text: widget.profile.userBio);
+    _interestsController =
+        TextEditingController(text: widget.profile.userInterests);
+  }
+
+  @override
+  void dispose() {
+    _bioController.dispose();
+    _interestsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             // Display user's name
             Text(
-              '${profile.user.firstName} ${profile.user.lastName}',
+              '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24.0,
@@ -34,10 +57,10 @@ class ProfileScreen extends StatelessWidget {
                 fontSize: 24.0,
               ),
             ),
-            Text(
-              profile.userBio, // Display the bio
-              style: const TextStyle(
-                fontSize: 20.0,
+            TextField(
+              controller: _bioController,
+              decoration: const InputDecoration(
+                hintText: 'Write your bio!',
               ),
             ),
             const SizedBox(height: 20.0), // Space below bio
@@ -48,10 +71,10 @@ class ProfileScreen extends StatelessWidget {
                 fontSize: 24.0,
               ),
             ),
-            Text(
-              profile.userInterests, // Displaying user interests
-              style: const TextStyle(
-                fontSize: 20.0,
+            TextField(
+              controller: _interestsController,
+              decoration: const InputDecoration(
+                hintText: 'Add your interests here!',
               ),
             ),
           ],
