@@ -145,7 +145,7 @@ class MetricsController {
   double prcntOverallProgress() {
     //averages the the values of the two function calls
     double overallPrcnt =
-        (shortPrcntCmplt().elementAt(2) + prcntDuration().elementAt(2)) / 2;
+        (shortPrcntCmplt().elementAt(2) + prcntDuration().elementAt(3)) / 2;
     return overallPrcnt;
   }
 }
