@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/userController.dart';
 import '../models/profileController.dart';
+import '../helpers/themes.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Profile profile;
@@ -12,8 +13,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // allows editable bio and interest
   late TextEditingController _bioController;
   late TextEditingController _interestsController;
+  // setting of the themes which can be changed
+  ThemeData _currentTheme = Themes.lightTheme;
 
   @override
   void initState() {
@@ -30,54 +34,138 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  void _showThemeMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: const Text('Light Theme'),
+                onTap: () {
+                  setState(() {
+                    _currentTheme = Themes.lightTheme;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('Dark Theme'),
+                onTap: () {
+                  setState(() {
+                    _currentTheme = Themes.darkTheme;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Display user's name
-            Text(
-              '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
-            const SizedBox(height: 20.0), // Space below name
-            const Text(
-              'About:', // User bio
+    return MaterialApp(
+      theme: _currentTheme,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
-            TextField(
-              controller: _bioController,
-              decoration: const InputDecoration(
-                hintText: 'Write your bio!',
-              ),
-            ),
-            const SizedBox(height: 20.0), // Space below bio
-            const Text(
-              'Interests:', // User interests
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
-            TextField(
-              controller: _interestsController,
-              decoration: const InputDecoration(
-                hintText: 'Add your interests here!',
-              ),
+                fontSize: 30.0,
+              )),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.color_lens),
+              onPressed: () {
+                _showThemeMenu(context);
+              },
             ),
           ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Display user's name
+              Text(
+                '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              const SizedBox(height: 20.0), // Space below name
+              const Text(
+                'About:', // User bio
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              TextField(
+                controller: _bioController,
+                decoration: InputDecoration(
+                  hintText: 'Write your bio!',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  border: OutlineInputBorder(),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 20.0), // Space below bio
+              const Text(
+                'Interests:', // User interests
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              TextField(
+                controller: _interestsController,
+                decoration: InputDecoration(
+                  hintText: 'Add your interests here!',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ??
+                          Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  border: OutlineInputBorder(),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
