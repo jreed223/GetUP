@@ -1,3 +1,8 @@
+import 'dart:html';
+import 'dart:io';
+import 'dart:js';
+import 'dart:js_util';
+import 'package:getup_csc450/models/userController.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -7,10 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: const MyStatefulWidget(),
+        body: MyStatefulWidget(),
       ),
     );
   }
@@ -31,8 +36,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController passwordConfirmController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
+  var _password = '';
+  var _confirmPassword = '';
+
   @override
   Widget build(BuildContext context) {
+    void signUpUser() async {
+      if (_password != _confirmPassword) {
+        showAlertDialog(context);
+      } else {
+        User(
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            email: emailController.text,
+            userName: userNameController.text,
+            passWord: passwordController.text);
+      }
+    }
+
     return Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
@@ -46,6 +67,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       color: Colors.blue,
                       fontWeight: FontWeight.w500,
                       fontSize: 30),
+                )),
+            Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: const Text(
+                  'Create an Account',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20),
                 )),
             Container(
               padding: const EdgeInsets.all(10),
@@ -90,46 +121,65 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                obscureText: true,
                 controller: passwordController,
+                obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
+                onChanged: (value) {
+                  _password = value;
+                },
               ),
             ),
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                obscureText: true,
                 controller: passwordConfirmController,
+                obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Confirm Password',
                 ),
+                onChanged: (value) {
+                  _confirmPassword = value;
+                },
               ),
             ),
             Container(
                 height: 100,
                 padding: const EdgeInsets.fromLTRB(200, 10, 200, 10),
                 child: ElevatedButton(
-                  child: const Text('Sign Up', style: TextStyle(fontSize: 30)),
-                  onPressed: () {
-                    //if (passwordController.text !=
-                    //    passwordConfirmController.text) {
-                    //  Container(
-                    //    alignment: Alignment.center,
-                    //    padding: const EdgeInsets.all(10),
-                    //    child: const Text('Passwords do not match',
-                    //        style: TextStyle(
-                    //            color: Colors.red,
-                    //            fontWeight: FontWeight.w500,
-                    //            fontSize: 30)),
-                    //  );
-                    //}
-                  },
-                )),
+                    child:
+                        const Text('Sign Up', style: TextStyle(fontSize: 30)),
+                    onPressed: () {
+                      signUpUser();
+                    })),
           ],
         ));
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Passwords do not match"),
+      content: Text("Please try again"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
