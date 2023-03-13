@@ -6,6 +6,8 @@ import 'package:getup_csc450/models/firebaseController.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/widgets/checkmark.dart';
 import 'package:getup_csc450/widgets/calendar.dart';
+import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/screens/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage>
   String PASS = "test1234";
   AuthController authController = AuthController();
   FirestoreController firestoreController = FirestoreController();
+  Profile profile = Profile.profiles[0];
 
   /// This function is used to help me test if the goals are being stored to the database
   Future signInTestUser() async {
@@ -198,15 +201,29 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFBFCFA),
+      backgroundColor: const Color(0xFFFBFCFA),
       appBar: AppBar(
-          backgroundColor: Color(0xFFFBFCFA),
-          title: Text('O V E R V I E W',
-              style: TextStyle(
-                color: Color.fromARGB(132, 0, 0, 0),
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ))),
+        backgroundColor: const Color(0xFFFBFCFA),
+        title: const Text('O V E R V I E W',
+            style: TextStyle(
+              color: Color.fromARGB(132, 0, 0, 0),
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            )),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileScreen(profile: profile)),
+              );
+            },
+            icon: const Icon(Icons.person),
+            color: Color.fromARGB(255, 233, 0, 0),
+          )
+        ],
+      ),
       body: Stack(
         children: [
           CalendarWidget(),
