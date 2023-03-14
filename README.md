@@ -15,7 +15,7 @@ monitoring your progress and completions over time.
 
 -   User - Cole Roberts
 -   Goals (Goal and LongTermGoal) - Cullin Capps
--   MetricsHandler - Johnathan Reed
+-   MetricsHandler - Jonathan Reed
 -   Challenge - Cullin Capps
 -   DataPoints - Lukas Becker
 -   Database - Cullin Capps
