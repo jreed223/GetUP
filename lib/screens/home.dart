@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage>
               );
             },
             icon: const Icon(Icons.person),
-            color: Color.fromARGB(255, 233, 0, 0),
+            color: Color.fromARGB(255, 255, 119, 0),
           )
         ],
       ),
@@ -270,7 +270,9 @@ class _HomePageState extends State<HomePage>
                         offset: const Offset(0, 5),
                       ),
                     ],
-                    color: _isButtonForm ? Colors.white : Colors.red,
+                    color: _isButtonForm
+                        ? Colors.white
+                        : Color.fromARGB(255, 255, 119, 0),
                     borderRadius: BorderRadius.all(
                       Radius.circular(_buttonBorderRadius),
                     ),

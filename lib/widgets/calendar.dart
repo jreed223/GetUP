@@ -1,26 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/firebaseController.dart';
-import 'package:getup_csc450/models/goals.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class CalendarWidget extends StatefulWidget {
-  CalendarWidget({super.key});
+  const CalendarWidget({super.key});
 
   @override
   State<CalendarWidget> createState() => _CalendarWidgetState();
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreController _firestoreController = FirestoreController();
-  late Map<DateTime, List<dynamic>> _events;
-  List _selectedGoals = [];
+  final goalsCollection = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('goals');
+  List<dynamic> _selectedGoals = [];
 
   DateTime _focusedDay = DateTime.now();
-  DateTime _firstDay = DateTime(2023, 1, 1);
-  DateTime _lastDay = DateTime(2023, 12, 31);
+  // String _formattedFocusedDay = DateFormat.yMMMMd('en_US').format(_focusedDay);
+  final DateTime _firstDay = DateTime(2023, 1, 1);
+  final DateTime _lastDay = DateTime(2023, 12, 31);
 
   bool expanded = false;
 
@@ -32,6 +34,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
       _focusedDay = selectedDay;
+      _selectedGoals.clear();
     });
   }
 
@@ -65,11 +68,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               headerStyle: const HeaderStyle(
                 leftChevronIcon: Icon(
                   Icons.chevron_left,
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                 ),
                 rightChevronIcon: Icon(
                   Icons.chevron_right,
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                 ),
                 formatButtonVisible: true,
                 titleCentered: true,
@@ -80,7 +83,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ),
               calendarStyle: const CalendarStyle(
                 selectedDecoration: BoxDecoration(
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                   shape: BoxShape.circle,
                 ),
                 selectedTextStyle: TextStyle(color: Colors.white),
@@ -93,11 +96,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
           ),
           Expanded(
+            // TODO: Abstract this into a separate widget
             child: StreamBuilder(
-              stream: _firestoreController.getGoalsByDate(
-                _auth.currentUser!.uid,
-                _focusedDay,
-              ),
+              stream: goalsCollection
+                  .where('date', isEqualTo: _focusedDay)
+                  .snapshots(includeMetadataChanges: true),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   // If there is no data in the snapshot, return a loading indicator
@@ -105,9 +108,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 }
 
                 // Assign the snapshot data to a variable
-                List<dynamic> selectedGoals = snapshot.data as List<dynamic>;
+                // TODO: use Dr. Laymans's method to get the data
+                _selectedGoals = snapshot.data as List<dynamic>;
 
-                if (selectedGoals.isEmpty) {
+                if (_selectedGoals.isEmpty) {
                   // If there are no goals for the selected date, display a message to the user
                   return const Center(
                     child: Text('No goals for selected date.'),
@@ -116,13 +120,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
                 // If there are goals for the selected date, display them in an AnimatedList
                 return AnimatedList(
-                  initialItemCount: selectedGoals.length,
+                  initialItemCount: _selectedGoals.length,
                   itemBuilder: (context, index, animation) {
                     return SizeTransition(
                       sizeFactor: animation,
                       child: Card(
+                        // TODO: Make seperate widgets for longterm and shortterm goals
                         child: ListTile(
-                          title: Text(selectedGoals[index]['title']),
+                          title: Text(_selectedGoals[index]['title']),
                         ),
                       ),
                     );
