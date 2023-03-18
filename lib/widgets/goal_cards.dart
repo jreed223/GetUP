@@ -14,15 +14,19 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-          title: Text(widget.title),
-          trailing: Wrap(
-            children: const <Widget>[
-              IconButton(
-                onPressed: null,
-                icon: Icon(Icons.edit),
-              ),
-            ],
-          )),
+        leading: const Checkbox(
+          // TODO Add functionality to checkbox
+          onChanged: null,
+          value: false,
+        ),
+        title: Text(widget.title),
+        trailing: IconButton(
+          // TODO Add functionality to edit button
+          onPressed: null,
+          icon:
+              Icon(Icons.edit, size: MediaQuery.of(context).size.width * 0.05),
+        ),
+      ),
     );
   }
 }
@@ -40,23 +44,31 @@ class _LongTermGoalCardState extends State<LongTermGoalCard> {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        leading: const Checkbox(
+          // TODO Add functionality to checkbox
+          onChanged: null,
+          value: false,
+        ),
         title: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(widget.title),
         ),
         subtitle: LinearPercentIndicator(
-          width: MediaQuery.of(context).size.width * 0.6,
+          animation: true,
+          width: MediaQuery.of(context).size.width * 0.5,
           lineHeight: 5.0,
+          // TODO: Percent reflects progress
           percent: 0.5,
-          progressColor: Colors.blue,
+          linearGradient: LinearGradient(
+            colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
+          ),
+          barRadius: const Radius.circular(2),
         ),
-        trailing: Wrap(
-          children: const <Widget>[
-            IconButton(
-              onPressed: null,
-              icon: Icon(Icons.edit),
-            ),
-          ],
+        trailing: IconButton(
+          // TODO Add functionality to edit button
+          onPressed: null,
+          icon:
+              Icon(Icons.edit, size: MediaQuery.of(context).size.width * 0.05),
         ),
       ),
     );
