@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:getup_csc450/models/firebaseController.dart';
+import 'package:getup_csc450/widgets/goal_display.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class CalendarWidget extends StatefulWidget {
   const CalendarWidget({super.key});
@@ -18,6 +18,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('goals');
   List<dynamic> _selectedGoals = [];
+  DateFormat formatter = DateFormat.yMMMMd('en_US');
 
   DateTime _focusedDay = DateTime.now();
   // String _formattedFocusedDay = DateFormat.yMMMMd('en_US').format(_focusedDay);
@@ -96,46 +97,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
           ),
           Expanded(
-            // TODO: Abstract this into a separate widget
-            child: StreamBuilder(
-              stream: goalsCollection
-                  .where('date', isEqualTo: _focusedDay)
-                  .snapshots(includeMetadataChanges: true),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  // If there is no data in the snapshot, return a loading indicator
-                  return const CircularProgressIndicator();
-                }
-
-                // Assign the snapshot data to a variable
-                // TODO: use Dr. Laymans's method to get the data
-                _selectedGoals = snapshot.data as List<dynamic>;
-
-                if (_selectedGoals.isEmpty) {
-                  // If there are no goals for the selected date, display a message to the user
-                  return const Center(
-                    child: Text('No goals for selected date.'),
-                  );
-                }
-
-                // If there are goals for the selected date, display them in an AnimatedList
-                return AnimatedList(
-                  initialItemCount: _selectedGoals.length,
-                  itemBuilder: (context, index, animation) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      child: Card(
-                        // TODO: Make seperate widgets for longterm and shortterm goals
-                        child: ListTile(
-                          title: Text(_selectedGoals[index]['title']),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+              child: GoalView(selectedDate: formatter.format(_focusedDay))),
         ],
       ),
     );
