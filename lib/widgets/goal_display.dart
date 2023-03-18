@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:intl/intl.dart';
 
 class GoalView extends StatelessWidget {
@@ -28,11 +29,13 @@ class GoalView extends StatelessWidget {
           return ListView.builder(
             itemCount: goals.length,
             itemBuilder: (context, index) {
-              return Card(
-                child: ListTile(
-                  title: Text(goals[index]['title']),
-                ),
-              );
+              // TODO: Return different card based on goal type
+              // TODO: Add complete button
+              // TODO: Add edit button
+              // TODO: Add a way to update progress for long term goals
+              return !goals[index]['isLongTerm']
+                  ? ShortTermGoalCard(title: goals[index]['title'])
+                  : LongTermGoalCard(title: goals[index]['title']);
             },
           );
         });

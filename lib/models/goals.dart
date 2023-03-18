@@ -25,6 +25,9 @@ class Goal {
   /// The date the goal was completed.
   DateTime? dateCompleted;
 
+  /// If the goal is a short term goal or a long term goal.
+  final bool isLongTerm = false;
+
   Goal({required this.title});
 
   /// A list <of type Goal> of sample goals.
@@ -70,6 +73,7 @@ class Goal {
   Map<String, dynamic> toJson() {
     return {
       'title': goalTitle,
+      'isLongTerm': isLongTerm,
       'isCompleted': goalStatus,
       'dateCreated': goalCreationDate,
       'dateCompleted': goalCompletionDate,
@@ -106,6 +110,10 @@ class LongTermGoal extends Goal {
   /// The progress of the goal/how many hours have been spent on it.
   double progress = 0.0;
 
+  /// if the goal is a short term goal or a long term goal.
+  @override
+  final bool isLongTerm = true;
+
   LongTermGoal({required String title, required this.duration})
       : super(title: title);
 
@@ -122,6 +130,7 @@ class LongTermGoal extends Goal {
   Map<String, dynamic> toJson() {
     return {
       'title': goalTitle,
+      'isLongTerm': isLongTerm,
       'isCompleted': goalStatus,
       'dateCreated': goalCreationDate,
       'dateCompleted': goalCompletionDate,
