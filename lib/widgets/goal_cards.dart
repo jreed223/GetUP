@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ShortTermGoalCard extends StatefulWidget {
   final String title;
@@ -20,10 +21,6 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                 onPressed: null,
                 icon: Icon(Icons.edit),
               ),
-              IconButton(
-                onPressed: null,
-                icon: Icon(Icons.check),
-              ),
             ],
           )),
     );
@@ -43,18 +40,22 @@ class _LongTermGoalCardState extends State<LongTermGoalCard> {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(widget.title),
+        title: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(widget.title),
+        ),
+        subtitle: LinearPercentIndicator(
+          width: MediaQuery.of(context).size.width * 0.6,
+          lineHeight: 5.0,
+          percent: 0.5,
+          progressColor: Colors.blue,
+        ),
         trailing: Wrap(
           children: const <Widget>[
             IconButton(
               onPressed: null,
               icon: Icon(Icons.edit),
             ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(Icons.check),
-            ),
-            IconButton(onPressed: null, icon: Icon(Icons.punch_clock)),
           ],
         ),
       ),
