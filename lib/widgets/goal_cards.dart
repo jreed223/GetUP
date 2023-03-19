@@ -94,7 +94,6 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
         duration: const Duration(milliseconds: 500),
         child: ListTile(
           leading: Checkbox(
-            // TODO Add functionality to checkbox
             onChanged: (value) {
               setState(() {
                 _isCompleted = value!;
@@ -118,7 +117,6 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                 )
               : Text(widget.title),
           trailing: IconButton(
-            // TODO Add functionality to edit button
             onPressed: () async {
               if (_isEditing && _titleController.text.isNotEmpty) {
                 await FirebaseFirestore.instance
@@ -134,7 +132,6 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                 toggleEditTitleMode();
               }
             },
-
             icon: Icon(Icons.edit,
                 size: MediaQuery.of(context).size.width * 0.05),
           ),
@@ -172,7 +169,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard> {
           lineHeight: 5.0,
           // TODO: Percent reflects progress
           percent: 0.5,
-          linearGradient: LinearGradient(
+          linearGradient: const LinearGradient(
             colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
           ),
           barRadius: const Radius.circular(2),

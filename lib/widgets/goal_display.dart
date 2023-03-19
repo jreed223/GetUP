@@ -29,10 +29,6 @@ class GoalView extends StatelessWidget {
           return ListView.builder(
             itemCount: goals.length,
             itemBuilder: (context, index) {
-              // TODO: Return different card based on goal type
-              // TODO: Add complete button
-              // TODO: Add edit button
-              // TODO: Add a way to update progress for long term goals
               return !goals[index]['isLongTerm']
                   ? ShortTermGoalCard(
                       title: goals[index]['title'],
