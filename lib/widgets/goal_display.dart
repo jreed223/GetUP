@@ -34,7 +34,9 @@ class GoalView extends StatelessWidget {
               // TODO: Add edit button
               // TODO: Add a way to update progress for long term goals
               return !goals[index]['isLongTerm']
-                  ? ShortTermGoalCard(title: goals[index]['title'])
+                  ? ShortTermGoalCard(
+                      title: goals[index]['title'],
+                      goalId: goals[index].reference.id)
                   : LongTermGoalCard(title: goals[index]['title']);
             },
           );

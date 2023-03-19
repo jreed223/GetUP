@@ -201,9 +201,9 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFCFA),
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFBFCFA),
+        backgroundColor: Colors.grey[50],
         title: const Text('O V E R V I E W',
             style: TextStyle(
               color: Color.fromARGB(132, 0, 0, 0),
@@ -468,133 +468,147 @@ class _HomePageState extends State<HomePage>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        InkWell(
-                                          onTap: () {
-                                            shapeShift();
-                                            moveDiagonalDown();
-                                            fadeInIcon();
-                                          },
-                                          child: Container(
-                                            height: 30,
-                                            width: 55,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black12,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                        Expanded(
+                                          flex: 1,
+                                          child: InkWell(
+                                            onTap: () {
+                                              shapeShift();
+                                              moveDiagonalDown();
+                                              fadeInIcon();
+                                            },
+                                            child: Container(
+                                              height: 30,
+                                              width: 55,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black12,
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: const Center(
+                                                  child: const Text('Cancel')),
                                             ),
-                                            child: Center(
-                                                child: const Text('Cancel')),
                                           ),
                                         ),
-                                        InkWell(
-                                          onTap: () async {
-                                            /// This ensures that the form is valid
-                                            if (_goalFormKey.currentState!
-                                                .validate()) {
-                                              try {
-                                                /// This pushes a Goal or LongTermGoal to the database depending on if it is long term or not
-                                                _isLongTermGoal
-                                                    ? FirestoreController.pushGoal(
-                                                        LongTermGoal(
-                                                            title: _goalTitle,
-                                                            duration:
-                                                                _goalDuration),
-                                                        _isLongTermGoal,
-                                                        authController
-                                                            .getUser!.uid)
-                                                    : FirestoreController
-                                                        .pushGoal(
-                                                            Goal(
-                                                                title:
-                                                                    _goalTitle),
-                                                            false,
-                                                            authController
-                                                                .getUser!.uid);
+                                        const Expanded(
+                                          flex: 1,
+                                          child: SizedBox(),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: InkWell(
+                                            onTap: () async {
+                                              /// This ensures that the form is valid
+                                              if (_goalFormKey.currentState!
+                                                  .validate()) {
+                                                try {
+                                                  /// This pushes a Goal or LongTermGoal to the database depending on if it is long term or not
+                                                  _isLongTermGoal
+                                                      ? FirestoreController.pushGoal(
+                                                          LongTermGoal(
+                                                              title: _goalTitle,
+                                                              duration:
+                                                                  _goalDuration),
+                                                          _isLongTermGoal,
+                                                          authController
+                                                              .getUser!.uid)
+                                                      : FirestoreController
+                                                          .pushGoal(
+                                                              Goal(
+                                                                  title:
+                                                                      _goalTitle),
+                                                              false,
+                                                              authController
+                                                                  .getUser!
+                                                                  .uid);
 
-                                                shrinkSubmitButton();
+                                                  shrinkSubmitButton();
 
-                                                /// This shows the checkmark
-                                                animatedCheckSwitch();
+                                                  /// This shows the submit checkmark
+                                                  animatedCheckSwitch();
 
+                                                  Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 2000),
+                                                      () {
+                                                    shapeShift();
+                                                    moveDiagonalDown();
+                                                    fadeInIcon();
+                                                  });
+                                                } catch (e) {
+                                                  print(e);
+                                                }
+
+                                                /// clearing input fields after submit
                                                 Future.delayed(
                                                     const Duration(
-                                                        milliseconds: 2000),
+                                                        milliseconds: 5000),
                                                     () {
-                                                  shapeShift();
-                                                  moveDiagonalDown();
-                                                  fadeInIcon();
+                                                  setState(() {
+                                                    // TODO: Add a wrapper function that will reset all the fields
+                                                    _goalDurationController
+                                                        .clear();
+                                                    _goalTitleController
+                                                        .clear();
+                                                    _isLongTermGoal = false;
+                                                  });
                                                 });
-                                              } catch (e) {
-                                                print(e);
+
+                                                /// resetting the checkmark and submit button
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 3000),
+                                                    () {
+                                                  setState(() {
+                                                    animatedCheckSwitch();
+                                                    growSubmitButton();
+                                                  });
+                                                });
                                               }
+                                              // TODO: Add a function that will reset checkbox and text field
+                                            },
 
-                                              /// clearing input fields after submit
-                                              Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 5000), () {
-                                                setState(() {
-                                                  // TODO: Add a wrapper function that will reset all the fields
-                                                  _goalDurationController
-                                                      .clear();
-                                                  _goalTitleController.clear();
-                                                  _isLongTermGoal = false;
-                                                });
-                                              });
-
-                                              /// resetting the checkmark and submit button
-                                              Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 3000), () {
-                                                setState(() {
-                                                  animatedCheckSwitch();
-                                                  growSubmitButton();
-                                                });
-                                              });
-                                            }
-                                            // TODO: Add a function that will reset checkbox and text field
-                                          },
-
-                                          /// This is the submit button for the form
-                                          child: AnimatedContainer(
-                                              curve: Curves.easeInOutBack,
-                                              width: _submitButtonWidth,
-                                              height: _submitButtonHeight,
-                                              decoration: BoxDecoration(
-                                                  color: _submitSuccessful
-                                                      ? Colors.green
-                                                      : Color.fromARGB(
-                                                          14, 0, 0, 0),
-                                                  borderRadius: BorderRadius
-                                                      .all(Radius.circular(
-                                                          _submitButtonBorderRadius))),
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              child: AnimatedCrossFade(
-                                                alignment: Alignment.center,
-                                                secondCurve: Curves.easeOut,
+                                            /// This is the submit button for the form
+                                            child: AnimatedContainer(
+                                                curve: Curves.easeInOutBack,
+                                                width: _submitButtonWidth,
+                                                height: _submitButtonHeight,
+                                                decoration: BoxDecoration(
+                                                    color: _submitSuccessful
+                                                        ? Colors.green
+                                                        : Color.fromARGB(
+                                                            14, 0, 0, 0),
+                                                    borderRadius: BorderRadius
+                                                        .all(Radius.circular(
+                                                            _submitButtonBorderRadius))),
                                                 duration: const Duration(
-                                                    milliseconds: 200),
-                                                firstChild: Center(
-                                                  child: AnimatedCheckMark(
-                                                    isFormValid:
-                                                        _submitSuccessful,
-                                                  ),
-                                                ),
-                                                secondChild: const Center(
-                                                  child: Text(
-                                                    'Submit',
-                                                    style: TextStyle(
-                                                      color: Colors.black54,
+                                                    milliseconds: 500),
+                                                child: AnimatedCrossFade(
+                                                  alignment: Alignment.center,
+                                                  secondCurve: Curves.easeOut,
+                                                  duration: const Duration(
+                                                      milliseconds: 200),
+                                                  firstChild: Center(
+                                                    child: AnimatedCheckMark(
+                                                      isFormValid:
+                                                          _submitSuccessful,
                                                     ),
                                                   ),
-                                                ),
-                                                crossFadeState:
-                                                    _submitSuccessful
-                                                        ? CrossFadeState
-                                                            .showFirst
-                                                        : CrossFadeState
-                                                            .showSecond,
-                                              )),
+                                                  secondChild: const Center(
+                                                    child: Text(
+                                                      'Submit',
+                                                      style: TextStyle(
+                                                        color: Colors.black54,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  crossFadeState:
+                                                      _submitSuccessful
+                                                          ? CrossFadeState
+                                                              .showFirst
+                                                          : CrossFadeState
+                                                              .showSecond,
+                                                )),
+                                          ),
                                         ),
                                       ],
                                     ),
