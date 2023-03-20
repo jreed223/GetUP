@@ -33,7 +33,9 @@ class GoalView extends StatelessWidget {
                   ? ShortTermGoalCard(
                       title: goals[index]['title'],
                       goalId: goals[index].reference.id)
-                  : LongTermGoalCard(title: goals[index]['title']);
+                  : LongTermGoalCard(
+                      title: goals[index]['title'],
+                      goalId: goals[index].reference.id);
             },
           );
         });
