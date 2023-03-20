@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 
 // TODO: Add color animations for completed and undo complete
 class ShortTermGoalCard extends StatefulWidget {
@@ -142,7 +143,8 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
               }
             },
             icon: Icon(Icons.edit,
-                size: MediaQuery.of(context).size.width * 0.05),
+                size: MediaQuery.of(context).size.width * 0.05,
+                color: _isCompleted ? Colors.grey[400] : Colors.grey[550]),
           ),
         ),
       ),
@@ -239,79 +241,98 @@ class _LongTermGoalCardState extends State<LongTermGoalCard> {
                   ),
                 ],
         ),
-        child: ListTile(
-          leading: Checkbox(
-            activeColor: Colors.orange,
-            onChanged: (value) {
-              setState(() {
-                _isCompleted = value!;
-                updateGoalStatus();
-              });
-            },
-            value: _isCompleted,
-          ),
-          title: _isEditing
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextField(
-                    cursorColor: Colors.orangeAccent,
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange)),
-                        errorText: _showError ? 'Title cannot be empty' : null,
-                        hintText: 'Enter a title'),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Checkbox(
+                    activeColor: Colors.orange,
                     onChanged: (value) {
                       setState(() {
-                        value = _titleController.text;
-                        widget.title = value;
+                        _isCompleted = value!;
+                        updateGoalStatus();
                       });
                     },
+                    value: _isCompleted,
                   ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(left: 9.0, bottom: 0),
-                  child: Text(widget.title,
-                      style: TextStyle(
-                          color: _isCompleted ? Colors.black26 : Colors.black)),
                 ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: LinearPercentIndicator(
-              animation: true,
-              width: MediaQuery.of(context).size.width * 0.5,
-              lineHeight: 5.0,
-              // TODO: Percent reflects progress
-              percent: 0.5,
-              linearGradient: const LinearGradient(
-                colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
+                Expanded(
+                  flex: 3,
+                  child: _isEditing
+                      ? TextField(
+                          cursorColor: Colors.orangeAccent,
+                          controller: _titleController,
+                          decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange)),
+                              errorText:
+                                  _showError ? 'Title cannot be empty' : null,
+                              hintText: 'Enter a title'),
+                          onChanged: (value) {
+                            setState(() {
+                              value = _titleController.text;
+                              widget.title = value;
+                            });
+                          },
+                        )
+                      : Text(widget.title,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: _isCompleted
+                                  ? Colors.black26
+                                  : Colors.black)),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    onPressed: () async {
+                      if (_isEditing && _titleController.text.isNotEmpty) {
+                        await FirebaseFirestore.instance
+                            .collection('Users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection('goals')
+                            .doc(widget.goalId)
+                            .update({'title': _titleController.text});
+                        toggleEditTitleMode();
+                      } else if (_isEditing && _titleController.text.isEmpty) {
+                        showError();
+                      } else {
+                        toggleEditTitleMode();
+                      }
+                    },
+                    icon: Icon(Icons.edit,
+                        size: screen.displayWidth(context) * 0.05),
+                    color: _isCompleted ? Colors.grey[400] : Colors.grey[550],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 8, left: screen.displayWidth(context) * 0.05, bottom: 8),
+              child: LinearPercentIndicator(
+                animation: true,
+                width: MediaQuery.of(context).size.width * 0.85,
+                lineHeight: 5.0,
+                // TODO: Percent reflects progress
+                percent: 0.5,
+                linearGradient: LinearGradient(
+                  colors: _isCompleted
+                      ? const [
+                          Color.fromARGB(181, 255, 172, 40),
+                          Color.fromARGB(173, 255, 109, 40)
+                        ]
+                      : const [Colors.orangeAccent, Colors.deepOrangeAccent],
+                ),
+                backgroundColor:
+                    _isCompleted ? Colors.blueGrey[150] : Colors.blueGrey[200],
+                barRadius: const Radius.circular(2),
               ),
-              barRadius: const Radius.circular(2),
             ),
-          ),
-          trailing: IconButton(
-            // TODO Add functionality to edit button
-            onPressed: null,
-            icon: IconButton(
-              onPressed: () async {
-                if (_isEditing && _titleController.text.isNotEmpty) {
-                  await FirebaseFirestore.instance
-                      .collection('Users')
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .collection('goals')
-                      .doc(widget.goalId)
-                      .update({'title': _titleController.text});
-                  toggleEditTitleMode();
-                } else if (_isEditing && _titleController.text.isEmpty) {
-                  showError();
-                } else {
-                  toggleEditTitleMode();
-                }
-              },
-              icon: Icon(Icons.edit,
-                  size: MediaQuery.of(context).size.width * 0.05),
-            ),
-          ),
+          ],
         ),
       ),
     );
