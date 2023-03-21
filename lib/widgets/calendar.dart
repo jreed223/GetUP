@@ -13,18 +13,28 @@ class CalendarWidget extends StatefulWidget {
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
+  /// This is the goals collection for the user
   final goalsCollection = FirebaseFirestore.instance
       .collection('Users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('goals');
+
+  /// This is the list of goals for the selected date
   List<dynamic> _selectedGoals = [];
+
+  /// This is the formatter for the selected date
   DateFormat formatter = DateFormat.yMMMMd('en_US');
 
+  /// This is the selected date
   DateTime _focusedDay = DateTime.now();
-  // String _formattedFocusedDay = DateFormat.yMMMMd('en_US').format(_focusedDay);
+
+  /// This is the first day of the calnedar
   final DateTime _firstDay = DateTime(2023, 1, 1);
+
+  /// This is the last day of the calendar
   final DateTime _lastDay = DateTime(2023, 12, 31);
 
+  /// This is the boolean that determines whether the calendar is in week or month view
   bool expanded = false;
 
   @override
@@ -32,6 +42,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     super.initState();
   }
 
+  /// This function is called when a day is selected
+  /// It sets the selected date to the focused day so that the calendar will display the goals for the selected date
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
       _focusedDay = selectedDay;
@@ -39,6 +51,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     });
   }
 
+  /// This function is called when the calendar is in week view and the user force presses the calendar
   void weekOrMonthView() {
     setState(() {
       expanded = !expanded;
@@ -65,7 +78,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               },
               selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
               calendarFormat:
-                  expanded ? CalendarFormat.month : CalendarFormat.week,
+                  expanded ? CalendarFormat.twoWeeks : CalendarFormat.week,
               headerStyle: const HeaderStyle(
                 leftChevronIcon: Icon(
                   Icons.chevron_left,

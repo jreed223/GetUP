@@ -5,8 +5,10 @@ import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:intl/intl.dart';
 
 class GoalView extends StatelessWidget {
+  /// This is the date that is passed in from the calendar view
   final String selectedDate;
 
+  /// This is the goals collection for the user
   final goalsCollection = FirebaseFirestore.instance
       .collection('Users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -15,7 +17,11 @@ class GoalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// This is the stream builder that will display the goals for the selected date
+    /// If there are no goals for the selected date, it will display a loading indicator
     return StreamBuilder(
+
+        /// Query the goals collection for the selected date
         stream: goalsCollection
             .where('dateCreated', isEqualTo: selectedDate)
             .snapshots(),
@@ -29,6 +35,8 @@ class GoalView extends StatelessWidget {
           return ListView.builder(
             itemCount: goals.length,
             itemBuilder: (context, index) {
+              /// If the goal is a short term goal, display the short term goal
+              /// If the goal is a long term goal, display the long term goal
               return !goals[index]['isLongTerm']
                   ? ShortTermGoalCard(
                       title: goals[index]['title'],
