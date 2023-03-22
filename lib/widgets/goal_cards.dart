@@ -298,6 +298,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = _hours + (_minutes / 60);
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
+      // TODO: Update progress in firebase
+      // TODO: Update isCompleted in firebase
+      // TODO: Update timeDedicated in firebase
+      // TODO: If they decrement back from 100%, update isCompleted to false
       if (_timeDedicated >= _duration) {
         _isCompleted = true;
       }
