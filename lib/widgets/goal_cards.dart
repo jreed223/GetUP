@@ -316,7 +316,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     _showError ? 'Title cannot be empty' : null,
                                 hintText: 'Edit title'),
                             onChanged: (value) {
-                              if (!_isEditingCancelled) {
+                              if (!_isEditingCancelled && value.isNotEmpty) {
                                 setState(() {
                                   value = _titleController.text;
                                   widget.title = value;
@@ -571,26 +571,42 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
               Row(
                 children: [
                   const Spacer(flex: 1),
-                  const Expanded(
+                  Expanded(
                     flex: 1,
-                    child:
-                        ElevatedButton(onPressed: null, child: Text('Cancel')),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          menuButtonController.reverse();
+                          setState(() {
+                            _isEditing = !_isEditing;
+                            _height = screen.displayHeight(context) * 0.08;
+                          });
+                        },
+                        child: const Text('Cancel')),
                   ),
                   const Spacer(flex: 1),
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
                         onPressed: () async {
-                          await FirebaseFirestore.instance
-                              .collection('Users')
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection('goals')
-                              .doc(widget.goalId)
-                              .update({'title': _titleController.text});
-                          setState(() {
-                            _isEditing = !_isEditing;
-                            _height = screen.displayHeight(context) * 0.08;
-                          });
+                          if (_titleController.text.isNotEmpty) {
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection('goals')
+                                .doc(widget.goalId)
+                                .update({'title': _titleController.text});
+                            menuButtonController.reverse();
+                            setState(() {
+                              _isEditing = !_isEditing;
+                              _height = screen.displayHeight(context) * 0.08;
+                            });
+                          } else {
+                            menuButtonController.reverse();
+                            setState(() {
+                              _isEditing = !_isEditing;
+                              _height = screen.displayHeight(context) * 0.08;
+                            });
+                          }
                         },
                         child: Text('Save')),
                   ),
