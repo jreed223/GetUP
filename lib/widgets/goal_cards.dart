@@ -369,10 +369,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   ),
                 ],
               ),
-              // TODO: If editing, show circle percent indicator
-              // TODO: If not editing, show linear percent indicator
               // TODO: If editing, show flip counters with button to updagte progress
-              // TODO: If editing, have cacel and save buttons
+              // TODO: Each time the button is clicked the progress is updated in the percentage indicator
+              // TODO: If editing, have cancel and save buttons
               Padding(
                 padding: EdgeInsets.only(
                     top: 8,
