@@ -150,52 +150,62 @@ class MetricsController {
   }
 }
 
-void metricsMain() {
-  final List<Goal> _sampleGoals = [
-    LongTermGoal(title: 'Learn Flutter', duration: '20'),
-    Goal(title: 'Go to grocery store'),
-    LongTermGoal(title: 'Read', duration: '5'),
-    Goal(title: 'Go to the gym'),
-    LongTermGoal(title: 'Learn Dart', duration: '10'),
-    Goal(title: 'Go to the dentist'),
-    LongTermGoal(title: 'Learn Python', duration: '15'),
-  ];
-  final sampleController = MetricsController(goalList: _sampleGoals);
-  final sampleMData = MetricsData(
+// final List<Goal> _sampleGoals = [
+//   LongTermGoal(title: 'Learn Flutter', duration: '20'),
+//   Goal(title: 'Go to grocery store'),
+//   LongTermGoal(title: 'Read', duration: '5'),
+//   Goal(title: 'Go to the gym'),
+//   LongTermGoal(title: 'Learn Dart', duration: '10'),
+//   Goal(title: 'Go to the dentist'),
+//   LongTermGoal(title: 'Learn Python', duration: '15'),
+// ];
 
-      //Short term data
-      numSTcompleted: sampleController
-          .shortPrcntCmplt()
-          .elementAt(0), //return idx[0] for prcntComplete func
-      numShortGoals: sampleController
-          .shortPrcntCmplt()
-          .elementAt(1), //return idx[1] prcntComplete  func
-      completionPrcnt: sampleController
-          .shortPrcntCmplt()
-          .elementAt(2), //return idx[2] for prcntComplete func
-      //Long term data
-      totalLTprogress: sampleController
-          .prcntDuration()
-          .elementAt(0), //return idx[0] for  prcntDuration func
-      totalDuration: sampleController
-          .prcntDuration()
-          .elementAt(1), //return idx[1] for prcntDuration func
-      numLongGoals: sampleController
-          .prcntDuration()
-          .elementAt(2), //return idx[2] for prcntDuration func
-      durationPrcnt: sampleController
-          .prcntDuration()
-          .elementAt(3), //return idx[3] for prcntDuration func
-      //Overall Data
-      numOverallCmplt: sampleController
-          .prcntOverallCmplt()
-          .elementAt(0), //return idx[0] for prcntOverallCmplt func
-      totalGoals: sampleController
-          .prcntOverallCmplt()
-          .elementAt(1), //return idx[1] for prcntOverallCmplt func
-      overallCmpltPrcnt: sampleController
-          .prcntOverallCmplt()
-          .elementAt(2), //return idx[2] for prcntOverallCmplt func
-      overallProgressPrcnt: sampleController
-          .prcntOverallProgress()); //return prcntOverallProgress func value
+class MetricsCalc {
+  final List<Goal> sampleList;
+  late MetricsData dailyData;
+  MetricsCalc({required this.sampleList});
+
+  void calcData() {
+    final sampleController = MetricsController(goalList: sampleList);
+
+    final sampleData = MetricsData(
+
+        //Short term data
+        numSTcompleted: sampleController
+            .shortPrcntCmplt()
+            .elementAt(0), //return idx[0] for prcntComplete func
+        numShortGoals: sampleController
+            .shortPrcntCmplt()
+            .elementAt(1), //return idx[1] prcntComplete  func
+        completionPrcnt: sampleController
+            .shortPrcntCmplt()
+            .elementAt(2), //return idx[2] for prcntComplete func
+        //Long term data
+        totalLTprogress: sampleController
+            .prcntDuration()
+            .elementAt(0), //return idx[0] for  prcntDuration func
+        totalDuration: sampleController
+            .prcntDuration()
+            .elementAt(1), //return idx[1] for prcntDuration func
+        numLongGoals: sampleController
+            .prcntDuration()
+            .elementAt(2), //return idx[2] for prcntDuration func
+        durationPrcnt: sampleController
+            .prcntDuration()
+            .elementAt(3), //return idx[3] for prcntDuration func
+        //Overall Data
+        numOverallCmplt: sampleController
+            .prcntOverallCmplt()
+            .elementAt(0), //return idx[0] for prcntOverallCmplt func
+        totalGoals: sampleController
+            .prcntOverallCmplt()
+            .elementAt(1), //return idx[1] for prcntOverallCmplt func
+        overallCmpltPrcnt: sampleController
+            .prcntOverallCmplt()
+            .elementAt(2), //return idx[2] for prcntOverallCmplt func
+        overallProgressPrcnt: sampleController
+            .prcntOverallProgress()); //return prcntOverallProgress func value
+    calcData();
+    dailyData = sampleData;
+  }
 }
