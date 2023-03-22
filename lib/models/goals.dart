@@ -105,10 +105,13 @@ class Goal {
 
 class LongTermGoal extends Goal {
   /// The duration of the goal (hours).
-  final String duration;
+  final double duration;
 
   /// The progress of the goal/how many hours have been spent on it.
   double progress = 0.0;
+
+  /// The time dedicated to the goal.
+  double timeDedicated = 0.0;
 
   /// if the goal is a short term goal or a long term goal.
   @override
@@ -119,11 +122,14 @@ class LongTermGoal extends Goal {
 
   /// Gets the duration of the goal.
   @override
-  String get goalDuration => duration;
+  double get goalDuration => duration;
 
   /// Gets the progress of the goal.
   @override
   double get goalProgress => progress;
+
+  /// gets the time dedicated to the goal.
+  double get goalTimeDedicated => timeDedicated;
 
   /// This returns the goal in a JSON format.
   @override

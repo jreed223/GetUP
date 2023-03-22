@@ -497,8 +497,8 @@ class _HomePageState extends State<HomePage>
                                                     ? FirestoreController.pushGoal(
                                                         LongTermGoal(
                                                             title: _goalTitle,
-                                                            duration:
-                                                                _goalDuration),
+                                                            duration: double.parse(
+                                                                _goalDuration)),
                                                         _isLongTermGoal,
                                                         authController
                                                             .getUser!.uid)

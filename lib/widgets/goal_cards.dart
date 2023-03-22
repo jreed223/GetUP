@@ -197,9 +197,50 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   /// The number of minutes the user has worked on the goal
   var _minutes = 0;
 
+  /// The progress of the goal
+  var _progress;
+
+  var _progressAsPercentage;
+
+  /// Time dedicated to the goal
+  var _timeDedicated;
+
+  /// Duration of the goal
+  var _duration;
+
   late TextEditingController _titleController;
 
   late TextEditingController _progressController;
+
+  /// Saves new progress to firebase
+  Future updateProgress() async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('goals')
+        .doc(widget.goalId)
+        .update({'progress': _progress});
+  }
+
+  /// Saves new time dedicated to firebase
+  Future updateTimeDedicated() async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('goals')
+        .doc(widget.goalId)
+        .update({'timeDedicated': _timeDedicated});
+  }
+
+  /// Update status of goal in firebase
+  Future updateGoalStatus() {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('goals')
+        .doc(widget.goalId)
+        .update({'isCompleted': _isCompleted});
+  }
 
   @override
   void initState() {
@@ -210,10 +251,23 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-
     menuButtonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        new CurvedAnimation(
+        CurvedAnimation(
             parent: menuButtonController, curve: Curves.easeInOutBack));
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('goals')
+        .doc(widget.goalId)
+        .get()
+        .then((value) {
+      setState(() {
+        _progress = value.data()!['progress'];
+        _progressAsPercentage = _progress * 100;
+        _duration = value.data()!['duration'];
+        _timeDedicated = value.data()!['timeDedicated'];
+      });
+    });
   }
 
   /// Toggles the edit mode for the title
@@ -238,14 +292,16 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     });
   }
 
-  /// Update status of goal in firebase
-  Future updateGoalStatus() {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .update({'isCompleted': _isCompleted});
+  /// Calculates the progress of the goal
+  void calculateProgress() {
+    setState(() {
+      _timeDedicated = _hours + (_minutes / 60);
+      _progress = _timeDedicated / _duration;
+      _progressAsPercentage = _progress * 100;
+      if (_timeDedicated >= _duration) {
+        _isCompleted = true;
+      }
+    });
   }
 
   @override
@@ -419,13 +475,21 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         child: CircularPercentIndicator(
                             radius: screen.displayWidth(context) * 0.125,
                             lineWidth: 10,
-                            percent: 0.5,
-                            center: Text('50%',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: _isCompleted
-                                        ? Colors.black26
-                                        : Colors.black)),
+                            percent: _progress == null
+                                ? 0.0
+                                : _progress >= 1
+                                    ? 1.0
+                                    : _progress,
+                            center: _progressAsPercentage == null
+                                ? const CircularProgressIndicator()
+                                : _progressAsPercentage >= 100
+                                    ? Text('100%')
+                                    : Text('$_progressAsPercentage %',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: _isCompleted
+                                                ? Colors.black26
+                                                : Colors.black)),
                             progressColor: _isCompleted
                                 ? Colors.blueGrey[150]
                                 : Colors.blueGrey[200],
@@ -474,14 +538,16 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   flex: 2,
                                   child: InkWell(
                                     onTap: () {
-                                      if (_isEditingHours) {
+                                      if (_isEditingHours && _hours != 0) {
                                         setState(() {
                                           _hours--;
                                         });
-                                      } else {
+                                        calculateProgress();
+                                      } else if (_minutes != 0) {
                                         setState(() {
                                           _minutes--;
                                         });
+                                        calculateProgress();
                                       }
                                     },
                                     child: Container(
@@ -503,14 +569,21 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   flex: 2,
                                   child: InkWell(
                                     onTap: () {
-                                      if (_isEditingHours) {
+                                      if (_isEditingHours && _hours >= 0) {
                                         setState(() {
+                                          print("progress $_progress");
+                                          print(
+                                              "_time dedicated $_timeDedicated");
+                                          print("Duration $_duration");
+
                                           _hours++;
                                         });
-                                      } else {
+                                        calculateProgress();
+                                      } else if (_minutes >= 0) {
                                         setState(() {
                                           _minutes++;
                                         });
+                                        calculateProgress();
                                       }
                                     },
                                     child: Container(
@@ -608,7 +681,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                             });
                           }
                         },
-                        child: Text('Save')),
+                        child: const Text('Save')),
                   ),
                   const Spacer(flex: 1),
                 ],
