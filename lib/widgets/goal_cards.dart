@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'dart:math';
 
 // TODO: Add color animations for completed and undo complete
 class ShortTermGoalCard extends StatefulWidget {
@@ -304,6 +305,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       // TODO: If they decrement back from 100%, update isCompleted to false
       if (_timeDedicated >= _duration) {
         _isCompleted = true;
+        updateGoalStatus();
+      } else {
+        _isCompleted = false;
+        updateGoalStatus();
       }
     });
   }
@@ -312,14 +317,22 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
+
+      /// The goal card
       child: AnimatedContainer(
         curve: Curves.easeInOutBack,
         height: _height,
         duration: const Duration(milliseconds: 500),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
+
+          /// The color of the goal card
+          /// If the goal is completed, the color is grey
           color:
               _isCompleted ? Color.fromARGB(255, 234, 233, 233) : Colors.white,
+
+          /// The shadow of the goal card
+          /// If the goal is completed, the shadow is grey
           boxShadow: _isCompleted
               ? [
                   BoxShadow(
@@ -364,6 +377,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   const Spacer(flex: 1),
                   Expanded(
                     flex: 5,
+
+                    /// The title of the goal
+                    /// If the goal is in edit mode, a text field is shown
                     child: _isEditing
                         ? TextField(
                             cursorColor: Colors.orangeAccent,
@@ -394,6 +410,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   const Spacer(flex: 1),
                   Expanded(
                     flex: 1,
+
+                    /// The gesture detector for the menu button
+                    /// If the goal is in edit mode, a cancel button is shown
+                    /// If the goal is not in edit mode, a menu button is shown
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -419,6 +439,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                           }
                         });
                       },
+
+                      /// The menu button
                       child: AnimatedIcon(
                         icon: AnimatedIcons.menu_close,
                         progress: menuButtonController,
@@ -429,24 +451,26 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   ),
                 ],
               ),
-              // TODO: If editing, show flip counters with button to updagte progress
-              // TODO: Each time the button is clicked the progress is updated in the percentage indicator
-              // TODO: If editing, have cancel and save buttons
               Padding(
                 padding: EdgeInsets.only(
                     top: 8,
                     left: screen.displayWidth(context) * 0.015,
                     bottom: screen.displayHeight(context) * 0.02),
+
+                /// If the goal is in edit mode, the progress bar is hidden
+                /// If the goal is not in edit mode, the progress bar is shown
                 child: AnimatedOpacity(
                   opacity: _isEditing ? 0 : 1.0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
+
+                  /// The progress bar
                   child: LinearPercentIndicator(
                     animation: true,
                     width: MediaQuery.of(context).size.width * 0.9,
                     lineHeight: 5.0,
                     // TODO: Percent reflects progress
-                    percent: 0.5,
+                    percent: _progress,
                     linearGradient: LinearGradient(
                       colors: _isCompleted
                           ? const [
@@ -466,6 +490,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                 ),
               ),
 
+              /// If the goal is in edit mode, the progress circle is hidden
+              /// If the goal is not in edit mode, the progress circle is shown
               AnimatedOpacity(
                 opacity: _isEditing ? 1 : 0,
                 duration: const Duration(milliseconds: 600),
@@ -476,7 +502,21 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                     children: [
                       Expanded(
                         flex: 6,
+
+                        /// The progress circle
                         child: CircularPercentIndicator(
+                            linearGradient: _isCompleted
+                                ? const LinearGradient(colors: [
+                                    Colors.greenAccent,
+                                    Colors.green,
+                                  ])
+                                : const LinearGradient(colors: [
+                                    Colors.orangeAccent,
+                                    Colors.orange,
+                                    Colors.deepOrangeAccent,
+                                    Colors.deepOrange
+                                  ]),
+                            curve: Curves.bounceInOut,
                             radius: screen.displayWidth(context) * 0.125,
                             lineWidth: 10,
                             percent: _progress == null
@@ -486,17 +526,12 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     : _progress,
                             center: _progressAsPercentage == null
                                 ? const CircularProgressIndicator()
-                                : _progressAsPercentage >= 100
-                                    ? Text('100%')
-                                    : Text('$_progressAsPercentage %',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: _isCompleted
-                                                ? Colors.black26
-                                                : Colors.black)),
-                            progressColor: _isCompleted
-                                ? Colors.blueGrey[150]
-                                : Colors.blueGrey[200],
+                                : AnimatedFlipCounter(
+                                    value: _progressAsPercentage >= 100
+                                        ? 100
+                                        : _progressAsPercentage,
+                                    suffix: "%",
+                                  ),
                             backgroundColor: Colors.black45),
                       ),
                       Expanded(
@@ -504,12 +539,17 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            /// Gesture detector for the hours
+                            /// If the user clicks on the hours, the hours are editable
+                            /// If the user clicks on the minutes, the minutes are editable
                             GestureDetector(
                               onTap: () {
                                 setState(() {
                                   _isEditingHours = true;
                                 });
                               },
+
+                              /// The indicator for if the hours are editable
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
@@ -521,6 +561,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
+
+                                  /// The hours
                                   child: AnimatedFlipCounter(
                                     prefix: "Update hours: ",
                                     value: _hours,
@@ -538,6 +580,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 const Spacer(
                                   flex: 2,
                                 ),
+
+                                /// Gesture detector/inkwell for the minus button
                                 Expanded(
                                   flex: 2,
                                   child: InkWell(
@@ -554,6 +598,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         calculateProgress();
                                       }
                                     },
+
+                                    /// The minus button
                                     child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.orange,
@@ -571,9 +617,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 ),
                                 Expanded(
                                   flex: 2,
+
+                                  /// Gesture detector/inkwell for the plus button
                                   child: InkWell(
                                     onTap: () {
-                                      if (_isEditingHours && _hours >= 0) {
+                                      calculateProgress();
+                                      if (_isEditingHours &&
+                                          _hours >= 0 &&
+                                          _isCompleted == false) {
                                         setState(() {
                                           print("progress $_progress");
                                           print(
@@ -583,23 +634,33 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                           _hours++;
                                         });
                                         calculateProgress();
-                                      } else if (_minutes >= 0) {
+                                      } else if (_minutes >= 0 &&
+                                          _isCompleted == false) {
                                         setState(() {
                                           _minutes++;
                                         });
                                         calculateProgress();
                                       }
                                     },
-                                    child: Container(
+
+                                    /// The plus button
+                                    child: AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
                                         decoration: BoxDecoration(
-                                          color: Colors.orange,
+                                          color: _isCompleted
+                                              ? Colors.black12
+                                              : Colors.orange,
                                           borderRadius:
                                               BorderRadius.circular(2),
                                         ),
-                                        child: const Center(
+                                        child: Center(
                                             child: Text('+',
                                                 style: TextStyle(
-                                                    color: Colors.white)))),
+                                                    color: _isCompleted
+                                                        ? Colors.black45
+                                                        : Colors.white)))),
                                   ),
                                 ),
                                 const Spacer(
@@ -607,12 +668,18 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 ),
                               ]),
                             ),
+
+                            /// Gesture detector for the minutes
+                            /// If the user clicks on the minutes, the minutes are editable
+                            /// If the user clicks on the hours, the hours are editable
                             GestureDetector(
                               onTap: () {
                                 setState(() {
                                   _isEditingHours = false;
                                 });
                               },
+
+                              /// The indicator for if the minutes are editable
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
@@ -624,6 +691,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
+
+                                  /// The minutes
                                   child: AnimatedFlipCounter(
                                     prefix: "Update minutes: ",
                                     value: _minutes,
@@ -650,6 +719,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   const Spacer(flex: 1),
                   Expanded(
                     flex: 1,
+
+                    /// Cancel button
                     child: ElevatedButton(
                         onPressed: () {
                           menuButtonController.reverse();
@@ -663,6 +734,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   const Spacer(flex: 1),
                   Expanded(
                     flex: 1,
+
+                    /// Save button
                     child: ElevatedButton(
                         onPressed: () async {
                           if (_titleController.text.isNotEmpty) {
@@ -678,6 +751,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                               _height = screen.displayHeight(context) * 0.08;
                             });
                           } else {
+                            await updateProgress();
+                            await updateTimeDedicated();
                             menuButtonController.reverse();
                             setState(() {
                               _isEditing = !_isEditing;
