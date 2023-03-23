@@ -142,6 +142,7 @@ class LongTermGoal extends Goal {
       'dateCompleted': goalCompletionDate,
       'duration': goalDuration,
       'progress': goalProgress,
+      'timeDedicated': goalTimeDedicated,
     };
   }
 }
