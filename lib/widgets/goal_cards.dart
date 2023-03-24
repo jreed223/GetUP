@@ -6,6 +6,7 @@ import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'dart:math';
+import 'dart:async';
 
 // TODO: Cancel button must clear changes that have been made to progress, time dedicated, and title
 class ShortTermGoalCard extends StatefulWidget {
@@ -175,7 +176,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   late Animation<double> menuButtonAnimation;
 
   /// Whether or not the goal is completed
-  late var _isCompleted = false;
+  late bool _isCompleted = false;
 
   /// Whether or not the title is being edited
   bool _isEditing = false;
@@ -188,6 +189,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
   /// Whether or not the hours are being edited
   bool _isEditingHours = true;
+
+  /// Timer for long pressing the plus button for the minutes
+  Timer? _timer;
 
   /// The height of the goal card
   late double _height = screen.displayHeight(context) * 0.08;
@@ -209,8 +213,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   /// Duration of the goal
   var _duration;
 
+  /// The controller for the title text field
   late TextEditingController _titleController;
 
+  /// The controller for the hours text field
   late TextEditingController _progressController;
 
   /// Sets the initial values for progress and time dedicated
@@ -611,6 +617,28 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 });
                               },
 
+                              /// Long press on the minus to decrease the minutes
+                              onLongPress: () {
+                                _timer = Timer.periodic(
+                                    Duration(milliseconds: 50), (timer) {
+                                  if (!_isEditingHours &&
+                                      _isCompleted == false) {
+                                    setState(() {
+                                      _minutes++;
+                                    });
+                                    addMinuteToProgress();
+                                    print("progress $_progress");
+                                    print("_time dedicated $_timeDedicated");
+                                    print("Duration $_duration");
+                                  }
+                                });
+                              },
+
+                              /// When the user stops long pressing, the timer is cancelled
+                              onLongPressEnd: (_) => setState(() {
+                                _timer?.cancel();
+                              }),
+
                               /// The indicator for if the hours are editable
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
@@ -646,7 +674,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 /// Gesture detector/inkwell for the minus button
                                 Expanded(
                                   flex: 2,
-                                  child: InkWell(
+                                  child: GestureDetector(
                                     onTap: () {
                                       if (_isEditingHours && _hours > 0) {
                                         setState(() {
@@ -669,6 +697,28 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       }
                                     },
 
+                                    /// Long press on the minus to decrease the minutes
+                                    onLongPress: () {
+                                      _timer = Timer.periodic(
+                                          Duration(milliseconds: 50), (timer) {
+                                        if (!_isEditingHours && _minutes > 0) {
+                                          setState(() {
+                                            _minutes--;
+                                          });
+                                          subtractMinuteFromProgress();
+                                          print("progress $_progress");
+                                          print(
+                                              "_time dedicated $_timeDedicated");
+                                          print("Duration $_duration");
+                                        }
+                                      });
+                                    },
+
+                                    /// When the user stops long pressing, the timer is cancelled
+                                    onLongPressEnd: (_) => setState(() {
+                                      _timer?.cancel();
+                                    }),
+
                                     /// The minus button
                                     child: Container(
                                         decoration: BoxDecoration(
@@ -689,7 +739,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   flex: 2,
 
                                   /// Gesture detector/inkwell for the plus button
-                                  child: InkWell(
+                                  child: GestureDetector(
                                     onTap: () {
                                       if (_isEditingHours &&
                                           _isCompleted == false) {
@@ -712,6 +762,29 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         print("Duration $_duration");
                                       }
                                     },
+
+                                    /// Long press to continuously add
+                                    onLongPress: () {
+                                      _timer = Timer.periodic(
+                                          Duration(milliseconds: 50), (timer) {
+                                        if (!_isEditingHours &&
+                                            _isCompleted == false) {
+                                          setState(() {
+                                            _minutes++;
+                                          });
+                                          addMinuteToProgress();
+                                          print("progress $_progress");
+                                          print(
+                                              "_time dedicated $_timeDedicated");
+                                          print("Duration $_duration");
+                                        }
+                                      });
+                                    },
+
+                                    /// When the user stops long pressing, the timer is cancelled
+                                    onLongPressEnd: (_) => setState(() {
+                                      _timer?.cancel();
+                                    }),
 
                                     /// The plus button
                                     child: AnimatedContainer(
