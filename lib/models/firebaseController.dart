@@ -56,14 +56,6 @@ class FirestoreController {
     DateFormat formatter = DateFormat.yMMMMd('en_US');
     String formattedTimestamp = formatter.format(selectedDate);
 
-    /// Querying the database for the goals that were created on the selected date.
-    Stream<QuerySnapshot> querySnapshot = _db
-        .collection('Users')
-        .doc(id)
-        .collection('goals')
-        .where('dateCreated', isEqualTo: formattedTimestamp)
-        .snapshots();
-
     CollectionReference goalsRef =
         _db.collection('Users').doc(id).collection('goals');
 

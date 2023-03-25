@@ -1,27 +1,40 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:getup_csc450/models/firebaseController.dart';
-import 'package:getup_csc450/models/goals.dart';
+import 'package:getup_csc450/widgets/goal_display.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalendarWidget extends StatefulWidget {
-  CalendarWidget({super.key});
+  const CalendarWidget({super.key});
 
   @override
   State<CalendarWidget> createState() => _CalendarWidgetState();
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreController _firestoreController = FirestoreController();
-  late Map<DateTime, List<dynamic>> _events;
-  List _selectedGoals = [];
+  /// This is the goals collection for the user
+  final goalsCollection = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('goals');
 
+  /// This is the list of goals for the selected date
+  List<dynamic> _selectedGoals = [];
+
+  /// This is the formatter for the selected date
+  DateFormat formatter = DateFormat.yMMMMd('en_US');
+
+  /// This is the selected date
   DateTime _focusedDay = DateTime.now();
-  DateTime _firstDay = DateTime(2023, 1, 1);
-  DateTime _lastDay = DateTime(2023, 12, 31);
 
+  /// This is the first day of the calnedar
+  final DateTime _firstDay = DateTime(2023, 1, 1);
+
+  /// This is the last day of the calendar
+  final DateTime _lastDay = DateTime(2023, 12, 31);
+
+  /// This is the boolean that determines whether the calendar is in week or month view
   bool expanded = false;
 
   @override
@@ -29,12 +42,16 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     super.initState();
   }
 
+  /// This function is called when a day is selected
+  /// It sets the selected date to the focused day so that the calendar will display the goals for the selected date
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
       _focusedDay = selectedDay;
+      _selectedGoals.clear();
     });
   }
 
+  /// This function is called when the calendar is in week view and the user force presses the calendar
   void weekOrMonthView() {
     setState(() {
       expanded = !expanded;
@@ -61,15 +78,15 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               },
               selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
               calendarFormat:
-                  expanded ? CalendarFormat.month : CalendarFormat.week,
+                  expanded ? CalendarFormat.twoWeeks : CalendarFormat.week,
               headerStyle: const HeaderStyle(
                 leftChevronIcon: Icon(
                   Icons.chevron_left,
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                 ),
                 rightChevronIcon: Icon(
                   Icons.chevron_right,
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                 ),
                 formatButtonVisible: true,
                 titleCentered: true,
@@ -80,7 +97,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ),
               calendarStyle: const CalendarStyle(
                 selectedDecoration: BoxDecoration(
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 255, 119, 0),
                   shape: BoxShape.circle,
                 ),
                 selectedTextStyle: TextStyle(color: Colors.white),
@@ -93,44 +110,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
           ),
           Expanded(
-            child: StreamBuilder(
-              stream: _firestoreController.getGoalsByDate(
-                _auth.currentUser!.uid,
-                _focusedDay,
-              ),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  // If there is no data in the snapshot, return a loading indicator
-                  return const CircularProgressIndicator();
-                }
-
-                // Assign the snapshot data to a variable
-                List<dynamic> selectedGoals = snapshot.data as List<dynamic>;
-
-                if (selectedGoals.isEmpty) {
-                  // If there are no goals for the selected date, display a message to the user
-                  return const Center(
-                    child: Text('No goals for selected date.'),
-                  );
-                }
-
-                // If there are goals for the selected date, display them in an AnimatedList
-                return AnimatedList(
-                  initialItemCount: selectedGoals.length,
-                  itemBuilder: (context, index, animation) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      child: Card(
-                        child: ListTile(
-                          title: Text(selectedGoals[index]['title']),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+              child: GoalView(selectedDate: formatter.format(_focusedDay))),
         ],
       ),
     );
