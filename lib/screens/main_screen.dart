@@ -7,11 +7,27 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-// Comment this for once in your life
-// Add slight separators between containers
-// Add theme capabilities
-// Put side-scrollable stuff in the containers
 class _HomeScreenState extends State<HomeScreen> {
+  // Define a list of data to use for the item squares
+  final List<String> items = [
+    'Scroll',
+    'To',
+    'The',
+    'Right',
+    'For',
+    'As',
+    'Long',
+    'As',
+    'There',
+    'Exists',
+    'Data',
+    'To',
+    'Be',
+    'Stored',
+    'In',
+    'Here',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,46 +44,21 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               color: Colors.purple,
-              child: const Center(
-                child: Text(
-                  'Container 1',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              child: buildItemSquareList(items),
             ),
           ),
+          const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
               color: Colors.red,
-              child: const Center(
-                child: Text(
-                  'Container 2',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              child: buildItemSquareList(items),
             ),
           ),
+          const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
               color: Colors.pink,
-              child: const Center(
-                child: Text(
-                  'Container 3',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              child: buildItemSquareList(items),
             ),
           ),
         ],
@@ -90,9 +81,35 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget buildItemSquareList(List<String> items) {
+    // Calculate the width of each item square based on the device screen size
+    final double itemWidth = MediaQuery.of(context).size.width / 2;
+
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          width: itemWidth,
+          height: itemWidth,
+          margin: const EdgeInsets.all(8),
+          color: Colors.grey[200],
+          child: Center(
+            child: Text(
+              items[index],
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-// Used for testing
 void main() {
   runApp(const MyApp());
 }
