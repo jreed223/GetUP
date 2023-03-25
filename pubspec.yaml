@@ -41,9 +41,17 @@ dependencies:
     cupertino_icons: ^1.0.2
     firebase_auth: ^4.2.6
     firebase_core: ^2.5.0
+    # This is for the success aniamtion for the submit button
     lottie: ^2.2.0
+    # This is for date time operations
     intl: ^0.17.0
+    # This is for the calendar
     table_calendar: ^3.0.8
+    # This is for the progress bar
+    percent_indicator: ^4.0.1
+    # This is for the "Update progress" popup
+    flutter_animated_dialog: ^2.0.1
+    animated_flip_counter: ^0.2.5
 
 dev_dependencies:
     flutter_test:
@@ -65,7 +73,6 @@ flutter:
     # included with your application, so that you can use the icons in
     # the material Icons class.
     uses-material-design: true
-
 
     # To add assets to your application, add an assets section, like this:
     assets:
