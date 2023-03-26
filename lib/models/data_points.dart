@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'metricsController.dart';
 
@@ -35,23 +34,6 @@ var M1 = MetricsCalc(sampleList: _sampleGoalsM).dataVals.overallProgressPrcnt;
 var T1 = MetricsCalc(sampleList: _sampleGoalsT).dataVals.overallProgressPrcnt;
 
 var W1 = MetricsCalc(sampleList: _sampleGoalsW).dataVals.overallProgressPrcnt;
-
-class LineData {
-  final List<LineChartBarData> lineChartBarData = [
-    LineChartBarData(
-      isCurved: true,
-      spots: [
-        FlSpot(1, M1),
-        FlSpot(2, T1),
-        FlSpot(3, W1),
-        FlSpot(4, M1),
-        FlSpot(5, T1),
-        FlSpot(6, W1),
-        FlSpot(7, M1),
-      ],
-    )
-  ];
-}
 
 /// this class represents one bar in a bar graph
 class BarData {
