@@ -30,23 +30,6 @@ class MetricsData {
       required this.totalGoals,
       required this.overallCmpltPrcnt,
       required this.overallProgressPrcnt});
-
-  ///Creates a list of objects containing seperate data
-  static List<MetricsData> dailyData = [
-    MetricsData(
-      numSTcompleted: 3,
-      numShortGoals: 5,
-      completionPrcnt: 85.00,
-      totalLTprogress: 40,
-      totalDuration: 60.00,
-      numLongGoals: 5,
-      durationPrcnt: 44.00,
-      numOverallCmplt: 4,
-      totalGoals: 6,
-      overallCmpltPrcnt: 66,
-      overallProgressPrcnt: 55.00,
-    )
-  ];
 }
 
 ///Class used to calculate and handle data received for the MetricsData class
@@ -161,13 +144,12 @@ class MetricsController {
 // ];
 
 class MetricsCalc {
-  final List<Goal> sampleList;
-  late MetricsData dailyData;
+  List<Goal> sampleList;
+  late MetricsData dataVals;
   MetricsCalc({required this.sampleList});
 
-  void calcData() {
+  MetricsData calcData() {
     final sampleController = MetricsController(goalList: sampleList);
-
     final sampleData = MetricsData(
 
         //Short term data
@@ -205,7 +187,12 @@ class MetricsCalc {
             .elementAt(2), //return idx[2] for prcntOverallCmplt func
         overallProgressPrcnt: sampleController
             .prcntOverallProgress()); //return prcntOverallProgress func value
+
+    return sampleData;
+  }
+
+  void call(sampleList) {
     calcData();
-    dailyData = sampleData;
+    dataVals = calcData();
   }
 }

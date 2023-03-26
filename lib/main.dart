@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           )),
-      home: const MetricsPage(),
+      home: const HomePage(),
     );
   }
 }

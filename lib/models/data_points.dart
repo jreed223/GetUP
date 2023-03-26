@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'metricsController.dart';
 
@@ -31,27 +30,24 @@ final List<Goal> _sampleGoalsW = [
   LongTermGoal(title: 'Learn Python', duration: '15'),
 ];
 
-var M1 = MetricsCalc(sampleList: _sampleGoalsM);
-var M2 = M1.dailyData.overallProgressPrcnt;
+var M1 = MetricsCalc(sampleList: _sampleGoalsM).dataVals.overallProgressPrcnt;
 
-var T1 = MetricsCalc(sampleList: _sampleGoalsT);
-var T2 = T1.dailyData.overallProgressPrcnt;
+var T1 = MetricsCalc(sampleList: _sampleGoalsT).dataVals.overallProgressPrcnt;
 
-var W1 = MetricsCalc(sampleList: _sampleGoalsW);
-var W2 = W1.dailyData.overallProgressPrcnt;
+var W1 = MetricsCalc(sampleList: _sampleGoalsW).dataVals.overallProgressPrcnt;
 
 class LineData {
   final List<LineChartBarData> lineChartBarData = [
     LineChartBarData(
       isCurved: true,
       spots: [
-        FlSpot(1, M2),
-        FlSpot(2, T2),
-        FlSpot(3, W2),
-        FlSpot(4, M2),
-        FlSpot(5, T2),
-        FlSpot(6, W2),
-        FlSpot(7, M2),
+        FlSpot(1, M1),
+        FlSpot(2, T1),
+        FlSpot(3, W1),
+        FlSpot(4, M1),
+        FlSpot(5, T1),
+        FlSpot(6, W1),
+        FlSpot(7, M1),
       ],
     )
   ];
@@ -66,9 +62,9 @@ class BarData {
 }
 
 //overall progreess sample data
-final sampleBarDataM = BarData(xAxis: 'Mon', val: M2);
-final sampleBarDataT = BarData(xAxis: 'Tue', val: T2);
-final sampleBarDataW = BarData(xAxis: 'Wed', val: W2);
+final sampleBarDataM = BarData(xAxis: 'Mon', val: M1);
+final sampleBarDataT = BarData(xAxis: 'Tue', val: T1);
+final sampleBarDataW = BarData(xAxis: 'Wed', val: W1);
 
 
 // /// this class represents a single slice in a pie chart
