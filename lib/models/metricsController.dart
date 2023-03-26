@@ -83,7 +83,8 @@ class MetricsController {
         //adds the getter stored value to the progress counter
         totalProgress = totalProgress + currentGoal.goalProgress;
         //adds the getter stored value to the duration counter
-        totalDuration = totalDuration + double.parse(currentGoal.goalDuration);
+        totalDuration =
+            totalDuration + double.parse(currentGoal.goalDuration as String);
       }
     }
     double durationPrcnt =
@@ -109,7 +110,7 @@ class MetricsController {
       if (currentGoal is LongTermGoal) {
         //if statement targets each completed long term goal
         if (currentGoal.isCompleted == true ||
-            double.parse(currentGoal.goalDuration) ==
+            double.parse(currentGoal.goalDuration as String) ==
                 currentGoal.goalProgress) {
           overallCmpltCnt = overallCmpltCnt + 1;
         }

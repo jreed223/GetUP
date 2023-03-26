@@ -36,6 +36,8 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           )),
+
+      /// Replace this page with your page to test and run it
       home: const HomePage(),
     );
   }

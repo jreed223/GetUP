@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.17"
+  animated_flip_counter:
+    dependency: "direct main"
+    description:
+      name: animated_flip_counter
+      sha256: abbb8368bf30cb027af59a1ed3747868790070d70c24405ce39dcd65fd3eba33
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   archive:
     dependency: transitive
     description:
@@ -199,14 +207,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_echarts:
+  flutter_animated_dialog:
     dependency: "direct main"
     description:
-      name: flutter_echarts
-      sha256: df84e5c9a68526b0d5a8ec3393033238c6b39a856a691f6cff82644e3c7b4742
+      name: flutter_animated_dialog
+      sha256: "16b88e56ea7014925a1ed4c3c3644f735edfe9194d5cc027a1a10a95d8f55fce"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.0.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -305,6 +313,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: c37099ad833a883c9d71782321cb65c3a848c21b6939b6185f0ff6640d05814c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   plugin_platform_interface:
     dependency: transitive
     description:
