@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:getup_csc450/screens/metrics.dart';
 import 'firebase_options.dart';
 import 'package:getup_csc450/models/profileController.dart';
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           )),
 
       /// Replace this page with your page to test and run it
-      home: const HomePage(),
+      home: const MetricsPage(),
     );
   }
 }

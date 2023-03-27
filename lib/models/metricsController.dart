@@ -30,23 +30,6 @@ class MetricsData {
       required this.totalGoals,
       required this.overallCmpltPrcnt,
       required this.overallProgressPrcnt});
-
-  ///Creates a list of objects containing seperate data
-  static List<MetricsData> dailyData = [
-    MetricsData(
-      numSTcompleted: 3,
-      numShortGoals: 5,
-      completionPrcnt: 85.00,
-      totalLTprogress: 40,
-      totalDuration: 60.00,
-      numLongGoals: 5,
-      durationPrcnt: 44.00,
-      numOverallCmplt: 4,
-      totalGoals: 6,
-      overallCmpltPrcnt: 66,
-      overallProgressPrcnt: 55.00,
-    )
-  ];
 }
 
 ///Class used to calculate and handle data received for the MetricsData class
@@ -100,7 +83,8 @@ class MetricsController {
         //adds the getter stored value to the progress counter
         totalProgress = totalProgress + currentGoal.goalProgress;
         //adds the getter stored value to the duration counter
-        totalDuration = totalDuration + currentGoal.goalDuration;
+        totalDuration =
+            totalDuration + double.parse(currentGoal.goalDuration as String);
       }
     }
     double durationPrcnt =
@@ -126,7 +110,8 @@ class MetricsController {
       if (currentGoal is LongTermGoal) {
         //if statement targets each completed long term goal
         if (currentGoal.isCompleted == true ||
-            currentGoal.goalDuration == currentGoal.goalProgress) {
+            double.parse(currentGoal.goalDuration as String) ==
+                currentGoal.goalProgress) {
           overallCmpltCnt = overallCmpltCnt + 1;
         }
       } else if (currentGoal is Goal) {
@@ -149,52 +134,66 @@ class MetricsController {
   }
 }
 
-void metricsMain() {
-  final List<Goal> _sampleGoals = [
-    LongTermGoal(title: 'Learn Flutter', duration: 20),
-    Goal(title: 'Go to grocery store'),
-    LongTermGoal(title: 'Read', duration: 5),
-    Goal(title: 'Go to the gym'),
-    LongTermGoal(title: 'Learn Dart', duration: 10),
-    Goal(title: 'Go to the dentist'),
-    LongTermGoal(title: 'Learn Python', duration: 15),
-  ];
-  final sampleController = MetricsController(goalList: _sampleGoals);
-  final sampleMData = MetricsData(
+// final List<Goal> _sampleGoals = [
+//   LongTermGoal(title: 'Learn Flutter', duration: '20'),
+//   Goal(title: 'Go to grocery store'),
+//   LongTermGoal(title: 'Read', duration: '5'),
+//   Goal(title: 'Go to the gym'),
+//   LongTermGoal(title: 'Learn Dart', duration: '10'),
+//   Goal(title: 'Go to the dentist'),
+//   LongTermGoal(title: 'Learn Python', duration: '15'),
+// ];
 
-      //Short term data
-      numSTcompleted: sampleController
-          .shortPrcntCmplt()
-          .elementAt(0), //return idx[0] for prcntComplete func
-      numShortGoals: sampleController
-          .shortPrcntCmplt()
-          .elementAt(1), //return idx[1] prcntComplete  func
-      completionPrcnt: sampleController
-          .shortPrcntCmplt()
-          .elementAt(2), //return idx[2] for prcntComplete func
-      //Long term data
-      totalLTprogress: sampleController
-          .prcntDuration()
-          .elementAt(0), //return idx[0] for  prcntDuration func
-      totalDuration: sampleController
-          .prcntDuration()
-          .elementAt(1), //return idx[1] for prcntDuration func
-      numLongGoals: sampleController
-          .prcntDuration()
-          .elementAt(2), //return idx[2] for prcntDuration func
-      durationPrcnt: sampleController
-          .prcntDuration()
-          .elementAt(3), //return idx[3] for prcntDuration func
-      //Overall Data
-      numOverallCmplt: sampleController
-          .prcntOverallCmplt()
-          .elementAt(0), //return idx[0] for prcntOverallCmplt func
-      totalGoals: sampleController
-          .prcntOverallCmplt()
-          .elementAt(1), //return idx[1] for prcntOverallCmplt func
-      overallCmpltPrcnt: sampleController
-          .prcntOverallCmplt()
-          .elementAt(2), //return idx[2] for prcntOverallCmplt func
-      overallProgressPrcnt: sampleController
-          .prcntOverallProgress()); //return prcntOverallProgress func value
+class MetricsCalc {
+  List<Goal> sampleList;
+  late MetricsData dataVals;
+  MetricsCalc({required this.sampleList});
+
+  MetricsData calcData() {
+    final sampleController = MetricsController(goalList: sampleList);
+    final sampleData = MetricsData(
+
+        //Short term data
+        numSTcompleted: sampleController
+            .shortPrcntCmplt()
+            .elementAt(0), //return idx[0] for prcntComplete func
+        numShortGoals: sampleController
+            .shortPrcntCmplt()
+            .elementAt(1), //return idx[1] prcntComplete  func
+        completionPrcnt: sampleController
+            .shortPrcntCmplt()
+            .elementAt(2), //return idx[2] for prcntComplete func
+        //Long term data
+        totalLTprogress: sampleController
+            .prcntDuration()
+            .elementAt(0), //return idx[0] for  prcntDuration func
+        totalDuration: sampleController
+            .prcntDuration()
+            .elementAt(1), //return idx[1] for prcntDuration func
+        numLongGoals: sampleController
+            .prcntDuration()
+            .elementAt(2), //return idx[2] for prcntDuration func
+        durationPrcnt: sampleController
+            .prcntDuration()
+            .elementAt(3), //return idx[3] for prcntDuration func
+        //Overall Data
+        numOverallCmplt: sampleController
+            .prcntOverallCmplt()
+            .elementAt(0), //return idx[0] for prcntOverallCmplt func
+        totalGoals: sampleController
+            .prcntOverallCmplt()
+            .elementAt(1), //return idx[1] for prcntOverallCmplt func
+        overallCmpltPrcnt: sampleController
+            .prcntOverallCmplt()
+            .elementAt(2), //return idx[2] for prcntOverallCmplt func
+        overallProgressPrcnt: sampleController
+            .prcntOverallProgress()); //return prcntOverallProgress func value
+
+    return sampleData;
+  }
+
+  void call(sampleList) {
+    calcData();
+    dataVals = calcData();
+  }
 }
