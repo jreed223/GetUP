@@ -16,7 +16,7 @@ class _LineEchartState extends State<LineEchart> {
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       width: 300,
-      height: MediaQuery.of(context).size.height / 3.5,
+      height: MediaQuery.of(context).size.height / 4.5,
       child: Echarts(
         ///
         option: '''
@@ -36,7 +36,8 @@ class _LineEchartState extends State<LineEchart> {
       },
       series: [{
         data: [23, 46, 52, 63, 81, 76, 98], 
-        type: 'line'
+        type: 'line',
+        smooth: true
       }],
 
     }

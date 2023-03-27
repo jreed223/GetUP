@@ -62,10 +62,12 @@ class _MetricsPageState extends State<MetricsPage> {
                     children: [
                       Container(
                         color: Colors.orangeAccent,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 30, horizontal: 30),
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 30, horizontal: 20),
+                        padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.width / 14,
+                            horizontal: MediaQuery.of(context).size.width / 14),
+                        margin: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.width / 14,
+                            horizontal: MediaQuery.of(context).size.width / 14),
                         alignment: const Alignment(0, -.15),
                         child: const Text(
                           "You have\n completed\n 4/7 Goals",
