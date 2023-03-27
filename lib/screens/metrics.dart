@@ -32,7 +32,7 @@ class _MetricsPageState extends State<MetricsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 56, 123, 248),
+        backgroundColor: Colors.orange,
         title: const Text('Daily Data'),
       ),
       body: Center(
@@ -40,7 +40,7 @@ class _MetricsPageState extends State<MetricsPage> {
         child: Container(
           padding: const EdgeInsets.all(0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             //Centers column vertically on y axis
             children: [
@@ -56,26 +56,28 @@ class _MetricsPageState extends State<MetricsPage> {
               ///This lays the button side by side
               Row(
                 ///Centers row horizontally on x axis
-                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Stack(
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 3.5,
-                        alignment: const Alignment(-.75, -.25),
+                        color: Colors.orangeAccent,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 30, horizontal: 30),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 30, horizontal: 20),
+                        alignment: const Alignment(0, -.15),
                         child: const Text(
                           "You have\n completed\n 4/7 Goals",
                           textAlign: TextAlign.center,
                           textScaleFactor: 1.5,
                         ),
                       ),
-                      const Positioned(
-                        width: 400,
-                        left: 90,
-                        child: PieEchart(),
-                      )
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 3.5,
+                        child: const PieEchart(),
+                      ),
                     ],
                   ),
                 ],

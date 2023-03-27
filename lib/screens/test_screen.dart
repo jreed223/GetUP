@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 
-import '../widgets/line_chart.dart';
-
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
 

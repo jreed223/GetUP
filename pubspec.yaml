@@ -52,6 +52,7 @@ dependencies:
     # This is for the "Update progress" popup
     flutter_animated_dialog: ^2.0.1
     animated_flip_counter: ^0.2.5
+    flutter_echarts: ^2.4.0
 
 dev_dependencies:
     flutter_test:

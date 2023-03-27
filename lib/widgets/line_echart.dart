@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:getup_csc450/models/data_points.dart';
 
 class LineEchart extends StatefulWidget {
   const LineEchart({super.key});
@@ -17,8 +18,10 @@ class _LineEchartState extends State<LineEchart> {
       width: 300,
       height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
+        ///
         option: '''
     {
+
       title: {
         left: 'center',
         top: 'top',
@@ -26,15 +29,16 @@ class _LineEchartState extends State<LineEchart> {
       },
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       },
       yAxis: {
         type: 'value'
       },
       series: [{
-        data: [23, 46, 52, 63, 81, 76, 98],
+        data: [23, 46, 52, 63, 81, 76, 98], 
         type: 'line'
-      }]
+      }],
+
     }
   ''',
       ),

@@ -12,18 +12,18 @@ class _PieEchartState extends State<PieEchart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.zero,
-      margin: EdgeInsets.zero,
-      alignment: Alignment.centerRight,
-      width: MediaQuery.of(context).size.width / 2,
+      padding: EdgeInsets.all(0),
+      alignment: const Alignment(1, 0),
+      width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
         option: '''
 {
  
   tooltip: {
-    trigger: 'item'
-  },
+      trigger: 'item',
+      position: 'left'
+    },
 
   series: [
     {
@@ -56,7 +56,8 @@ class _PieEchartState extends State<PieEchart> {
         { value: 580, name: 'Email' },
         { value: 484, name: 'Union Ads' },
         { value: 300, name: 'Video Ads' }
-      ]
+      ],
+      left: '40%'
     }
   ]
 }
