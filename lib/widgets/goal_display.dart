@@ -37,13 +37,16 @@ class GoalView extends StatelessWidget {
             itemBuilder: (context, index) {
               /// If the goal is a short term goal, display the short term goal
               /// If the goal is a long term goal, display the long term goal
+              Future.delayed(Duration(seconds: 1), () {});
               return !goals[index]['isLongTerm']
                   ? ShortTermGoalCard(
                       title: goals[index]['title'],
-                      goalId: goals[index].reference.id)
+                      goalId: goals[index].reference.id,
+                    )
                   : LongTermGoalCard(
                       title: goals[index]['title'],
-                      goalId: goals[index].reference.id);
+                      goalId: goals[index].reference.id,
+                    );
             },
           );
         });
