@@ -31,6 +31,7 @@ class GoalView extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
+          print(snapshot.data!.docs.length);
           var goals = snapshot.data!.docs;
           return ListView.builder(
             itemCount: goals.length,
@@ -41,11 +42,11 @@ class GoalView extends StatelessWidget {
               return !goals[index]['isLongTerm']
                   ? ShortTermGoalCard(
                       title: goals[index]['title'],
-                      goalId: goals[index].reference.id,
+                      goalId: goals[index]['goalId'],
                     )
                   : LongTermGoalCard(
                       title: goals[index]['title'],
-                      goalId: goals[index].reference.id,
+                      goalId: goals[index]['goalId'],
                     );
             },
           );

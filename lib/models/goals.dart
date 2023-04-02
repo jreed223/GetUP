@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 /// The goal class is the base class for all goals.
 /// It requires the following parameters:
@@ -16,6 +17,9 @@ import 'package:intl/intl.dart';
 /// * goalStatus: gets the status of the goal
 /// * sampleGoalList: gets a list of sample goals
 class Goal {
+  /// The ID of the goal.
+  final String id;
+
   /// The title of the goal.
   String title;
 
@@ -23,7 +27,7 @@ class Goal {
   bool isCompleted = false;
 
   /// The date the goal was created.
-  DateTime dateCreated = DateTime.now();
+  final DateTime dateCreated;
 
   /// The date the goal was completed.
   DateTime? dateCompleted;
@@ -31,27 +35,14 @@ class Goal {
   /// If the goal is a short term goal or a long term goal.
   final bool isLongTerm = false;
 
-  Goal({required this.title, bool? isCompleted});
-
-  /// A list <of type Goal> of sample goals.
-  // final List<Goal> _sampleGoals = [
-  //   LongTermGoal(title: 'Learn Flutter', duration: '20'),
-  //   Goal(title: 'Go to grocery store'),
-  //   LongTermGoal(title: 'Read', duration: '20'),
-  //   Goal(title: 'Go to the gym'),
-  //   LongTermGoal(title: 'Learn Dart', duration: '20'),
-  //   Goal(title: 'Go to the dentist'),
-  //   LongTermGoal(title: 'Learn Python', duration: '20'),
-  // ];
-
-  /// Get the ID of the goal.
-  /// The ID is in the format of goal_title-date_created.
-  /// For example, 'Go to the gym - 2021-09-01 12:00:00.000'.
-  String get goalId {
-    DateFormat formatter = DateFormat('EEEE, MMMM d, y - h:mm a');
-    String formattedTimestamp = formatter.format(dateCreated);
-    return '$title - $formattedTimestamp';
-  }
+  Goal({
+    required this.title,
+    String? id,
+    bool? isCompleted,
+    DateTime? dateCreated,
+    DateTime? dateCompleted,
+  })  : id = id ?? const Uuid().v4(),
+        dateCreated = dateCreated ?? DateTime.now();
 
   /// Sets the title of the goal.
   set goalTitle(String newTitle) {
@@ -63,20 +54,18 @@ class Goal {
     isCompleted = newStatus;
   }
 
+  /// Gets the ID of the goal.
+  String? get goalId => id;
+
   /// Gets the title of the goal.
   String get goalTitle => title;
 
   /// Gets the status of the goal.
   bool get goalStatus => isCompleted;
 
-  /// Gets the sample goals.
-  // List<Goal> get sampleGoalList => _sampleGoals;
-
   /// Gets the date the goal was created.
-  String get goalCreationDate {
-    DateFormat formatter = DateFormat.yMMMMd('en_US');
-    String formattedTimestamp = formatter.format(dateCreated);
-    return formattedTimestamp;
+  DateTime get goalCreationDate {
+    return dateCreated;
   }
 
   /// Gets the date the goal was completed.
@@ -90,12 +79,23 @@ class Goal {
       'isCompleted': goalStatus,
       'dateCreated': goalCreationDate,
       'dateCompleted': goalCompletionDate,
+      'goalId': goalId,
     };
   }
 
   /// This returns the goal from a JSON format.
-  factory Goal.fromJson(Map<String, dynamic> json) {
-    return Goal(title: json['title'], isCompleted: json['isCompleted']);
+  static Goal fromJson(Map<String, dynamic> json) {
+    return Goal(
+        title: json['title'],
+        isCompleted: json['isCompleted'],
+
+        /// This ensures that the date is in the correct format.
+        dateCreated: (json['dateCreated'] as Timestamp).toDate(),
+
+        /// This ensures that the date is in the correct format.
+        /// If the date is null, it will be set to null.
+        dateCompleted: (json['dateCreated'] as Timestamp).toDate(),
+        id: json['goalId']);
   }
 }
 
@@ -137,8 +137,16 @@ class LongTermGoal extends Goal {
       required this.duration,
       double? progress,
       double? timeDedicated,
-      bool? isCompleted})
-      : super(title: title);
+      bool? isCompleted,
+      DateTime? dateCreated,
+      DateTime? dateCompleted,
+      String? id})
+      : super(
+            title: title,
+            isCompleted: isCompleted,
+            dateCreated: DateTime.now(),
+            dateCompleted: null,
+            id: id);
 
   /// Sets the title of the goal.
   void setTitle(String newTitle) {
@@ -172,16 +180,13 @@ class LongTermGoal extends Goal {
   /// This returns the goal in a JSON format.
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'title': goalTitle,
-      'isLongTerm': isLongTerm,
-      'isCompleted': goalStatus,
-      'dateCreated': goalCreationDate,
-      'dateCompleted': goalCompletionDate,
+    final json = super.toJson();
+    json.addAll({
       'duration': goalDuration,
       'progress': goalProgress,
       'timeDedicated': goalTimeDedicated,
-    };
+    });
+    return json;
   }
 
   /// This returns the goal from a JSON format.
@@ -192,6 +197,9 @@ class LongTermGoal extends Goal {
       progress: json['progress'].toDouble(),
       timeDedicated: json['timeDedicated'].toDouble(),
       isCompleted: json['isCompleted'],
+      dateCreated: (json['dateCreated'] as Timestamp).toDate(),
+      dateCompleted: (json['dateCreated'] as Timestamp).toDate(),
+      id: json['goalId'],
     );
   }
 }
@@ -224,7 +232,9 @@ class GoalDataState extends ChangeNotifier {
   /// This is the list that stores long term goals.
   List<LongTermGoal> longTermGoals = [];
 
+  /// This method loads the goals from Firebase
   Future<void> loadGoalsFromFirebase() async {
+    /// This is the reference to the goals collection in Firebase
     final CollectionReference goalsCollection = FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -235,32 +245,32 @@ class GoalDataState extends ChangeNotifier {
 
     // Iterate over each document in the collection
     // Check if the document represents a short-term or a long-term goal
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data['isLongTerm'] == true) {
         longTermGoals.add(LongTermGoal.fromJson(data));
       } else if (data['isLongTerm'] == false) {
         _shortTermGoals.add(Goal.fromJson(data));
       }
-    });
-
-    // Notify listeners that the state has changed
+    }
     notifyListeners();
   }
 
   /// This will add a new goal to the list of short term goals.
   void addShortTermGoal(Goal newGoal) {
     _shortTermGoals.add(newGoal);
+    notifyListeners();
   }
 
   /// This will add a new goal to the list of long term goals.
   void addLongTermGoal(LongTermGoal newGoal) {
     longTermGoals.add(newGoal);
+    notifyListeners();
   }
 
   void printLongTermGoals() {
     for (LongTermGoal goal in longTermGoals) {
-      print(goal.goalTitle);
+      print(goal.goalId);
     }
   }
 
@@ -286,20 +296,23 @@ class GoalDataState extends ChangeNotifier {
   }
 
   /// This will set the new status of the goal that is being edited.
-  void setStatus(String goalId, bool? newStatus, bool isLongTerm) {
+  void setStatus(String goalId, bool newStatus, bool isLongTerm) {
     if (isLongTerm) {
       for (LongTermGoal goal in longTermGoals) {
+        print('in loop');
         if (goal.goalId == goalId) {
-          goal.setStatus(newStatus!);
-          test = newStatus;
+          print('goal found');
+          goal.setStatus(newStatus);
           notifyListeners();
           break;
+        } else {
+          print('goal not found');
         }
       }
     } else if (!isLongTerm) {
       for (Goal goal in _shortTermGoals) {
         if (goal.goalId == goalId) {
-          goal.goalStatus = newStatus!;
+          goal.goalStatus = newStatus;
           notifyListeners();
           break;
         }
@@ -361,10 +374,13 @@ class GoalDataState extends ChangeNotifier {
   }
 
   /// This will return the status of the goal that is being edited.
-  bool getStatus(String goalId, bool isLongTerm) {
+  bool? getStatus(String goalId, bool isLongTerm) {
     print('Function called');
     if (isLongTerm) {
+      print('In long term');
+      print(longTermGoals.length);
       for (LongTermGoal goal in longTermGoals) {
+        print('In loop');
         if (goal.goalId == goalId) {
           print(goal.goalStatus);
           return goal.goalStatus;

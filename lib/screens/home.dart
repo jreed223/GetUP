@@ -109,6 +109,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _iconIsVisible = true;
     signInTestUser();
+    print('Init bruv');
     GOAL_STATES
         .loadGoalsFromFirebase()
         .then((_) => GOAL_STATES.printLongTermGoals());

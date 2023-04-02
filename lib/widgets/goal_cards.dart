@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'dart:math';
 import 'dart:async';
+
+import 'package:provider/provider.dart';
 
 /// This will be holding the state of all the goals
 /// This will be used to update the goals in the database
@@ -18,7 +20,7 @@ class ShortTermGoalCard extends StatefulWidget {
   /// The title of the goal
   String title;
 
-  /// The index of the goal in the list of goals inside the goal view
+  /// The id of the goal
   String goalId;
 
   ShortTermGoalCard({super.key, required this.title, required this.goalId});
@@ -34,7 +36,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
   /// Whether or not the error text should be shown
   bool _showError = false;
 
-  ///
+  /// Whether or not the goal is completed
   bool _isCompleted = false;
 
   late TextEditingController _titleController;
@@ -411,9 +413,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
   @override
   Widget build(BuildContext context) {
-    return GoalDataEventListener(
-      goalDataState: GoalDataState.mainInstance,
-      child: Builder(builder: (context) {
+    return Consumer<GoalDataState>(
+      builder: (context, provider, child) {
         return Padding(
           padding: const EdgeInsets.all(3.0),
 
@@ -427,8 +428,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
               /// The color of the goal card
               /// If the goal is completed, the color is grey
-              color: GoalDataEventListener.of(context)
-                      .getStatus(widget.goalId, true)
+              color: _isCompleted
                   ? Color.fromARGB(255, 234, 233, 233)
                   : Colors.white,
 
@@ -462,29 +462,28 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GoalDataEventListener(
-                        goalDataState: GoalDataState.mainInstance,
-                        child: Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Builder(builder: (context) {
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Consumer<GoalDataState>(
+                            builder: (context, provider, child) {
                               return Checkbox(
                                 activeColor: Colors.orange,
                                 onChanged: (value) {
-                                  print(GoalDataEventListener.of(context));
-                                  goalDataState.setStatus(
-                                      widget.goalId, value, true);
-                                  setState(() {
-                                    _isCompleted =
-                                        GoalDataEventListener.of(context)
-                                            .getStatus(widget.goalId, true);
-                                  });
+                                  if (provider.getStatus(widget.goalId, true) ==
+                                      true) {
+                                    provider.setStatus(
+                                        widget.goalId, false, true);
+                                  } else {
+                                    provider.setStatus(
+                                        widget.goalId, true, true);
+                                  }
+                                  provider.printLongTermGoals();
                                 },
-                                value: GoalDataEventListener.of(context)
-                                    .getStatus(widget.goalId, true),
+                                value: provider.getStatus(widget.goalId, true),
                               );
-                            }),
+                            },
                           ),
                         ),
                       ),
@@ -1022,7 +1021,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
             ),
           ),
         );
-      }),
+      },
     );
   }
 }
