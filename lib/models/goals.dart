@@ -68,6 +68,11 @@ class Goal {
     return dateCreated;
   }
 
+  /// This is done to match the table calendar date format.
+  String get formattedCreationDate {
+    return DateFormat.yMMMMd().format(dateCreated);
+  }
+
   /// Gets the date the goal was completed.
   DateTime? get goalCompletionDate => dateCompleted;
 

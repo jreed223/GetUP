@@ -27,8 +27,8 @@ class GoalView extends StatelessWidget {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Text('$selectedDate'),
             );
           }
           print(snapshot.data!.docs.length);
