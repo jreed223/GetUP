@@ -64,9 +64,7 @@ class Goal {
   bool get goalStatus => isCompleted;
 
   /// Gets the date the goal was created.
-  DateTime get goalCreationDate {
-    return dateCreated;
-  }
+  DateTime get goalCreationDate => dateCreated;
 
   /// This is done to match the table calendar date format.
   String get formattedCreationDate {
@@ -236,6 +234,9 @@ class GoalDataState extends ChangeNotifier {
 
   /// This is the list that stores long term goals.
   List<LongTermGoal> longTermGoals = [];
+
+  /// This is the list that stores all the goals.
+  List<dynamic> goals = [];
 
   /// This method loads the goals from Firebase
   Future<void> loadGoalsFromFirebase() async {
