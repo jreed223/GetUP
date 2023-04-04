@@ -519,22 +519,13 @@ class _HomePageState extends State<HomePage>
 
                                                 /// This adds the goal to the state
                                                 _isLongTermGoal
-                                                    ? GoalDataState.mainInstance
-                                                        .addLongTermGoal(
-                                                            LongTermGoal(
-                                                                title:
-                                                                    _goalTitle,
-                                                                duration: double
-                                                                    .parse(
-                                                                        _goalDuration)))
-                                                    : GoalDataState.mainInstance
-                                                        .addShortTermGoal(Goal(
-                                                            title: _goalTitle));
-                                                GoalDataState
-                                                    .mainInstance.longTermGoals
-                                                    .forEach((element) {
-                                                  print(element.title);
-                                                });
+                                                    ? GOAL_STATES.addGoal(
+                                                        LongTermGoal(
+                                                            title: _goalTitle,
+                                                            duration: double.parse(
+                                                                _goalDuration)))
+                                                    : GOAL_STATES.addGoal(Goal(
+                                                        title: _goalTitle));
 
                                                 shrinkSubmitButton();
 

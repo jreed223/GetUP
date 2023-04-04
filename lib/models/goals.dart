@@ -33,7 +33,7 @@ class Goal {
   DateTime? dateCompleted;
 
   /// If the goal is a short term goal or a long term goal.
-  final bool isLongTerm = false;
+  final isLongTerm = false;
 
   Goal({
     required this.title,
@@ -131,10 +131,6 @@ class LongTermGoal extends Goal {
   /// The time dedicated to the goal.
   double timeDedicated = 0.0;
 
-  /// if the goal is a short term goal or a long term goal.
-  @override
-  final bool isLongTerm = true;
-
   LongTermGoal(
       {required String title,
       required this.duration,
@@ -179,6 +175,9 @@ class LongTermGoal extends Goal {
 
   /// Gets the time dedicated to the goal.
   double get goalTimeDedicated => timeDedicated;
+
+  @override
+  bool get isLongTerm => true;
 
   /// This returns the goal in a JSON format.
   @override
@@ -229,12 +228,6 @@ class GoalDataState extends ChangeNotifier {
 
   bool test = false;
 
-  /// This is the list that stores short term goals.
-  List<Goal> _shortTermGoals = [];
-
-  /// This is the list that stores long term goals.
-  List<LongTermGoal> longTermGoals = [];
-
   /// This is the list that stores all the goals.
   List<dynamic> goals = [];
 
@@ -253,85 +246,57 @@ class GoalDataState extends ChangeNotifier {
     // Check if the document represents a short-term or a long-term goal
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      if (data['isLongTerm'] == true) {
-        longTermGoals.add(LongTermGoal.fromJson(data));
-      } else if (data['isLongTerm'] == false) {
-        _shortTermGoals.add(Goal.fromJson(data));
+      if (data['isLongTerm']) {
+        goals.add(LongTermGoal.fromJson(data));
+      } else {
+        goals.add(Goal.fromJson(data));
       }
     }
     notifyListeners();
   }
 
-  /// This will add a new goal to the list of short term goals.
-  void addShortTermGoal(Goal newGoal) {
-    _shortTermGoals.add(newGoal);
-    notifyListeners();
-  }
-
   /// This will add a new goal to the list of long term goals.
-  void addLongTermGoal(LongTermGoal newGoal) {
-    longTermGoals.add(newGoal);
+  void addGoal(dynamic newGoal) {
+    goals.add(newGoal);
     notifyListeners();
   }
 
   void printLongTermGoals() {
-    for (LongTermGoal goal in longTermGoals) {
+    for (LongTermGoal goal in goals) {
       print(goal.goalId);
     }
   }
 
   /// This will set the new title of the goal that is being edited.
-  void setTitle(String goalId, String newTitle, bool isLongTerm) {
-    if (isLongTerm) {
-      for (LongTermGoal goal in longTermGoals) {
-        if (goal.goalId == goalId) {
-          goal.setTitle(newTitle);
-          notifyListeners();
-          break;
-        }
-      }
-    } else {
-      for (Goal goal in _shortTermGoals) {
-        if (goal.goalId == goalId) {
-          goal.goalTitle = newTitle;
-          notifyListeners();
-          break;
-        }
+  void setTitle(String? goalId, String newTitle) {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        goal.setTitle(newTitle);
+        notifyListeners();
+        break;
+      } else {
+        print('** setTitle ** => goal not found');
       }
     }
   }
 
   /// This will set the new status of the goal that is being edited.
-  void setStatus(String goalId, bool newStatus, bool isLongTerm) {
-    if (isLongTerm) {
-      for (LongTermGoal goal in longTermGoals) {
-        print('in loop');
-        if (goal.goalId == goalId) {
-          print('goal found');
-          goal.setStatus(newStatus);
-          notifyListeners();
-          break;
-        } else {
-          print('goal not found');
-        }
+  void setStatus(String goalId, bool newStatus) {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        goal.setStatus(newStatus);
+        notifyListeners();
+        break;
+      } else {
+        print('** setStatus ** => goal not found');
       }
-    } else if (!isLongTerm) {
-      for (Goal goal in _shortTermGoals) {
-        if (goal.goalId == goalId) {
-          goal.goalStatus = newStatus;
-          notifyListeners();
-          break;
-        }
-      }
-    } else {
-      print('Error: Goal not found');
     }
   }
 
   /// This will set the new progress of the goal that is being edited.
   void setProgress(String goalId, double newProgress) {
-    for (LongTermGoal goal in longTermGoals) {
-      if (goal.goalId == goalId) {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId && goal.isLongTerm == true) {
         goal.setProgress(newProgress);
         notifyListeners();
         break;
@@ -341,8 +306,8 @@ class GoalDataState extends ChangeNotifier {
 
   /// This will set the new time dedicated to the goal that is being edited.
   void setTimeDedicated(String goalId, double newTimeDedicated) {
-    for (LongTermGoal goal in longTermGoals) {
-      if (goal.goalId == goalId) {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId && goal.isLongTerm == true) {
         goal.setTimeDedicated(newTimeDedicated);
         notifyListeners();
         break;
@@ -362,65 +327,68 @@ class GoalDataState extends ChangeNotifier {
   // }
 
   /// This will return the title of the goal that is being edited.
-  String getTitle(String goalId, bool isLongTerm) {
-    if (isLongTerm) {
-      for (LongTermGoal goal in longTermGoals) {
-        if (goal.goalId == goalId) {
-          return goal.goalTitle;
-        }
-      }
-    } else {
-      for (Goal goal in _shortTermGoals) {
-        if (goal.goalId == goalId) {
-          return goal.goalTitle;
-        }
+  String? getTitle(String goalId) {
+    String title = '';
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        title = goal.title;
+        break;
       }
     }
-    return 'Title does not exist';
+
+    if (title == '') {
+      print('** getTitle ** => goal not found');
+    } else {
+      return title;
+    }
   }
 
   /// This will return the status of the goal that is being edited.
-  bool? getStatus(String goalId, bool isLongTerm) {
-    print('Function called');
-    if (isLongTerm) {
-      print('In long term');
-      print(longTermGoals.length);
-      for (LongTermGoal goal in longTermGoals) {
-        print('In loop');
-        if (goal.goalId == goalId) {
-          print(goal.goalStatus);
-          return goal.goalStatus;
-        }
-      }
-    } else {
-      for (Goal goal in _shortTermGoals) {
-        if (goal.goalId == goalId) {
-          print(goal.goalStatus);
-          return goal.goalStatus;
-        }
+  bool? getStatus(String goalId) {
+    bool? status;
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        status = goal.isCompleted;
+        break;
       }
     }
-    return false;
+    if (status == null) {
+      print('** getStatus ** => goal not found');
+    } else {
+      return status;
+    }
   }
 
   /// This will return the progress of the goal that is being edited.
-  double getProgress(String goalId) {
-    for (LongTermGoal goal in longTermGoals) {
-      if (goal.goalId == goalId) {
-        return goal.goalProgress;
+  double? getProgress(String goalId) {
+    double? progress;
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId && goal.isLongTerm == true) {
+        progress = goal.goalProgress;
+        break;
       }
     }
-    return 0.0;
+    if (progress == null) {
+      print('** getProgress ** => goal not found');
+    } else {
+      return progress;
+    }
   }
 
   /// This will return the time dedicated to the goal that is being edited.
-  double getTimeDedicated(String goalId) {
-    for (LongTermGoal goal in longTermGoals) {
-      if (goal.goalId == goalId) {
-        return goal.goalTimeDedicated;
+  double? getTimeDedicated(String goalId) {
+    double? timeDedicated;
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId && goal.isLongTerm == true) {
+        timeDedicated = goal.timeDedicated;
+        break;
       }
     }
-    return 0.0;
+    if (timeDedicated == null) {
+      print('** getTimeDedicated ** => goal not found');
+    } else {
+      return timeDedicated;
+    }
   }
 }
 

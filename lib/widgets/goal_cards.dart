@@ -17,13 +17,10 @@ import 'package:provider/provider.dart';
 GoalDataState goalDataState = GoalDataState.mainInstance;
 
 class ShortTermGoalCard extends StatefulWidget {
-  /// The title of the goal
-  String title;
+  /// This is the goal that will be displayed
+  final Goal goal;
 
-  /// The id of the goal
-  String goalId;
-
-  ShortTermGoalCard({super.key, required this.title, required this.goalId});
+  ShortTermGoalCard({super.key, required this.goal});
 
   @override
   State<ShortTermGoalCard> createState() => _ShortTermGoalCardState();
@@ -70,14 +67,14 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
   }
 
   /// Update status of goal in firebase
-  Future updateGoalStatus() {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .update({'isCompleted': _isCompleted});
-  }
+  // Future updateGoalStatus() {
+  //   return FirebaseFirestore.instance
+  //       .collection('Users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .collection('goals')
+  //       .doc(widget.goalId)
+  //       .update({'isCompleted': _isCompleted});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +110,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
             onChanged: (value) {
               setState(() {
                 _isCompleted = value!;
-                updateGoalStatus();
+                // updateGoalStatus();
               });
             },
             value: _isCompleted,
@@ -130,28 +127,18 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                   onChanged: (value) {
                     setState(() {
                       value = _titleController.text;
-                      widget.title = value;
+                      // TODO: Update title with provider
                     });
                   },
                 )
-              : Text(widget.title,
+
+              /// TODO: Add a provider to update the title
+              : Text('placeholder',
                   style: TextStyle(
                       color: _isCompleted ? Colors.black26 : Colors.black)),
           trailing: IconButton(
             onPressed: () async {
-              if (_isEditing && _titleController.text.isNotEmpty) {
-                await FirebaseFirestore.instance
-                    .collection('Users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .collection('goals')
-                    .doc(widget.goalId)
-                    .update({'title': _titleController.text});
-                toggleEditTitleMode();
-              } else if (_isEditing && _titleController.text.isEmpty) {
-                showError();
-              } else {
-                toggleEditTitleMode();
-              }
+              // TODO: Add a provider to update the title in the database
             },
             icon: Icon(Icons.edit,
                 size: MediaQuery.of(context).size.width * 0.05,
@@ -165,16 +152,15 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
 
 class LongTermGoalCard extends StatefulWidget {
   /// The title of the goal
-  String title;
+  String? title;
 
   /// The index of the goal in the list of goals inside the goal view
-  String goalId;
+  String? goalId;
 
-  LongTermGoalCard({
-    super.key,
-    required this.title,
-    required this.goalId,
-  });
+  /// This is the goal that will be displayed
+  final LongTermGoal goal;
+
+  LongTermGoalCard({super.key, required this.goal});
 
   @override
   State<LongTermGoalCard> createState() => _LongTermGoalCardState();
@@ -295,20 +281,20 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     menuButtonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: menuButtonController, curve: Curves.easeInOutBack));
-    FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .get()
-        .then((value) {
-      setState(() {
-        _progress = value.data()!['progress'];
-        _progressAsPercentage = _progress * 100;
-        _duration = value.data()!['duration'];
-        _timeDedicated = value.data()!['timeDedicated'];
-      });
-    });
+    // FirebaseFirestore.instance
+    //     .collection('Users')
+    //     .doc(FirebaseAuth.instance.currentUser!.uid)
+    //     .collection('goals')
+    //     .doc(widget.goalId)
+    //     .get()
+    //     .then((value) {
+    //   setState(() {
+    //     _progress = value.data()!['progress'];
+    //     _progressAsPercentage = _progress * 100;
+    //     _duration = value.data()!['duration'];
+    //     _timeDedicated = value.data()!['timeDedicated'];
+    //   });
+    // });
   }
 
   /// Toggles the edit mode for the title
@@ -471,17 +457,19 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                               return Checkbox(
                                 activeColor: Colors.orange,
                                 onChanged: (value) {
-                                  if (provider.getStatus(widget.goalId, true) ==
+                                  if (provider.getStatus(
+                                          widget.goal.goalId as String) ==
                                       true) {
                                     provider.setStatus(
-                                        widget.goalId, false, true);
+                                        widget.goal.goalId as String, false);
                                   } else {
                                     provider.setStatus(
-                                        widget.goalId, true, true);
+                                        widget.goal.goalId as String, true);
                                   }
                                   provider.printLongTermGoals();
                                 },
-                                value: provider.getStatus(widget.goalId, true),
+                                value: provider
+                                    .getStatus(widget.goal.goalId as String),
                               );
                             },
                           ),
@@ -515,7 +503,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   }
                                 },
                               )
-                            : Text(widget.title,
+                            : Text(widget.goal.goalTitle,
                                 style: TextStyle(
                                     fontSize: 16,
                                     // TODO: use change notifier to update the text color
