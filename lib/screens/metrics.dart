@@ -72,7 +72,6 @@ class _MetricsPageState extends State<MetricsPage> {
                         child: const Text(
                           "You have\n completed\n 4/7 Goals",
                           textAlign: TextAlign.center,
-                          textScaleFactor: 1.5,
                         ),
                       ),
                       SizedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/screens/metrics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -121,7 +122,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'test',
-      home: HomeScreen(),
+      home: MetricsPage(),
     );
   }
 }

@@ -29,6 +29,7 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
     top: 30
   },
   tooltip: {},
+  
   dataset: {
     source: [
       ['Date', 'Short Term', 'Long Term' ],
@@ -42,7 +43,8 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
     ]
   },
   xAxis: { type: 'category' },
-  yAxis: {},
+  yAxis: {
+  },
   // Declare several bar series, each will be mapped
   // to a column of dataset.source by default.
   series: [{ type: 'bar' }, { type: 'bar' }]

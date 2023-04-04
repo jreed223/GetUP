@@ -1,72 +1,109 @@
 import 'package:getup_csc450/models/goals.dart';
 import 'metricsController.dart';
+import 'goal_organizer.dart';
 
 final List<Goal> _sampleGoalsM = [
   LongTermGoal(title: 'Learn Flutter', duration: 20),
-  Goal(title: 'Go to grocery store'),
+  Goal(title: 'ijbib'),
   LongTermGoal(title: 'Read', duration: 5),
   Goal(title: 'Go to the gym'),
   LongTermGoal(title: 'Learn Dart', duration: 10),
   Goal(title: 'Go to the dentist'),
   LongTermGoal(title: 'Learn Python', duration: 15),
 ];
-final List<Goal> _sampleGoalsT = [
-  LongTermGoal(title: 'Learn Flutter', duration: 20),
-  Goal(title: 'Go to grocery store'),
-  LongTermGoal(title: 'Read', duration: 5),
-  Goal(title: 'Go to the gym'),
-  LongTermGoal(title: 'Learn Dart', duration: 10),
-  Goal(title: 'Go to the dentist'),
-  LongTermGoal(title: 'Learn Python', duration: 15),
-];
-final List<Goal> _sampleGoalsW = [
-  LongTermGoal(title: 'Learn Flutter', duration: 20),
-  Goal(title: 'Go to grocery store'),
-  LongTermGoal(title: 'Read', duration: 5),
-  Goal(title: 'Go to the gym'),
-  LongTermGoal(title: 'Learn Dart', duration: 10),
-  Goal(title: 'Go to the dentist'),
-  LongTermGoal(title: 'Learn Python', duration: 15),
-];
-
-var M1 = MetricsCalc(sampleList: _sampleGoalsM).dataVals.overallProgressPrcnt;
-
-var T1 = MetricsCalc(sampleList: _sampleGoalsT).dataVals.overallProgressPrcnt;
-
-var W1 = MetricsCalc(sampleList: _sampleGoalsW).dataVals.overallProgressPrcnt;
 
 /// this class represents one bar in a bar graph
-class BarData {
+class DataPoints {
   final String day; //weekday
   final double val; //overall percentage
 
-  BarData({
+  DataPoints({
     required this.day,
     required this.val,
   });
 }
 
-//overall progreess sample data
-final sampleBarDataM = BarData(day: 'Mon', val: M1);
-final sampleBarDataT = BarData(day: 'Tue', val: T1);
-final sampleBarDataW = BarData(day: 'Wed', val: W1);
-
-// var barX1 = sampleBarDataM.day;
-// var barX2 = sampleBarDataT.day;
-// var barX3 = sampleBarDataW.day;
-
-/// this class represents a single slice in a pie chart
-class PieData {
-  final double val; //% of goals comlpeted
-  final int dateId;
-
-  PieData({required this.val, required this.dateId});
+List<DataPoints> setLineData(List<Goal> sampleList) {
+  DataPoints lineData1 = DataPoints(
+      day: sampleList[0].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData2 = DataPoints(
+      day: sampleList[1].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData3 = DataPoints(
+      day: sampleList[2].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData4 = DataPoints(
+      day: sampleList[3].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData5 = DataPoints(
+      day: sampleList[4].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData6 = DataPoints(
+      day: sampleList[5].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints lineData7 = DataPoints(
+      day: sampleList[6].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  return [
+    lineData1,
+    lineData2,
+    lineData3,
+    lineData4,
+    lineData5,
+    lineData6,
+    lineData7
+  ];
 }
 
-/// this class represents a single point on the line graph
-class LineData {
-  final String day; //weekday
-  final double val; //overall percentage
+List<DataPoints> setBarData(List<Goal> sampleList) {
+  DataPoints barData1 = DataPoints(
+      day: sampleList[0].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints barData2 = DataPoints(
+      day: sampleList[1].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints barData3 = DataPoints(
+      day: sampleList[2].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints barData4 = DataPoints(
+      day: sampleList[3].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints barData5 = DataPoints(
+      day: _sampleGoalsM[4].goalCreationDate,
+      val: calcData(_sampleGoalsM).completionPrcnt);
+  DataPoints barData6 = DataPoints(
+      day: sampleList[5].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints barData7 = DataPoints(
+      day: sampleList[6].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  return [barData1, barData2, barData3, barData4, barData5, barData6, barData7];
+}
 
-  LineData({required this.day, required this.val});
+/// this class represents a single slice in a pie chart
+
+List<DataPoints> setPieData(List<Goal> sampleList) {
+  DataPoints pieData1 = DataPoints(
+      day: sampleList[0].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints pieData2 = DataPoints(
+      day: sampleList[1].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints pieData3 = DataPoints(
+      day: sampleList[2].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints pieData4 = DataPoints(
+      day: sampleList[3].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints pieData5 = DataPoints(
+      day: _sampleGoalsM[4].goalCreationDate,
+      val: calcData(_sampleGoalsM).completionPrcnt);
+  DataPoints pieData6 = DataPoints(
+      day: sampleList[5].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  DataPoints pieData7 = DataPoints(
+      day: sampleList[6].goalCreationDate,
+      val: calcData(sampleList).completionPrcnt);
+  return [pieData1, pieData2, pieData3, pieData4, pieData5, pieData6, pieData7];
 }
