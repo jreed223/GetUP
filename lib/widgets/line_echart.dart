@@ -23,7 +23,9 @@ class _LineEchartState extends State<LineEchart> {
       Goal(title: 'Go to the dentist'),
       LongTermGoal(title: 'Learn Python', duration: 15),
     ];
-    var lineData = setLineData(_sampleGoalsM);
+
+    var lineData = setLineData();
+
     return Container(
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,

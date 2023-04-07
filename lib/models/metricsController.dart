@@ -16,7 +16,9 @@ class MetricsData {
   double totalGoals;
   double overallCmpltPrcnt;
   double overallProgressPrcnt; // percent of progress of all goals
-  late DateTime dataCollectionDate;
+
+  late String dataCollectionDate;
+  late String dayOfWeek;
 
   ///initializes data
   MetricsData(

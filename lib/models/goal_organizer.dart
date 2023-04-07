@@ -1,20 +1,33 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/metricsController.dart';
+import 'package:intl/intl.dart';
 
 import 'goals.dart';
 
 class DataQueue {
   final List<Goal> goalList;
-  List<List<Goal>> queueList = [[], [], [], [], [], [], []];
+  List<List<Goal>> goalQueue = [[], [], [], [], [], [], []];
   List<MetricsData> metricsQueue = [];
 
-  DataQueue({required this.goalList});
+  MetricsData m0 = MetricsData(
+      numSTcompleted: 0,
+      numShortGoals: 0,
+      completionPrcnt: 0,
+      totalLTprogress: 0,
+      totalDuration: 0,
+      numLongGoals: 0,
+      durationPrcnt: 0,
+      numOverallCmplt: 0,
+      totalGoals: 0,
+      overallCmpltPrcnt: 0,
+      overallProgressPrcnt: 0);
 
-  List<MetricsData> calcWeeklyMetrics(goalList) {
-    DataQueue dailyMetrics = DataQueue(goalList: goalList);
-    dailyMetrics.addMetrics();
-    return metricsQueue;
-  }
+  var todaysDate = DateFormat('EEEE, d MMM, yyyy').format(DateTime.now());
+  var dayOfWeek = DateFormat('EEEE').format(DateTime.now());
+
+  DataQueue({required this.goalList});
 
   //Method for creting list of active goals for the current date
   List<Goal> dailyGoals() {
@@ -28,7 +41,7 @@ class DataQueue {
           .compareTo(b.dateCreated); //sorts list using dates ascending order
     });
     goalList.sort();
-    for (var i = goalList.length; i > 0; i--) {
+    for (var i = goalList.length - 1; i > 0; i--) {
       var currentGoal = goalList[i];
       //if statement targets each goal returns list curren
       if (currentGoal.isLongTerm == false) {
@@ -52,45 +65,54 @@ class DataQueue {
   }
 
   ///Methods for controlling Metrics Queue
-  void addMetrics() {
-    List<Goal> todaysGoals = dailyGoals();
-    MetricsData todaysMetrics = calcData(todaysGoals);
-    todaysMetrics.dataCollectionDate = DateTime.now();
-    metricsQueue.add(todaysMetrics); //Function call adds metrics for today
-    mSize();
+
+  void zeroMetrics() {
+    while (metricsQueue.length < 7) {
+      metricsQueue.insert(0, m0);
+    }
   }
 
-  void removeMetrics(idx) {
-    metricsQueue.removeAt(idx);
+  void addMetrics() {
+    // prints Tuesday
+    List<Goal> todaysGoals = dailyGoals();
+    MetricsData todaysMetrics = calcData(todaysGoals);
+    todaysMetrics.dataCollectionDate = todaysDate;
+    todaysMetrics.dayOfWeek = dayOfWeek; // prints Tuesday
+
+    zeroMetrics(); //initilizes Metrics Data with values of zero
+    metricsQueue.add(todaysMetrics); //Function call adds metrics for today
+    mSize(); //Manage the size of metrics Queuelist
   }
 
   void mSize() {
     if ((metricsQueue.length > 7) &
-        (metricsQueue[6].dataCollectionDate.day != DateTime.now().day)) {
-      removeMetrics(0);
+        (metricsQueue[6].dataCollectionDate != todaysDate)) {
+      metricsQueue.removeAt(6);
     } else if ((metricsQueue.length > 7) &
-        (metricsQueue[6].dataCollectionDate.day == DateTime.now().day)) {
-      removeGoals(6);
+        (metricsQueue[6].dataCollectionDate == todaysDate)) {
+      metricsQueue.removeAt(0);
     }
   }
 
   /// methods for controlling Goal Queue
   void addGoals() {
-    queueList.add(dailyGoals()); //Function call add todays goal's to list
+    goalQueue.add(dailyGoals()); //Function call add todays goal's to list
     gSize();
   }
 
-  void removeGoals(idx) {
-    queueList.removeAt(idx);
-  }
-
   void gSize() {
-    if ((queueList.length > 7) &
-        (queueList[6][0].dateCreated.day != DateTime.now().day)) {
-      removeGoals(0);
-    } else if ((queueList.length > 7) &
-        (queueList[6][0].dateCreated.day == DateTime.now().day)) {
-      removeGoals(6);
+    if ((goalQueue.length > 7) &
+        (goalQueue[6][0].dateCreated.day != DateTime.now().day)) {
+      goalQueue.removeAt(0);
+    } else if ((goalQueue.length > 7) &
+        (goalQueue[6][0].dateCreated.day == DateTime.now().day)) {
+      goalQueue.removeAt(6);
     }
   }
+}
+
+List<MetricsData> calcWeeklyMetrics(goalList) {
+  DataQueue dailyMetrics = DataQueue(goalList: goalList);
+  dailyMetrics.addMetrics();
+  return dailyMetrics.metricsQueue;
 }

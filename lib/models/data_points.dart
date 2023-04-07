@@ -12,6 +12,8 @@ final List<Goal> _sampleGoalsM = [
   LongTermGoal(title: 'Learn Python', duration: 15),
 ];
 
+var weeklyMetrics = calcWeeklyMetrics(_sampleGoalsM);
+
 /// this class represents one bar in a bar graph
 class DataPoints {
   final String day; //weekday
@@ -23,28 +25,21 @@ class DataPoints {
   });
 }
 
-List<DataPoints> setLineData(List<Goal> sampleList) {
+List<DataPoints> setLineData() {
   DataPoints lineData1 = DataPoints(
-      day: sampleList[0].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[0].completionPrcnt);
   DataPoints lineData2 = DataPoints(
-      day: sampleList[1].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[1].dayOfWeek, val: weeklyMetrics[1].completionPrcnt);
   DataPoints lineData3 = DataPoints(
-      day: sampleList[2].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[2].dayOfWeek, val: weeklyMetrics[2].completionPrcnt);
   DataPoints lineData4 = DataPoints(
-      day: sampleList[3].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[3].dayOfWeek, val: weeklyMetrics[3].completionPrcnt);
   DataPoints lineData5 = DataPoints(
-      day: sampleList[4].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[4].dayOfWeek, val: weeklyMetrics[4].completionPrcnt);
   DataPoints lineData6 = DataPoints(
-      day: sampleList[5].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[5].dayOfWeek, val: weeklyMetrics[5].completionPrcnt);
   DataPoints lineData7 = DataPoints(
-      day: sampleList[6].goalCreationDate,
-      val: calcData(sampleList).completionPrcnt);
+      day: weeklyMetrics[6].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
   return [
     lineData1,
     lineData2,
