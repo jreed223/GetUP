@@ -22,26 +22,48 @@ class _FilterState extends State<Filter> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, provider, child) {
-      return DropdownButton<String>(
-        // TODO: Change this to the provider method that grabs the filter value
-        value: selectedFilterOption,
-        icon: const Icon(Icons.arrow_downward),
-        elevation: 16,
-        style: const TextStyle(color: Colors.deepPurple),
-        onChanged: (String? value) {
-          // This is called when the user selects an item.
-          setState(() {
-            // TODO: Change this to the provider method that sets the filter value
-            selectedFilterOption = value!;
-          });
-        },
-        items: widget.filterOptionsList
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
+      return Container(
+        child: Row(
+          children: [
+            const Text(
+              'Filter by: ',
+              style: TextStyle(
+                color: Color.fromARGB(129, 0, 0, 0),
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+            Expanded(
+              flex: 10,
+              child: DropdownButton<String>(
+                isDense: true,
+                // TODO: Change this to the provider method that grabs the filter value
+                value: selectedFilterOption,
+                icon: const Icon(Icons.arrow_downward, size: 15),
+                elevation: 16,
+                style: const TextStyle(color: Colors.orange),
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    // TODO: Change this to the provider method that sets the filter value
+                    selectedFilterOption = value!;
+                  });
+                },
+                items: widget.filterOptionsList
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
       );
     });
   }

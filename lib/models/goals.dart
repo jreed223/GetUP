@@ -24,7 +24,7 @@ class Goal {
   String title;
 
   /// Whether the goal is completed.
-  bool isCompleted = false;
+  bool isCompleted;
 
   /// The date the goal was created.
   final DateTime dateCreated;
@@ -42,7 +42,8 @@ class Goal {
     DateTime? dateCreated,
     DateTime? dateCompleted,
   })  : id = id ?? const Uuid().v4(),
-        dateCreated = dateCreated ?? DateTime.now();
+        dateCreated = dateCreated ?? DateTime.now(),
+        isCompleted = isCompleted ?? false;
 
   /// Sets the title of the goal.
   set goalTitle(String newTitle) {
@@ -126,10 +127,10 @@ class LongTermGoal extends Goal {
   final double duration;
 
   /// The progress of the goal/how many hours have been spent on it.
-  double progress = 0.0;
+  double progress;
 
   /// The time dedicated to the goal.
-  double timeDedicated = 0.0;
+  double timeDedicated;
 
   LongTermGoal(
       {required String title,
@@ -140,11 +141,13 @@ class LongTermGoal extends Goal {
       DateTime? dateCreated,
       DateTime? dateCompleted,
       String? id})
-      : super(
+      : progress = progress ?? 0.0,
+        timeDedicated = timeDedicated ?? 0.0,
+        super(
             title: title,
             isCompleted: isCompleted,
-            dateCreated: DateTime.now(),
-            dateCompleted: null,
+            dateCreated: dateCreated ?? DateTime.now(),
+            dateCompleted: dateCompleted,
             id: id);
 
   /// Sets the title of the goal.
@@ -199,6 +202,7 @@ class LongTermGoal extends Goal {
       progress: json['progress'].toDouble(),
       timeDedicated: json['timeDedicated'].toDouble(),
       isCompleted: json['isCompleted'],
+      // TODO:
       dateCreated: (json['dateCreated'] as Timestamp).toDate(),
       dateCompleted: (json['dateCreated'] as Timestamp).toDate(),
       id: json['goalId'],
@@ -247,6 +251,7 @@ class GoalDataState extends ChangeNotifier {
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data['isLongTerm']) {
+        print(data['progress']);
         goals.add(LongTermGoal.fromJson(data));
       } else {
         goals.add(Goal.fromJson(data));
@@ -355,6 +360,7 @@ class GoalDataState extends ChangeNotifier {
     if (status == null) {
       print('** getStatus ** => goal not found');
     } else {
+      print('** getStatus ** => goal found');
       return status;
     }
   }
@@ -388,6 +394,66 @@ class GoalDataState extends ChangeNotifier {
       print('** getTimeDedicated ** => goal not found');
     } else {
       return timeDedicated;
+    }
+  }
+
+  double? getDuration(String goalId) {
+    double duration = 0;
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId && goal.isLongTerm == true) {
+        duration = goal.goalDuration;
+        break;
+      }
+    }
+    if (duration == 0) {
+      print('** getDuration ** => goal not found');
+    } else {
+      return duration;
+    }
+  }
+
+  /// This will update the goal progress in Firebase.
+  Future<void> updateGoalProgress(String goalId) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals')
+            .doc(goalId)
+            .update({
+          'progress': goal.goalProgress,
+          'timeDedicated': goal.goalTimeDedicated
+        });
+      }
+    }
+  }
+
+  /// This will update the goal title in Firebase.
+  Future<void> updateTitle(String goalId) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals')
+            .doc(goalId)
+            .update({'title': goal.title});
+      }
+    }
+  }
+
+  /// This will update the goal status in Firebase.
+  Future<void> updateStatus(String goalId) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals')
+            .doc(goalId)
+            .update({'isCompleted': goal.isCompleted});
+      }
     }
   }
 }

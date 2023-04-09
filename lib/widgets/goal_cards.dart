@@ -174,11 +174,32 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   /// the animation for the menu button on the goal card
   late Animation<double> menuButtonAnimation;
 
+  /// The inital value of the progress when the card is first built
+  late var _initialProgress;
+
+  /// The progress of the goal
+  late var _progress;
+
+  /// The progress of the goal as a percentage
+  late var _progressAsPercentage;
+
+  /// The initial value of the time dedicated when the card is first built
+  late var _initialTimeDedicated;
+
+  /// Time dedicated to the goal
+  late var _timeDedicated;
+
+  /// The initial value of the duration when the card is first built
+  late var _initialDuration;
+
+  /// Duration of the goal
+  late var _duration;
+
   /// The local variable for the goal status
-  bool _isCompleted = false;
+  late bool _isCompleted;
 
   /// Whether or not the title is being edited
-  bool _isEditing = false;
+  late bool _isEditing;
 
   /// Whether the user has exited or cancelled goal editing mode
   bool _isEditingCancelled = false;
@@ -201,79 +222,32 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   /// The number of minutes the user has worked on the goal
   var _minutes = 0;
 
-  /// The progress of the goal
-  var _progress;
-
-  var _progressAsPercentage;
-
-  /// Time dedicated to the goal
-  var _timeDedicated;
-
-  /// Duration of the goal
-  var _duration;
-
   /// The controller for the title text field
   late TextEditingController _titleController;
 
-  /// The controller for the hours text field
-  late TextEditingController _progressController;
-
   /// Sets the initial values for progress and time dedicated
-  void setInitialValues() async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .get()
-        .then((value) {
-      setState(() {
-        _progress = value['progress'];
-        _timeDedicated = value['timeDedicated'];
-        _duration = value['duration'];
-        _progressAsPercentage = _progress / _duration * 100;
-      });
-    });
-  }
+  void setInitialValues() {
+    /// These are used in case the user cancels editing the goal
+    _initialProgress = GOAL_STATES.getProgress(widget.goal.goalId as String);
+    _initialTimeDedicated =
+        GOAL_STATES.getTimeDedicated(widget.goal.goalId as String);
+    _initialDuration = GOAL_STATES.getDuration(widget.goal.goalId as String);
+    _progressAsPercentage = _initialProgress * 100;
 
-  /// Saves new progress to firebase
-  Future updateProgress() async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .update({'progress': _progress});
-  }
+    /// These values are used to calculate the progress
+    _progress = _initialProgress;
+    _timeDedicated = _initialTimeDedicated;
+    _duration = _initialDuration;
 
-  /// Saves new time dedicated to firebase
-  Future updateTimeDedicated() async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        .update({'timeDedicated': _timeDedicated});
-  }
-
-  /// Update status of goal in firebase
-  Future updateGoalStatus() {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals')
-        .doc(widget.goalId)
-        // TODO: Use change notifier to update the goal status
-        .update({'isCompleted': _isCompleted});
+    _isEditing = false;
   }
 
   @override
   void initState() {
     super.initState();
-    // TODO: Use change notifier to update the goal status
-    _isCompleted = _isCompleted;
+    setInitialValues();
+
     _titleController = TextEditingController();
-    _progressController = TextEditingController();
     menuButtonController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -281,20 +255,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     menuButtonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: menuButtonController, curve: Curves.easeInOutBack));
-    // FirebaseFirestore.instance
-    //     .collection('Users')
-    //     .doc(FirebaseAuth.instance.currentUser!.uid)
-    //     .collection('goals')
-    //     .doc(widget.goalId)
-    //     .get()
-    //     .then((value) {
-    //   setState(() {
-    //     _progress = value.data()!['progress'];
-    //     _progressAsPercentage = _progress * 100;
-    //     _duration = value.data()!['duration'];
-    //     _timeDedicated = value.data()!['timeDedicated'];
-    //   });
-    // });
   }
 
   /// Toggles the edit mode for the title
@@ -312,7 +272,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     });
 
     /// Deactivate the error text animation after 1 second
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _showError = !_showError;
       });
@@ -320,79 +280,81 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   }
 
   /// Calculates the progress of the goal by adding 1 hour to the progress
-  void addHourToProgress() {
-    setState(() {
+  Future<void> addHourToProgress() async {
+    setState(() async {
       double newTimeDedicated = _timeDedicated + 1;
       if (newTimeDedicated >= _duration) {
         _timeDedicated = _duration;
         _progress = 1.0;
         _progressAsPercentage = 100.0;
         // TODO: Use change notifier to update the goal status
-        _isCompleted = true;
+        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       } else {
         _timeDedicated = newTimeDedicated;
         _progress = _timeDedicated / _duration;
         _progressAsPercentage = _progress * 100;
         // TODO: Use change notifier to update the goal status
-        _isCompleted = false;
+        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       }
-      updateGoalStatus();
     });
   }
 
   /// Calculates the progress of the goal by subtracting 1 hour from the progress
-  void subtractHourFromProgress() {
-    setState(() {
+  Future<void> subtractHourFromProgress() async {
+    setState(() async {
       _timeDedicated -= 1;
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
       if (_timeDedicated >= _duration) {
         // TODO: Use change notifier to update the goal status
-        _isCompleted = true;
-        updateGoalStatus();
+        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       } else {
         // TODO: Use change notifier to update the goal status
-        _isCompleted = false;
-        updateGoalStatus();
+        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       }
     });
   }
 
   /// Calculates the progress of the goal by adding 1 minute to the progress
-  void addMinuteToProgress() {
-    setState(() {
+  Future<void> addMinuteToProgress() async {
+    setState(() async {
       double newTimeDedicated = _timeDedicated + (1 / 60);
       if (newTimeDedicated >= _duration) {
         _timeDedicated = _duration;
         _progress = 1.0;
         _progressAsPercentage = 100.0;
         // TODO: Use change notifier to update the goal status
-        _isCompleted = true;
+        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       } else {
         _timeDedicated = newTimeDedicated;
         _progress = _timeDedicated / _duration;
         _progressAsPercentage = _progress * 100;
         // TODO: Use change notifier to update the goal status
-        _isCompleted = false;
+        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       }
-      updateGoalStatus();
     });
   }
 
   /// Calculates the progress of the goal by subtracting 1 minute from the progress
-  void subtractMinuteFromProgress() {
-    setState(() {
+  Future<void> subtractMinuteFromProgress() async {
+    setState(() async {
       _timeDedicated -= (1 / 60);
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
       if (_timeDedicated >= _duration) {
         // TODO: Use change notifier to update the goal status
-        _isCompleted = true;
-        updateGoalStatus();
+        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       } else {
         // TODO: Use change notifier to update the goal status
-        _isCompleted = false;
-        updateGoalStatus();
+        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
       }
     });
   }
@@ -414,14 +376,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
               /// The color of the goal card
               /// If the goal is completed, the color is grey
-              color: _isCompleted
-                  ? Color.fromARGB(255, 234, 233, 233)
+              color: provider.getStatus(widget.goal.goalId as String)!
+                  ? Color.fromARGB(166, 224, 224, 224)
                   : Colors.white,
 
               // TODO: use change notifier to update the shadow color
               /// The shadow of the goal card
               /// If the goal is completed, the shadow is grey
-              boxShadow: _isCompleted
+              boxShadow: provider.getStatus(widget.goal.goalId as String)!
                   ? [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -454,19 +416,23 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Consumer<GoalDataState>(
                             builder: (context, provider, child) {
+                              debugPrint('Checkbox is being built');
                               return Checkbox(
                                 activeColor: Colors.orange,
-                                onChanged: (value) {
+                                onChanged: (_) async {
                                   if (provider.getStatus(
                                           widget.goal.goalId as String) ==
                                       true) {
                                     provider.setStatus(
                                         widget.goal.goalId as String, false);
+                                    provider.updateStatus(
+                                        widget.goal.goalId as String);
                                   } else {
                                     provider.setStatus(
                                         widget.goal.goalId as String, true);
+                                    provider.updateStatus(
+                                        widget.goal.goalId as String);
                                   }
-                                  provider.printLongTermGoals();
                                 },
                                 value: provider
                                     .getStatus(widget.goal.goalId as String),
@@ -507,7 +473,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 style: TextStyle(
                                     fontSize: 16,
                                     // TODO: use change notifier to update the text color
-                                    color: _isCompleted
+                                    color: provider.getStatus(
+                                            widget.goal.goalId as String)!
                                         ? Colors.black26
                                         : Colors.black)),
                       ),
@@ -574,23 +541,25 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         width: MediaQuery.of(context).size.width * 0.9,
                         lineHeight: 5.0,
                         // TODO: Use change notifier to update the progress bar
-                        percent: .5,
+                        percent: _progressAsPercentage / 100,
                         linearGradient: LinearGradient(
                           //TODO: Use change notifier to update the progress bar colors
-                          colors: _isCompleted
-                              ? const [
-                                  Color.fromARGB(181, 255, 172, 40),
-                                  Color.fromARGB(173, 255, 109, 40)
-                                ]
-                              : const [
-                                  Colors.orangeAccent,
-                                  Colors.deepOrangeAccent
-                                ],
+                          colors:
+                              provider.getStatus(widget.goal.goalId as String)!
+                                  ? const [
+                                      Color.fromARGB(181, 255, 172, 40),
+                                      Color.fromARGB(173, 255, 109, 40)
+                                    ]
+                                  : const [
+                                      Colors.orangeAccent,
+                                      Colors.deepOrangeAccent
+                                    ],
                         ),
                         // TODO: Use change notifier to update the progress bar colors
-                        backgroundColor: _isCompleted
-                            ? Colors.blueGrey[150]
-                            : Colors.blueGrey[200],
+                        backgroundColor:
+                            provider.getStatus(widget.goal.goalId as String)!
+                                ? Colors.blueGrey[150]
+                                : Colors.blueGrey[200],
                         barRadius: const Radius.circular(2),
                       ),
                     ),
@@ -612,7 +581,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                             /// The progress circle
                             child: CircularPercentIndicator(
                                 // TODO: Use change notifier to update the progress circle
-                                linearGradient: _isCompleted
+                                linearGradient: provider.getStatus(
+                                        widget.goal.goalId as String)!
                                     ? const LinearGradient(colors: [
                                         Colors.greenAccent,
                                         Colors.green,
@@ -626,9 +596,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 curve: Curves.bounceInOut,
                                 radius: screen.displayWidth(context) * 0.125,
                                 lineWidth: 10,
-                                percent: _progressAsPercentage == null
-                                    ? 0
-                                    : _progressAsPercentage / 100,
+                                percent: _progressAsPercentage / 100,
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
@@ -649,25 +617,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   onTap: () {
                                     setState(() {
                                       _isEditingHours = true;
-                                    });
-                                  },
-
-                                  /// Long press on the minus to decrease the minutes
-                                  onLongPress: () {
-                                    _timer = Timer.periodic(
-                                        Duration(milliseconds: 50), (timer) {
-                                      if (!_isEditingHours &&
-                                          // TODO: Use change notifier to update the progress circle
-                                          _isCompleted == false) {
-                                        setState(() {
-                                          _minutes++;
-                                        });
-                                        addMinuteToProgress();
-                                        print("progress $_progress");
-                                        print(
-                                            "_time dedicated $_timeDedicated");
-                                        print("Duration $_duration");
-                                      }
                                     });
                                   },
 
@@ -713,12 +662,12 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     Expanded(
                                       flex: 2,
                                       child: GestureDetector(
-                                        onTap: () {
+                                        onTap: () async {
                                           if (_isEditingHours && _hours > 0) {
                                             setState(() {
                                               _hours--;
                                             });
-                                            subtractHourFromProgress();
+                                            await subtractHourFromProgress();
                                             print("progress $_progress");
                                             print(
                                                 "_time dedicated $_timeDedicated");
@@ -782,7 +731,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       child: GestureDetector(
                                         onTap: () {
                                           if (_isEditingHours &&
-                                              _isCompleted == false) {
+                                              provider.getStatus(widget.goal
+                                                      .goalId as String)! ==
+                                                  false) {
                                             setState(() {
                                               _hours += 1;
                                             });
@@ -792,7 +743,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                                 "_time dedicated $_timeDedicated");
                                             print("Duration $_duration");
                                             // TODO: Use change notifier to update the progress circle
-                                          } else if (_isCompleted == false) {
+                                          } else if (provider.getStatus(widget
+                                                  .goal.goalId as String)! ==
+                                              false) {
                                             setState(() {
                                               _minutes++;
                                             });
@@ -811,7 +764,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                               (timer) {
                                             if (!_isEditingHours &&
                                                 // TODO: Use change notifier to update the progress circle
-                                                _isCompleted == false) {
+                                                provider.getStatus(widget.goal
+                                                        .goalId as String)! ==
+                                                    false) {
                                               setState(() {
                                                 _minutes++;
                                               });
@@ -836,7 +791,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                             curve: Curves.easeInOut,
                                             decoration: BoxDecoration(
                                               // TODO: Use change notifier to update the progress circle
-                                              color: _isCompleted
+                                              color: provider.getStatus(widget
+                                                      .goal.goalId as String)!
                                                   ? Colors.black12
                                                   : Colors.orange,
                                               borderRadius:
@@ -846,7 +802,11 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                                 child: Text('+',
                                                     style: TextStyle(
                                                         // TODO: Use change notifier to update the progress circle
-                                                        color: _isCompleted
+                                                        color: provider
+                                                                .getStatus(widget
+                                                                        .goal
+                                                                        .goalId
+                                                                    as String)!
                                                             ? Colors.black45
                                                             : Colors.white)))),
                                       ),
@@ -928,28 +888,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 _height = screen.displayHeight(context) * 0.08;
                                 _hours = 0;
                                 _minutes = 0;
-                                Future.delayed(
-                                    const Duration(milliseconds: 300), () {
-                                  setState(() {
-                                    // TODO: Use change notifier to grab information
-                                    FirebaseFirestore.instance
-                                        .collection('Users')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .collection('goals')
-                                        .doc(widget.goalId)
-                                        .get()
-                                        .then((value) {
-                                      setState(() {
-                                        _progress = value.data()!['progress'];
-                                        _progressAsPercentage = _progress * 100;
-                                        _duration = value.data()!['duration'];
-                                        _timeDedicated =
-                                            value.data()!['timeDedicated'];
-                                      });
-                                    });
-                                  });
-                                });
+                                _progress = _initialProgress;
+                                _timeDedicated = _initialTimeDedicated;
+                                _progressAsPercentage = _progress * 100;
                               });
                             },
                             child: const Text('Cancel')),
@@ -972,12 +913,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                             ),
                             onPressed: () async {
                               if (_titleController.text.isNotEmpty) {
-                                await FirebaseFirestore.instance
-                                    .collection('Users')
-                                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                                    .collection('goals')
-                                    .doc(widget.goalId)
-                                    .update({'title': _titleController.text});
+                                provider.setTitle(
+                                    widget.goal.goalId, _titleController.text);
+                                await provider
+                                    .updateTitle(widget.goal.goalId as String);
                                 menuButtonController.reverse();
                                 setState(() {
                                   _isEditing = !_isEditing;
@@ -987,8 +926,13 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   _minutes = 0;
                                 });
                               } else {
-                                await updateProgress();
-                                await updateTimeDedicated();
+                                provider.setProgress(
+                                    widget.goal.goalId as String, _progress);
+                                provider.setTimeDedicated(
+                                    widget.goal.goalId as String,
+                                    _timeDedicated);
+                                await provider.updateGoalProgress(
+                                    widget.goal.goalId as String);
                                 menuButtonController.reverse();
                                 setState(() {
                                   _isEditing = !_isEditing;
