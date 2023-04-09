@@ -46,6 +46,7 @@ class _MetricsPageState extends State<MetricsPage> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: const [
                   Expanded(
                     child: LineEchart(),
@@ -59,6 +60,7 @@ class _MetricsPageState extends State<MetricsPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Stack(
+                    alignment: Alignment.centerLeft,
                     children: [
                       Container(
                         color: Colors.orangeAccent,
@@ -68,7 +70,6 @@ class _MetricsPageState extends State<MetricsPage> {
                         margin: EdgeInsets.symmetric(
                             vertical: MediaQuery.of(context).size.width / 14,
                             horizontal: MediaQuery.of(context).size.width / 14),
-                        alignment: const Alignment(0, -.15),
                         child: const Text(
                           "You have\n completed\n 4/7 Goals",
                           textAlign: TextAlign.center,

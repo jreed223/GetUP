@@ -24,15 +24,16 @@ class _LineEchartState extends State<LineEchart> {
       LongTermGoal(title: 'Learn Python', duration: 15),
     ];
 
-    var lineData = setLineData();
+    //var lineData = setLineData();
 
     return Container(
+      alignment: Alignment.center,
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
-      width: 300,
-      height: MediaQuery.of(context).size.height / 3.8,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
-        ///
+        ///${lineData.elementAt(0).val}
         option: '''
     {
 
@@ -53,13 +54,13 @@ class _LineEchartState extends State<LineEchart> {
         type: 'value',
       },
       series: [{
-        data: [${lineData.elementAt(0).val}, 
-        ${lineData.elementAt(1).val}, 
-        ${lineData.elementAt(2).val}, 
-        ${lineData.elementAt(3).val}, 
-        ${lineData.elementAt(4).val}, 
-        ${lineData.elementAt(5).val}, 
-        ${lineData.elementAt(6).val}], 
+        data: [ 22,
+        44, 
+        55, 
+        66, 
+        77, 
+        88, 
+        90], 
         type: 'line',
         smooth: true
       }],

@@ -37,7 +37,7 @@ class MetricsData {
 
 ///Class used to calculate and handle data received for the MetricsData class
 class MetricsController {
-  final List<Goal> goalList;
+  final List goalList;
 
   MetricsController({required this.goalList});
 
@@ -144,7 +144,7 @@ class MetricsController {
 // ];
 
 //Need to create a method that returns goals in a list by day
-MetricsData calcData(List<Goal> sampleList) {
+MetricsData calcData(List sampleList) {
   final sampleController = MetricsController(goalList: sampleList);
   final sampleData = MetricsData(
 

@@ -32,13 +32,13 @@ class Goal {
 
   /// A list <of type Goal> of sample goals.
   // final List<Goal> _sampleGoals = [
-  //   LongTermGoal(title: 'Learn Flutter', duration: '20'),
+  //   LongTermGoal(title: 'Learn Flutter', duration: 20),
   //   Goal(title: 'Go to grocery store'),
-  //   LongTermGoal(title: 'Read', duration: '20'),
+  //   LongTermGoal(title: 'Read', duration: 20),
   //   Goal(title: 'Go to the gym'),
-  //   LongTermGoal(title: 'Learn Dart', duration: '20'),
+  //   LongTermGoal(title: 'Learn Dart', duration: 20),
   //   Goal(title: 'Go to the dentist'),
-  //   LongTermGoal(title: 'Learn Python', duration: '20'),
+  //   LongTermGoal(title: 'Learn Python', duration: 20),
   // ];
 
   /// Get the ID of the goal.

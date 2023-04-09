@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 import 'goals.dart';
 
 class DataQueue {
-  final List<Goal> goalList;
-  List<List<Goal>> goalQueue = [[], [], [], [], [], [], []];
+  final List goalList;
+  List<List> goalQueue = [[], [], [], [], [], [], []];
   List<MetricsData> metricsQueue = [];
 
   MetricsData m0 = MetricsData(
@@ -30,8 +30,8 @@ class DataQueue {
   DataQueue({required this.goalList});
 
   //Method for creting list of active goals for the current date
-  List<Goal> dailyGoals() {
-    List<Goal> todaysGoals = [];
+  List dailyGoals() {
+    List todaysGoals = [];
     var currentDay = DateTime.now().day;
     var currentMonth = DateTime.now().month;
 
@@ -74,7 +74,7 @@ class DataQueue {
 
   void addMetrics() {
     // prints Tuesday
-    List<Goal> todaysGoals = dailyGoals();
+    List todaysGoals = dailyGoals();
     MetricsData todaysMetrics = calcData(todaysGoals);
     todaysMetrics.dataCollectionDate = todaysDate;
     todaysMetrics.dayOfWeek = dayOfWeek; // prints Tuesday

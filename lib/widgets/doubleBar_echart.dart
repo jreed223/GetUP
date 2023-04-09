@@ -14,7 +14,7 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
     return Container(
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
