@@ -44,7 +44,7 @@ class FirestoreController {
   static Future<void> pushGoal(Goal goal, bool isLongTerm, String id) async {
     final userCollection = _db.collection('Users').doc(id);
 
-    final goals = userCollection.collection('goals').doc(goal.goalID);
+    final goals = userCollection.collection('goals').doc(goal.goalId);
 
     await goals.set(goal.toJson());
   }
