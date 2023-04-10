@@ -50,9 +50,11 @@ dependencies:
     # This is for the progress bar
     percent_indicator: ^4.0.1
     # This is for the "Update progress" popup
-    flutter_animated_dialog: ^2.0.1
     animated_flip_counter: ^0.2.5
     flutter_echarts: ^2.4.0
+    provider: ^6.0.5
+    # This is for generating Ids for the goals
+    uuid: ^3.0.4
 
 dev_dependencies:
     flutter_test:

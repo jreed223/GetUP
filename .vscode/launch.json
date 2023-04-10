@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter (lib\\screens\\sign_up.dart)",
+            "name": "Flutter",
             "type": "dart",
             "request": "launch",
-            "program": "lib\\screens\\sign_up.dart"
+            "program": "lib/main.dart",
         }
     ]
 }
