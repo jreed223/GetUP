@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:getup_csc450/screens/metrics.dart';
 import 'firebase_options.dart';
 import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/screens/main_screen.dart';
 
 void main() async {
   Profile.createSampleData();
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
           )),
 
       /// Replace this page with your page to test and run it
-      home: const MetricsPage(),
+      home: const HomeScreen(),
     );
   }
 }
