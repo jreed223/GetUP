@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
@@ -8,6 +9,7 @@ import 'package:getup_csc450/widgets/checkmark.dart';
 import 'package:getup_csc450/widgets/calendar.dart';
 import 'package:getup_csc450/models/profileController.dart';
 import 'package:getup_csc450/screens/profile.dart';
+import 'package:getup_csc450/constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -107,6 +109,10 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _iconIsVisible = true;
     signInTestUser();
+    print('Init bruv');
+    GOAL_STATES
+        .loadGoalsFromFirebase()
+        .then((_) => GOAL_STATES.printLongTermGoals());
   }
 
   /// This is the function that will show the animated checkmark
@@ -510,6 +516,16 @@ class _HomePageState extends State<HomePage>
                                                             false,
                                                             authController
                                                                 .getUser!.uid);
+
+                                                /// This adds the goal to the state
+                                                _isLongTermGoal
+                                                    ? GOAL_STATES.addGoal(
+                                                        LongTermGoal(
+                                                            title: _goalTitle,
+                                                            duration: double.parse(
+                                                                _goalDuration)))
+                                                    : GOAL_STATES.addGoal(Goal(
+                                                        title: _goalTitle));
 
                                                 shrinkSubmitButton();
 
