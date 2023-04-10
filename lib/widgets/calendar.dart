@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'filter.dart';
+
 class CalendarWidget extends StatefulWidget {
   const CalendarWidget({super.key});
 
@@ -64,49 +66,45 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          GestureDetector(
-            onForcePressPeak: (details) {
+          Filter(),
+          TableCalendar(
+            focusedDay: _focusedDay,
+            firstDay: _firstDay,
+            lastDay: _lastDay,
+            onDaySelected: _onDaySelected,
+            onFormatChanged: (format) {
               weekOrMonthView();
             },
-            child: TableCalendar(
-              focusedDay: _focusedDay,
-              firstDay: _firstDay,
-              lastDay: _lastDay,
-              onDaySelected: _onDaySelected,
-              onFormatChanged: (format) {
-                weekOrMonthView();
-              },
-              selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
-              calendarFormat:
-                  expanded ? CalendarFormat.twoWeeks : CalendarFormat.week,
-              headerStyle: const HeaderStyle(
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Color.fromARGB(255, 255, 119, 0),
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Color.fromARGB(255, 255, 119, 0),
-                ),
-                formatButtonVisible: true,
-                titleCentered: true,
-                titleTextStyle: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 20,
-                ),
+            selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
+            calendarFormat:
+                expanded ? CalendarFormat.twoWeeks : CalendarFormat.week,
+            headerStyle: const HeaderStyle(
+              leftChevronIcon: Icon(
+                Icons.chevron_left,
+                color: Color.fromARGB(255, 255, 119, 0),
               ),
-              calendarStyle: const CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 119, 0),
-                  shape: BoxShape.circle,
-                ),
-                selectedTextStyle: TextStyle(color: Colors.white),
-                todayDecoration: BoxDecoration(
-                  color: Color.fromARGB(54, 0, 0, 0),
-                  shape: BoxShape.circle,
-                ),
-                todayTextStyle: TextStyle(color: Colors.white),
+              rightChevronIcon: Icon(
+                Icons.chevron_right,
+                color: Color.fromARGB(255, 255, 119, 0),
               ),
+              formatButtonVisible: true,
+              titleCentered: true,
+              titleTextStyle: TextStyle(
+                color: Colors.black54,
+                fontSize: 20,
+              ),
+            ),
+            calendarStyle: const CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Color.fromARGB(255, 255, 119, 0),
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(color: Colors.white),
+              todayDecoration: BoxDecoration(
+                color: Color.fromARGB(54, 0, 0, 0),
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(color: Colors.white),
             ),
           ),
           Expanded(
