@@ -1,20 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:getup_csc450/models/profileController.dart';
 import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 void main() async {
   Profile.createSampleData();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => GoalDataState.mainInstance,
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
