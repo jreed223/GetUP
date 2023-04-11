@@ -11,22 +11,6 @@ class MetricsPage extends StatefulWidget {
 }
 
 class _MetricsPageState extends State<MetricsPage> {
-  int num = 0;
-
-  ///Used to increase number and set new state
-  void incrementNum() {
-    setState(() {
-      num++;
-    });
-  }
-
-  ///Used to decrease number and set new state
-  void decrementNum() {
-    setState(() {
-      num = num - 1;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +30,6 @@ class _MetricsPageState extends State<MetricsPage> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: const [
                   Expanded(
                     child: LineEchart(),

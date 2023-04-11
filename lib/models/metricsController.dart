@@ -17,7 +17,7 @@ class MetricsData {
   double overallCmpltPrcnt;
   double overallProgressPrcnt; // percent of progress of all goals
 
-  late String dataCollectionDate;
+  late DateTime dataCollectionDate;
   late String dayOfWeek;
 
   ///initializes data
@@ -51,7 +51,7 @@ class MetricsController {
     for (var i = 0; i < goalList.length; i++) {
       var currentGoal = goalList[i];
       //if statement targets each short term goal
-      if (currentGoal is! LongTermGoal) {
+      if (currentGoal.isLongTerm == false) {
         numShortGoals = numShortGoals + 1;
         //if statement targets each completed short term goal
         if (currentGoal.isCompleted == true) {
@@ -79,10 +79,10 @@ class MetricsController {
     for (var i = 0; i < goalList.length; i++) {
       var currentGoal = goalList[i];
       //if statement targets each long term goal
-      if (currentGoal is LongTermGoal) {
+      if (currentGoal.isLongTerm == true) {
         numLongGoals = numLongGoals + 1;
         //adds the getter stored value to the progress counter
-        totalProgress = totalProgress + currentGoal.goalProgress;
+        totalProgress = totalProgress + currentGoal.timeDedicated;
         //adds the getter stored value to the duration counter
         totalDuration = totalDuration + currentGoal.goalDuration;
       }
@@ -107,13 +107,13 @@ class MetricsController {
       var currentGoal = goalList[i];
       totalGoals = totalGoals + 1;
       //if statement targets each long term goal
-      if (currentGoal is LongTermGoal) {
+      if (currentGoal.isLongTerm == true) {
         //if statement targets each completed long term goal
         if (currentGoal.isCompleted == true ||
-            currentGoal.goalDuration == currentGoal.goalProgress) {
+            currentGoal.duration == currentGoal.timeDedicated) {
           overallCmpltCnt = overallCmpltCnt + 1;
         }
-      } else if (currentGoal is! LongTermGoal) {
+      } else if (currentGoal.isLongTerm == false) {
         //else catches short term goals
         if (currentGoal.isCompleted == true) {
           overallCmpltCnt = overallCmpltCnt + 1;

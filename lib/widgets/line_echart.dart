@@ -24,7 +24,7 @@ class _LineEchartState extends State<LineEchart> {
       LongTermGoal(title: 'Learn Python', duration: 15),
     ];
 
-    //var lineData = setLineData();
+    var lineData = setLineData();
 
     return Container(
       alignment: Alignment.center,
@@ -48,19 +48,26 @@ class _LineEchartState extends State<LineEchart> {
 
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['${lineData.elementAt(0).day}', 
+        '${lineData.elementAt(1).day}', 
+        '${lineData.elementAt(2).day}', 
+        '${lineData.elementAt(3).day}', 
+        '${lineData.elementAt(4).day}', 
+        '${lineData.elementAt(5).day}',
+        '${lineData.elementAt(6).day}']
       },
-      yAxis: {
+      yAxis: [{
         type: 'value',
-      },
+        max: 100
+      }],
       series: [{
-        data: [ 22,
-        44, 
-        55, 
-        66, 
-        77, 
-        88, 
-        90], 
+        data: [ ${lineData.elementAt(0).val},
+        ${lineData.elementAt(1).val}, 
+        ${lineData.elementAt(2).val}, 
+        ${lineData.elementAt(3).val}, 
+        ${lineData.elementAt(4).val}, 
+        ${lineData.elementAt(5).val}, 
+        ${lineData.elementAt(6).val}], 
         type: 'line',
         smooth: true
       }],

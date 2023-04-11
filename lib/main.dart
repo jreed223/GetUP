@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           )),
 
       /// Replace this page with your page to test and run it
-      home: const HomePage(),
+      home: const MetricsPage(),
     );
   }
 }

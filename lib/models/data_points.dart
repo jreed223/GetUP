@@ -1,6 +1,8 @@
 import 'package:getup_csc450/models/goals.dart';
 import 'metricsController.dart';
-import 'goal_organizer.dart';
+//import 'goal_organizer.dart';
+import 'goals.dart';
+import 'metrics_Queue.dart';
 
 final List _sampleGoalsM = [
   LongTermGoal(
@@ -14,8 +16,8 @@ final List _sampleGoalsM = [
   Goal(title: 'Go to the dentist'),
   LongTermGoal(title: 'Learn Python', duration: 15),
 ];
-
-var weeklyMetrics = calcWeeklyMetrics(_sampleGoalsM);
+DataQueue weeklyMetrics1 = DataQueue();
+List<MetricsData> weeklyMetrics = metricsInitializer(weeklyMetrics1);
 
 /// this class represents one bar in a bar graph
 class DataPoints {
@@ -28,19 +30,19 @@ class DataPoints {
 
 List<DataPoints> setLineData() {
   DataPoints lineData1 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[0].completionPrcnt);
+      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[0].totalGoals);
   DataPoints lineData2 = DataPoints(
-      day: weeklyMetrics[1].dayOfWeek, val: weeklyMetrics[1].completionPrcnt);
+      day: weeklyMetrics[1].dayOfWeek, val: weeklyMetrics[1].totalGoals);
   DataPoints lineData3 = DataPoints(
-      day: weeklyMetrics[2].dayOfWeek, val: weeklyMetrics[2].completionPrcnt);
+      day: weeklyMetrics[2].dayOfWeek, val: weeklyMetrics[2].totalGoals);
   DataPoints lineData4 = DataPoints(
-      day: weeklyMetrics[3].dayOfWeek, val: weeklyMetrics[3].completionPrcnt);
+      day: weeklyMetrics[3].dayOfWeek, val: weeklyMetrics[3].totalGoals);
   DataPoints lineData5 = DataPoints(
-      day: weeklyMetrics[4].dayOfWeek, val: weeklyMetrics[4].completionPrcnt);
+      day: weeklyMetrics[4].dayOfWeek, val: weeklyMetrics[4].totalGoals);
   DataPoints lineData6 = DataPoints(
-      day: weeklyMetrics[5].dayOfWeek, val: weeklyMetrics[5].completionPrcnt);
+      day: weeklyMetrics[5].dayOfWeek, val: weeklyMetrics[5].totalGoals);
   DataPoints lineData7 = DataPoints(
-      day: weeklyMetrics[6].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
+      day: weeklyMetrics[6].dayOfWeek, val: weeklyMetrics[6].totalGoals);
   return [
     lineData1,
     lineData2,
