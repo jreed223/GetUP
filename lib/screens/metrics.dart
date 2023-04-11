@@ -13,14 +13,6 @@ class MetricsPage extends StatefulWidget {
 
 class _MetricsPageState extends State<MetricsPage> {
   @override
-  void initState() {
-    super.initState();
-    GOAL_STATES
-        .loadGoalsFromFirebase()
-        .then((_) => GOAL_STATES.printLongTermGoals());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

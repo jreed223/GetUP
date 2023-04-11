@@ -36,7 +36,7 @@ class DataQueue {
       return b.dateCreated
           .compareTo(a.dateCreated); //sorts list using dates ascending order
     });
-    goalList.sort();
+    // goalList.sort();
     var currentGoal;
     for (currentGoal in goalList) {
       DateTime goalDate = DateTime(currentGoal.goalCreationDate.year,
