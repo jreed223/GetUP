@@ -281,82 +281,82 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
   /// Calculates the progress of the goal by adding 1 hour to the progress
   Future<void> addHourToProgress() async {
-    setState(() async {
-      double newTimeDedicated = _timeDedicated + 1;
-      if (newTimeDedicated >= _duration) {
-        _timeDedicated = _duration;
-        _progress = 1.0;
-        _progressAsPercentage = 100.0;
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      } else {
-        _timeDedicated = newTimeDedicated;
-        _progress = _timeDedicated / _duration;
-        _progressAsPercentage = _progress * 100;
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      }
-    });
+    double newTimeDedicated = _timeDedicated + 1;
+    if (newTimeDedicated >= _duration) {
+      _timeDedicated = _duration;
+      _progress = 1.0;
+      _progressAsPercentage = 100.0;
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    } else {
+      _timeDedicated = newTimeDedicated;
+      _progress = _timeDedicated / _duration;
+      _progressAsPercentage = _progress * 100;
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    }
+    setState(() {});
   }
 
   /// Calculates the progress of the goal by subtracting 1 hour from the progress
   Future<void> subtractHourFromProgress() async {
-    setState(() async {
-      _timeDedicated -= 1;
-      _progress = _timeDedicated / _duration;
-      _progressAsPercentage = _progress * 100;
-      if (_timeDedicated >= _duration) {
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      } else {
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      }
-    });
+    _timeDedicated -= 1;
+    _progress = _timeDedicated / _duration;
+    _progressAsPercentage = _progress * 100;
+    if (_timeDedicated >= _duration) {
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    } else {
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    }
+    setState(() {});
   }
 
   /// Calculates the progress of the goal by adding 1 minute to the progress
   Future<void> addMinuteToProgress() async {
-    setState(() async {
-      double newTimeDedicated = _timeDedicated + (1 / 60);
-      if (newTimeDedicated >= _duration) {
-        _timeDedicated = _duration;
-        _progress = 1.0;
-        _progressAsPercentage = 100.0;
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      } else {
-        _timeDedicated = newTimeDedicated;
-        _progress = _timeDedicated / _duration;
-        _progressAsPercentage = _progress * 100;
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      }
-    });
+    double newTimeDedicated = _timeDedicated + (1 / 60);
+    if (newTimeDedicated >= _duration) {
+      _timeDedicated = _duration;
+      _progress = 1.0;
+      _progressAsPercentage = 100.0;
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    } else {
+      _timeDedicated = newTimeDedicated;
+      _progress = _timeDedicated / _duration;
+      _progressAsPercentage = _progress * 100;
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    }
+    setState(() {});
   }
 
   /// Calculates the progress of the goal by subtracting 1 minute from the progress
   Future<void> subtractMinuteFromProgress() async {
-    setState(() async {
-      _timeDedicated -= (1 / 60);
-      _progress = _timeDedicated / _duration;
-      _progressAsPercentage = _progress * 100;
-      if (_timeDedicated >= _duration) {
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, true);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      } else {
-        // TODO: Use change notifier to update the goal status
-        GOAL_STATES.setStatus(widget.goal.goalId as String, false);
-        await GOAL_STATES.updateStatus(widget.goal.goalId as String);
-      }
-    });
+    double newTimeDedicated = _timeDedicated - (1 / 60);
+    if (newTimeDedicated >= 0) {
+      setState(() {
+        _timeDedicated = newTimeDedicated;
+        _progress = _timeDedicated / _duration;
+        _progressAsPercentage = _progress * 100;
+      });
+    }
+    if (_timeDedicated >= _duration) {
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, true);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    } else {
+      // TODO: Use change notifier to update the goal status
+      GOAL_STATES.setStatus(widget.goal.goalId as String, false);
+      await GOAL_STATES.updateStatus(widget.goal.goalId as String);
+    }
   }
 
   @override
