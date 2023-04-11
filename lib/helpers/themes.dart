@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A class that provides light and dark themes for the app.
 class Themes {
   static final lightTheme = ThemeData(
     primarySwatch: Colors.blue,
@@ -20,6 +21,7 @@ class Themes {
     ),
   );
 
+  /// A [ThemeData] object representing the dark theme.
   static final darkTheme = ThemeData(
     primarySwatch: Colors.grey,
     visualDensity: VisualDensity.adaptivePlatformDensity,
