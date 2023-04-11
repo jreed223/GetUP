@@ -8,6 +8,7 @@ import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'dart:math';
 import 'dart:async';
+import 'package:getup_csc450/constants.dart';
 
 import 'package:provider/provider.dart';
 
@@ -133,7 +134,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                 )
 
               /// TODO: Add a provider to update the title
-              : Text('placeholder',
+              : Text('${widget.goal.title}',
                   style: TextStyle(
                       color: _isCompleted ? Colors.black26 : Colors.black)),
           trailing: IconButton(

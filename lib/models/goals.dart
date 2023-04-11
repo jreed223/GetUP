@@ -277,7 +277,7 @@ class GoalDataState extends ChangeNotifier {
   }
 
   void printLongTermGoals() {
-    for (LongTermGoal goal in goals) {
+    for (dynamic goal in goals) {
       print(goal.goalId);
     }
   }
