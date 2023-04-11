@@ -230,13 +230,22 @@ class GoalDataState extends ChangeNotifier {
     return mainInstance;
   }
 
-  bool test = false;
+  /// This is flag to denote if the goals have already been loaded from Firebase
+  /// It is set to false by default
+  /// It is set to true once the goals have been loaded from Firebase
+  /// This ensures that the goals are only loaded from Firebase once
+  bool _goalsLoaded = false;
 
   /// This is the list that stores all the goals.
   List<dynamic> goals = [];
 
   /// This method loads the goals from Firebase
   Future<void> loadGoalsFromFirebase() async {
+    /// If the goals have already been loaded, return
+    if (_goalsLoaded) {
+      return;
+    }
+
     /// This is the reference to the goals collection in Firebase
     final CollectionReference goalsCollection = FirebaseFirestore.instance
         .collection('Users')
@@ -257,6 +266,7 @@ class GoalDataState extends ChangeNotifier {
         goals.add(Goal.fromJson(data));
       }
     }
+    _goalsLoaded = true;
     notifyListeners();
   }
 
