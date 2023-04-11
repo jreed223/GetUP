@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:getup_csc450/screens/metrics.dart';
+import 'package:getup_csc450/models/profileController.dart';
+import '../screens/home.dart';
+import '../screens/metrics.dart';
+import '../screens/profile.dart';
 
+/// The Home screen widget.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -9,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Define a list of data to use for the item squares
+  /// The list of data to use for the item squares.
   final List<String> items = [
     'Scroll',
     'To',
@@ -29,10 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
     'Here',
   ];
 
+  /// The profile to be used by the Profile screen.
+  Profile profile = Profile.profiles[
+      0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Home',
           style: TextStyle(
@@ -65,14 +74,22 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Metrics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -83,6 +100,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  int _selectedIndex = 0;
+
+  /// The function to call when a navigation bar item is tapped.
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MetricsPage()), //Change to metrics screen
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(profile: profile)),
+        );
+        break;
+    }
+  }
+
+  /// The widget to build the item square list.
   Widget buildItemSquareList(List<String> items) {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
@@ -95,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
           width: itemWidth,
           height: itemWidth,
           margin: const EdgeInsets.all(8),
-          color: Colors.grey[200],
+          color: Colors.white,
           child: Center(
             child: Text(
               items[index],
@@ -112,17 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'test',
-      home: MetricsPage(),
-    );
-  }
+  runApp(const MaterialApp(
+    home: HomeScreen(),
+  ));
 }
