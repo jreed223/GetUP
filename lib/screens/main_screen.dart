@@ -4,6 +4,7 @@ import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
 
+/// The Home screen widget.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Define a list of data to use for the item squares
+  /// The list of data to use for the item squares.
   final List<String> items = [
     'Scroll',
     'To',
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Here',
   ];
 
+  /// The profile to be used by the Profile screen.
   Profile profile = Profile.profiles[
       0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
 
@@ -100,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0;
 
+  /// The function to call when a navigation bar item is tapped.
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -135,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  /// The widget to build the item square list.
   Widget buildItemSquareList(List<String> items) {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
@@ -162,22 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       title: 'test',
-//       home: HomeScreen(),
-//     );
-//   }
-// }
 
 void main() {
   runApp(const MaterialApp(

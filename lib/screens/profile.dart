@@ -3,6 +3,7 @@ import '../models/userController.dart';
 import '../models/profileController.dart';
 import '../helpers/themes.dart';
 
+/// The [ProfileScreen] widget displays the user's profile information and allows them to edit their bio and interests.
 class ProfileScreen extends StatefulWidget {
   final Profile profile;
 
@@ -12,6 +13,7 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+/// Creates a new [ProfileScreen] widget with the given [profile].
 class _ProfileScreenState extends State<ProfileScreen> {
   // allows editable bio and interest
   late TextEditingController _bioController;
@@ -34,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  /// Displays a menu allowing the user to select a new theme.
   void _showThemeMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
