@@ -342,6 +342,7 @@ class _HomePageState extends State<HomePage>
                                       onChanged: (input) {
                                         setState(() => _goalTitle = input);
                                       },
+
                                       decoration: const InputDecoration(
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
