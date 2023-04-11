@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the prcntDuration method from the MetricsController class, for the Dart programming language.">
+  <title>prcntDuration method - MetricsController class - metricsController library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">getup_csc450</a></li>
+    <li><a href="../../models_metricsController/models_metricsController-library.html">metricsController</a></li>
+    <li><a href="../../models_metricsController/MetricsController-class.html">MetricsController</a></li>
+    <li class="self-crumb">prcntDuration method</li>
+  </ol>
+  <div class="self-name">prcntDuration</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">prcntDuration</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span></span>
+<span class="name ">prcntDuration</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>LONG TERM GOAL DATA HANDLING</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">&#47;&#47;Method calculates the percentage of duration completed for all Longterm goals
+List&lt;double&gt; prcntDuration() {
+  double totalProgress = 0; &#47;&#47;progress counter
+  double totalDuration = 0; &#47;&#47;duration counter
+  double numLongGoals = 0;
+
+  &#47;&#47; for loop iterates through the goalList
+  for (var i = 0; i &lt; goalList!.length; i++) {
+    var currentGoal = goalList![i];
+    &#47;&#47;if statement targets each long term goal
+    if (currentGoal is LongTermGoal) {
+      numLongGoals = numLongGoals + 1;
+      &#47;&#47;adds the getter stored value to the progress counter
+      totalProgress = totalProgress + currentGoal.goalProgress;
+      &#47;&#47;adds the getter stored value to the duration counter
+      totalDuration =
+          totalDuration + double.parse(currentGoal.goalDuration as String);
+    }
+  }
+  double durationPrcnt =
+      (totalProgress &#47; totalDuration) * 100; &#47;&#47;calulcates percentage
+  return [
+    totalProgress,
+    totalDuration,
+    numLongGoals,
+    durationPrcnt
+  ]; &#47;&#47;returns list of data
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">getup_csc450</a></li>
+  <li><a href="../../models_metricsController/models_metricsController-library.html">metricsController</a></li>
+  <li><a href="../../models_metricsController/MetricsController-class.html">MetricsController</a></li>
+  <li class="self-crumb">prcntDuration method</li>
+</ol>
+
+
+    <h5>MetricsController class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../models_metricsController/MetricsController-class.html#constructors">Constructors</a></li>
+          <li><a href="../../models_metricsController/MetricsController/MetricsController.html">MetricsController</a></li>
+
+
+        <li class="section-title">
+          <a href="../../models_metricsController/MetricsController-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../../models_metricsController/MetricsController/goalList.html">goalList</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+          <li><a href="../../models_metricsController/MetricsController/longGoal.html">longGoal</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+          <li><a href="../../models_metricsController/MetricsController/shortGoal.html">shortGoal</a></li>
+
+        <li class="section-title"><a href="../../models_metricsController/MetricsController-class.html#instance-methods">Methods</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li><a href="../../models_metricsController/MetricsController/prcntDuration.html">prcntDuration</a></li>
+          <li><a href="../../models_metricsController/MetricsController/prcntOverallCmplt.html">prcntOverallCmplt</a></li>
+          <li><a href="../../models_metricsController/MetricsController/prcntOverallProgress.html">prcntOverallProgress</a></li>
+          <li><a href="../../models_metricsController/MetricsController/shortPrcntCmplt.html">shortPrcntCmplt</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+        <li class="section-title inherited"><a href="../../models_metricsController/MetricsController-class.html#operators">Operators</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    getup_csc450
+      1.0.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

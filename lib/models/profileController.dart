@@ -1,12 +1,18 @@
 import 'userController.dart';
 
+/// Represents a user profile containing user details, bio and interests.
 class Profile {
-  late User _user;
-  late String _userBio;
-  late String _userInterests;
+  late User _user; // The user of the profile
+  late String _userBio; // The bio of the user
+  late String _userInterests; // The interests of the user
 
-  static List<Profile> _profiles = [];
+  static List<Profile> _profiles = []; // The list of profiles created
 
+  /// Constructor for creating a new profile
+  ///
+  /// [user] is the user of the profile.
+  /// [userBio] is the bio of the user.
+  /// [userInterests] is the interests of the user.
   Profile({
     required User user,
     required String userBio,
@@ -50,6 +56,9 @@ class Profile {
     _profiles = value;
   }
 
+  /// Creates sample data for the profiles.
+  ///
+  /// Uses sample users from `UserController` to create a new `Profile` for each user.
   static void createSampleData() {
     for (var user in sampleUsers) {
       //sampleUsers comes from User which at the time is part of a pull request and is not fully merged into main yet
