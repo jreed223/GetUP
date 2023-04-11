@@ -2,9 +2,10 @@ import 'package:getup_csc450/models/metricsController.dart';
 import 'package:intl/intl.dart';
 
 import 'goals.dart';
+import 'package:getup_csc450/constants.dart';
 
 class DataQueue {
-  final List goalList = GoalDataState().goals;
+  final List goalList = GOAL_STATES.goals;
   List<List> goalQueue = [[], [], [], [], [], [], []];
   List<MetricsData> metricsQueue = [];
 

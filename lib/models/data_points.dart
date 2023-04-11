@@ -16,8 +16,8 @@ final List _sampleGoalsM = [
   Goal(title: 'Go to the dentist'),
   LongTermGoal(title: 'Learn Python', duration: 15),
 ];
-DataQueue weeklyMetrics1 = DataQueue();
-List<MetricsData> weeklyMetrics = metricsInitializer(weeklyMetrics1);
+DataQueue data = DataQueue();
+List<MetricsData> weeklyMetrics = metricsInitializer(data);
 
 /// this class represents one bar in a bar graph
 class DataPoints {

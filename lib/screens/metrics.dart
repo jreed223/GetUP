@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
+import 'package:getup_csc450/constants.dart';
 
 class MetricsPage extends StatefulWidget {
   const MetricsPage({super.key});
@@ -11,6 +12,14 @@ class MetricsPage extends StatefulWidget {
 }
 
 class _MetricsPageState extends State<MetricsPage> {
+  @override
+  void initState() {
+    super.initState();
+    GOAL_STATES
+        .loadGoalsFromFirebase()
+        .then((_) => GOAL_STATES.printLongTermGoals());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
