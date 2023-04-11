@@ -8,6 +8,8 @@ import 'package:getup_csc450/models/profileController.dart';
 import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+
 void main() async {
   Profile.createSampleData();
   WidgetsFlutterBinding.ensureInitialized();
