@@ -44,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (userCredential.user != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
           return const HomeScreen();
         }));
       }
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: Center(
             child: Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(5.0),
                 child: Form(
                     key: _formKey,
                     child: SingleChildScrollView(
@@ -84,19 +85,26 @@ class _LoginPageState extends State<LoginPage> {
                               child: Container(
                                   width: 600,
                                   padding: const EdgeInsets.fromLTRB(
-                                      80, 200, 80, 200),
+                                      30, 200, 30, 200),
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32)),
+                                      borderRadius: BorderRadius.circular(50)),
                                   child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         RichText(
                                           text: const TextSpan(
-                                              text: 'Welcome to Get UP!',
+                                              text: 'Welcome to',
                                               style: TextStyle(
                                                   fontSize: 40,
                                                   fontWeight: FontWeight.bold)),
                                         ),
+                                        RichText(
+                                            text: const TextSpan(
+                                                text: 'Get UP!',
+                                                style: TextStyle(
+                                                    fontSize: 40,
+                                                    fontWeight:
+                                                        FontWeight.bold))),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -138,8 +146,6 @@ class _LoginPageState extends State<LoginPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(20)),
                                             labelText: 'Password',
-                                            hintText:
-                                                'Password must be 6 characters',
                                             prefixIcon: const Icon(
                                                 Icons.lock_outline_rounded),
                                             suffixIcon: IconButton(

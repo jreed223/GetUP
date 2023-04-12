@@ -167,7 +167,7 @@ class _SignupPage extends State<SignupPage> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20)),
                       labelText: 'Password',
-                      hintText: 'Password must be at least 6 characters',
+                      hintText: 'Must be at least 6 characters',
                       prefixIcon: const Icon(Icons.lock_outline_rounded)),
                   validator: _validatePassword,
                 )),
@@ -211,7 +211,8 @@ class _SignupPage extends State<SignupPage> {
             SizedBox(height: 50),
             TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
                     return const LoginPage();
                   }));
                 },
