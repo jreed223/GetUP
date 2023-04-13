@@ -287,6 +287,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = _duration;
       _progress = 1.0;
       _progressAsPercentage = 100.0;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -294,6 +297,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = newTimeDedicated;
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -306,6 +312,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     _timeDedicated -= 1;
     _progress = _timeDedicated / _duration;
     _progressAsPercentage = _progress * 100;
+    GOAL_STATES.setTimeDedicated(widget.goal.goalId as String, _timeDedicated);
+    GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     if (_timeDedicated >= _duration) {
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
@@ -325,6 +333,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = _duration;
       _progress = 1.0;
       _progressAsPercentage = 100.0;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -332,6 +343,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = newTimeDedicated;
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -348,6 +362,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
         _progress = _timeDedicated / _duration;
         _progressAsPercentage = _progress * 100;
       });
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     }
     if (_timeDedicated >= _duration) {
       // TODO: Use change notifier to update the goal status
@@ -542,7 +559,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         width: MediaQuery.of(context).size.width * 0.9,
                         lineHeight: 5.0,
                         // TODO: Use change notifier to update the progress bar
-                        percent: _progressAsPercentage / 100,
+                        percent: provider.getTimeDedicated(
+                                widget.goal.goalId as String)! /
+                            provider.getDuration(widget.goal.goalId as String)!,
                         linearGradient: LinearGradient(
                           //TODO: Use change notifier to update the progress bar colors
                           colors:
@@ -597,11 +616,18 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 curve: Curves.bounceInOut,
                                 radius: screen.displayWidth(context) * 0.125,
                                 lineWidth: 10,
-                                percent: _progressAsPercentage / 100,
+                                percent: provider.getTimeDedicated(
+                                        widget.goal.goalId as String)! /
+                                    provider.getDuration(
+                                        widget.goal.goalId as String)!,
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
-                                        value: _progressAsPercentage,
+                                        value: provider.getTimeDedicated(
+                                                widget.goal.goalId as String)! /
+                                            provider.getDuration(
+                                                widget.goal.goalId as String)! *
+                                            100,
                                         suffix: "%",
                                       ),
                                 backgroundColor: Colors.black45),
@@ -893,6 +919,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 _timeDedicated = _initialTimeDedicated;
                                 _progressAsPercentage = _progress * 100;
                               });
+                              provider.setProgress(
+                                  widget.goal.goalId as String, _progress);
+                              provider.setTimeDedicated(
+                                  widget.goal.goalId as String, _timeDedicated);
                             },
                             child: const Text('Cancel')),
                       ),
@@ -941,6 +971,13 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       screen.displayHeight(context) * 0.08;
                                   _hours = 0;
                                   _minutes = 0;
+                                  _initialProgress = provider.getProgress(
+                                      widget.goal.goalId as String);
+                                  _initialTimeDedicated =
+                                      provider.getTimeDedicated(
+                                          widget.goal.goalId as String);
+                                  _initialDuration = provider.getDuration(
+                                      widget.goal.goalId as String);
                                 });
                               }
                             },
