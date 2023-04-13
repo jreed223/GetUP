@@ -13,12 +13,21 @@ class Filter extends StatefulWidget {
     'Incomplete',
   ];
 
+  static String filterSelection = 'All';
+
+  String getFilterSelection() {
+    return filterSelection;
+  }
+
+  void setFilterSelection(String value) {
+    filterSelection = value;
+  }
+
   @override
   State<Filter> createState() => _FilterState();
 }
 
 class _FilterState extends State<Filter> {
-  String selectedFilterOption = 'All';
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, provider, child) {
@@ -34,7 +43,7 @@ class _FilterState extends State<Filter> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Spacer(
+            const Spacer(
               flex: 1,
             ),
             Expanded(
@@ -42,7 +51,7 @@ class _FilterState extends State<Filter> {
               child: DropdownButton<String>(
                 isDense: true,
                 // TODO: Change this to the provider method that grabs the filter value
-                value: selectedFilterOption,
+                value: widget.getFilterSelection(),
                 icon: const Icon(Icons.arrow_downward, size: 15),
                 elevation: 16,
                 style: const TextStyle(color: Colors.orange),
@@ -50,7 +59,10 @@ class _FilterState extends State<Filter> {
                   // This is called when the user selects an item.
                   setState(() {
                     // TODO: Change this to the provider method that sets the filter value
-                    selectedFilterOption = value!;
+                    widget.setFilterSelection(value!);
+                    FilterState.mainInstance
+                        .setFilterSelection(widget.getFilterSelection());
+                    print(widget.getFilterSelection());
                   });
                 },
                 items: widget.filterOptionsList
@@ -84,5 +96,16 @@ class FilterState extends ChangeNotifier {
   /// If the instance has not been created yet, it will create the instance
   factory FilterState() {
     return mainInstance;
+  }
+
+  String filterSelection = 'All';
+
+  String getFilterSelection() {
+    return filterSelection;
+  }
+
+  void setFilterSelection(String value) {
+    filterSelection = value;
+    notifyListeners();
   }
 }
