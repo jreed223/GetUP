@@ -51,7 +51,7 @@ class Goal {
   }
 
   /// Sets the status of the goal.
-  set goalStatus(bool newStatus) {
+  void setStatus(bool newStatus) {
     isCompleted = newStatus;
   }
 
@@ -165,9 +165,9 @@ class LongTermGoal extends Goal {
     timeDedicated = newTimeDedicated;
   }
 
-  /// Sets the status of the goal.
-  void setStatus(bool isCompleted) {
-    this.isCompleted = isCompleted;
+  @override
+  void setStatus(bool newStatus) {
+    isCompleted = newStatus;
   }
 
   /// Gets the duration of the goal.

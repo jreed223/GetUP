@@ -79,74 +79,84 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color:
-              _isCompleted ? Color.fromARGB(255, 234, 233, 233) : Colors.white,
-          boxShadow: _isCompleted
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: const Offset(0, 0), // changes position of shadow
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: .1,
-                    blurRadius: .5,
-                    offset: const Offset(0, 2), // changes position of shadow
-                  ),
-                ],
-        ),
-        child: ListTile(
-          leading: Checkbox(
-            activeColor: Colors.orange,
-            onChanged: (value) {
-              setState(() {
-                _isCompleted = value!;
-                // updateGoalStatus();
-              });
-            },
-            value: _isCompleted,
-          ),
-          title: _isEditing
-              ? TextField(
-                  cursorColor: Colors.orangeAccent,
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orange)),
-                      errorText: _showError ? 'Title cannot be empty' : null,
-                      hintText: 'Enter a title'),
-                  onChanged: (value) {
-                    setState(() {
-                      value = _titleController.text;
-                      // TODO: Update title with provider
-                    });
-                  },
-                )
+    return Consumer<GoalDataState>(
+      builder: (context, provider, child) {
+        return Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: provider.getStatus(widget.goal.goalId as String)!
+                  ? Color.fromARGB(255, 234, 233, 233)
+                  : Colors.white,
+              boxShadow: provider.getStatus(widget.goal.goalId as String)!
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset:
+                            const Offset(0, 0), // changes position of shadow
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: .1,
+                        blurRadius: .5,
+                        offset:
+                            const Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
+            ),
+            child: ListTile(
+              leading: Checkbox(
+                activeColor: Colors.orange,
+                onChanged: (value) {
+                  setState(() {
+                    _isCompleted = value!;
+                    provider.setStatus(widget.goal.goalId as String, value);
+                    provider.updateStatus(widget.goal.goalId as String);
+                    // updateGoalStatus();
+                  });
+                },
+                value: provider.getStatus(widget.goal.goalId as String),
+              ),
+              title: _isEditing
+                  ? TextField(
+                      cursorColor: Colors.orangeAccent,
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                          focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.orange)),
+                          errorText:
+                              _showError ? 'Title cannot be empty' : null,
+                          hintText: 'Enter a title'),
+                      onChanged: (value) {
+                        setState(() {
+                          value = _titleController.text;
+                          // TODO: Update title with provider
+                        });
+                      },
+                    )
 
-              /// TODO: Add a provider to update the title
-              : Text('${widget.goal.title}',
-                  style: TextStyle(
-                      color: _isCompleted ? Colors.black26 : Colors.black)),
-          trailing: IconButton(
-            onPressed: () async {
-              // TODO: Add a provider to update the title in the database
-            },
-            icon: Icon(Icons.edit,
-                size: MediaQuery.of(context).size.width * 0.05,
-                color: _isCompleted ? Colors.grey[400] : Colors.grey[550]),
+                  /// TODO: Add a provider to update the title
+                  : Text('${widget.goal.title}',
+                      style: TextStyle(
+                          color: _isCompleted ? Colors.black26 : Colors.black)),
+              trailing: IconButton(
+                onPressed: () async {
+                  // TODO: Add a provider to update the title in the database
+                },
+                icon: Icon(Icons.edit,
+                    size: MediaQuery.of(context).size.width * 0.05,
+                    color: _isCompleted ? Colors.grey[400] : Colors.grey[550]),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
