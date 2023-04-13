@@ -923,6 +923,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                   widget.goal.goalId as String, _progress);
                               provider.setTimeDedicated(
                                   widget.goal.goalId as String, _timeDedicated);
+                              if (_initialProgress != 1) {
+                                provider.setStatus(
+                                    widget.goal.goalId as String, false);
+                              }
                             },
                             child: const Text('Cancel')),
                       ),
