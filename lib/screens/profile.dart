@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/userController.dart';
 import '../models/profileController.dart';
 import '../helpers/themes.dart';
+import 'login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// The [ProfileScreen] widget displays the user's profile information and allows them to edit their bio and interests.
 class ProfileScreen extends StatefulWidget {
@@ -27,6 +29,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _bioController = TextEditingController(text: widget.profile.userBio);
     _interestsController =
         TextEditingController(text: widget.profile.userInterests);
+  }
+
+  void logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return const LoginPage();
+    }));
   }
 
   @override
@@ -173,6 +182,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 40,
+                width: 100,
+                child: ElevatedButton(
+                  onPressed: () {
+                    logout();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(106, 172, 51, 51),
+                  ),
+                  child: Text(
+                    'Log Out',
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
             ],
           ),
         ),

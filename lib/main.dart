@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:getup_csc450/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:getup_csc450/models/profileController.dart';
@@ -67,6 +68,8 @@ class _MyAppState extends State<MyApp> {
                 fontWeight: FontWeight.bold,
               ),
             )),
-        home: const LoginPage());
+        home: FirebaseAuth.instance.currentUser == null
+            ? const LoginPage()
+            : const HomeScreen());
   }
 }
