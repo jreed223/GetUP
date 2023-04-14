@@ -9,7 +9,6 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:getup_csc450/constants.dart';
-
 import 'package:provider/provider.dart';
 
 /// This will be holding the state of all the goals

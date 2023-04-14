@@ -185,25 +185,14 @@ class _HomePageState extends State<HomePage>
       return Scaffold(
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.grey[50],
-          title: const Text('O V E R V I E W',
+          title: const Text('Calendar View',
               style: TextStyle(
                 color: Color.fromARGB(132, 0, 0, 0),
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
               )),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
-              icon: const Icon(Icons.person),
-              color: Color.fromARGB(255, 255, 119, 0),
-            )
-          ],
         ),
         body: Stack(
           children: [
