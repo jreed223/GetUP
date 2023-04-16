@@ -13,31 +13,10 @@ class GoalView extends StatelessWidget {
   /// This is the date that is passed in from the calendar view
   final String selectedDate;
 
-  /// This is the goals collection for the user
-  // final goalsCollection = FirebaseFirestore.instance
-  //     .collection('Users')
-  //     .doc(FirebaseAuth.instance.currentUser!.uid)
-  //     .collection('goals');
   GoalView({super.key, required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
-    /// This is the stream builder that will display the goals for the selected date
-    /// If there are no goals for the selected date, it will display a loading indicator
-    // return StreamBuilder(
-
-    //     /// Query the goals collection for the selected date
-    //     stream: goalsCollection
-    //         .where('dateCreated', isEqualTo: selectedDate)
-    //         .snapshots(),
-    //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    //         return Center(
-    //           child: Text('$selectedDate'),
-    //         );
-    //       }
-    //print(snapshot.data!.docs.length);
-
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         List<dynamic> filteredGoalsBySelectedDate = [];

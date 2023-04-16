@@ -46,7 +46,7 @@ class Goal {
         isCompleted = isCompleted ?? false;
 
   /// Sets the title of the goal.
-  set goalTitle(String newTitle) {
+  void setTitle(String newTitle) {
     title = newTitle;
   }
 
@@ -151,6 +151,7 @@ class LongTermGoal extends Goal {
             id: id);
 
   /// Sets the title of the goal.
+  @override
   void setTitle(String newTitle) {
     title = newTitle;
   }
@@ -441,14 +442,17 @@ class GoalDataState extends ChangeNotifier {
 
   /// This will update the goal title in Firebase.
   Future<void> updateTitle(String goalId) async {
-    for (dynamic goal in goals) {
-      if (goal.goalId == goalId) {
-        await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection('goals')
-            .doc(goalId)
-            .update({'title': goal.title});
+    final docRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('goals')
+        .doc(goalId);
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+      for (dynamic goal in goals) {
+        if (goal.goalId == goalId) {
+          await docRef.update({'title': goal.title});
+        }
       }
     }
   }
