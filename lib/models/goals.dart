@@ -261,7 +261,6 @@ class GoalDataState extends ChangeNotifier {
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data['isLongTerm']) {
-        print(data['progress']);
         goals.add(LongTermGoal.fromJson(data));
       } else {
         goals.add(Goal.fromJson(data));
@@ -277,12 +276,6 @@ class GoalDataState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void printLongTermGoals() {
-    for (dynamic goal in goals) {
-      print(goal.goalId);
-    }
-  }
-
   /// This will set the new title of the goal that is being edited.
   void setTitle(String? goalId, String newTitle) {
     for (dynamic goal in goals) {
@@ -290,8 +283,6 @@ class GoalDataState extends ChangeNotifier {
         goal.setTitle(newTitle);
         notifyListeners();
         break;
-      } else {
-        print('** setTitle ** => goal not found');
       }
     }
   }
@@ -303,8 +294,6 @@ class GoalDataState extends ChangeNotifier {
         goal.setStatus(newStatus);
         notifyListeners();
         break;
-      } else {
-        print('** setStatus ** => goal not found');
       }
     }
   }
@@ -469,26 +458,5 @@ class GoalDataState extends ChangeNotifier {
             .update({'isCompleted': goal.isCompleted});
       }
     }
-  }
-}
-
-/// This class will listen to changes made in GoalDataState and update the UI.
-/// It extends InheritedNotifier so that it can listen to changes made in GoalDataState.
-/// It provides getters to access the goal data.
-class GoalDataEventListener extends InheritedNotifier<GoalDataState> {
-  final GoalDataState _goalDataState;
-
-  GoalDataEventListener({
-    Key? key,
-    required GoalDataState goalDataState,
-    required Widget child,
-  })  : _goalDataState = goalDataState,
-        super(key: key, notifier: goalDataState, child: child);
-
-  static GoalDataState of(BuildContext context) {
-    return context
-            .dependOnInheritedWidgetOfExactType<GoalDataEventListener>()
-            ?._goalDataState ??
-        (throw Exception('Goal data not found'));
   }
 }

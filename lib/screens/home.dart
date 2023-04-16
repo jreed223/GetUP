@@ -85,9 +85,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _iconIsVisible = true;
     print('Init bruv');
-    GOAL_STATES
-        .loadGoalsFromFirebase()
-        .then((_) => GOAL_STATES.printLongTermGoals());
+    GOAL_STATES.loadGoalsFromFirebase();
   }
 
   /// This is the function that will show the animated checkmark
