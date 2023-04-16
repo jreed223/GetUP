@@ -87,9 +87,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _iconIsVisible = true;
     print('Init bruv');
-    GOAL_STATES
-        .loadGoalsFromFirebase()
-        .then((_) => GOAL_STATES.printLongTermGoals());
+    GOAL_STATES.loadGoalsFromFirebase();
   }
 
   /// This is the function that will show the animated checkmark
@@ -187,25 +185,14 @@ class _HomePageState extends State<HomePage>
       return Scaffold(
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.grey[50],
-          title: const Text('O V E R V I E W',
+          title: const Text('Calendar View',
               style: TextStyle(
                 color: Color.fromARGB(132, 0, 0, 0),
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
               )),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
-              icon: const Icon(Icons.person),
-              color: Color.fromARGB(255, 255, 119, 0),
-            )
-          ],
         ),
         body: Stack(
           children: [
@@ -483,40 +470,36 @@ class _HomePageState extends State<HomePage>
                                                   .validate()) {
                                                 try {
                                                   /// This pushes a Goal or LongTermGoal to the database depending on if it is long term or not
-                                                  _isLongTermGoal
-                                                      ? FirestoreController.pushGoal(
-                                                          LongTermGoal(
-                                                              title: _goalTitle,
-                                                              duration:
-                                                                  double.parse(
-                                                                      _goalDuration)),
-                                                          _isLongTermGoal,
-                                                          FirebaseAuth.instance
-                                                              .currentUser!.uid)
-                                                      : FirestoreController
-                                                          .pushGoal(
-                                                              Goal(
-                                                                  title:
-                                                                      _goalTitle),
-                                                              false,
-                                                              FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser!
-                                                                  .uid);
-
-                                                  /// This adds the goal to the state
-                                                  _isLongTermGoal
-                                                      ? GOAL_STATES.addGoal(
-                                                          LongTermGoal(
-                                                              title: _goalTitle,
-                                                              duration:
-                                                                  double.parse(
-                                                                      _goalDuration)))
-                                                      : GOAL_STATES.addGoal(
-                                                          Goal(
-                                                              title:
-                                                                  _goalTitle));
-
+                                                  if (_isLongTermGoal) {
+                                                    LongTermGoal newGoal =
+                                                        LongTermGoal(
+                                                            title: _goalTitle,
+                                                            duration: double.parse(
+                                                                _goalDuration));
+                                                    await FirestoreController
+                                                        .pushGoal(
+                                                            newGoal,
+                                                            _isLongTermGoal,
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid);
+                                                    GOAL_STATES
+                                                        .addGoal(newGoal);
+                                                  } else {
+                                                    Goal newGoal =
+                                                        Goal(title: _goalTitle);
+                                                    await FirestoreController
+                                                        .pushGoal(
+                                                            newGoal,
+                                                            _isLongTermGoal,
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid);
+                                                    GOAL_STATES
+                                                        .addGoal(newGoal);
+                                                  }
                                                   shrinkSubmitButton();
 
                                                   /// This shows the submit checkmark

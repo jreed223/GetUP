@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -9,7 +10,6 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:getup_csc450/constants.dart';
-
 import 'package:provider/provider.dart';
 
 /// This will be holding the state of all the goals
@@ -67,97 +67,149 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
     });
   }
 
-  /// Update status of goal in firebase
-  // Future updateGoalStatus() {
-  //   return FirebaseFirestore.instance
-  //       .collection('Users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .collection('goals')
-  //       .doc(widget.goalId)
-  //       .update({'isCompleted': _isCompleted});
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color:
-              _isCompleted ? Color.fromARGB(255, 234, 233, 233) : Colors.white,
-          boxShadow: _isCompleted
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: const Offset(0, 0), // changes position of shadow
+    return Consumer<GoalDataState>(
+      builder: (context, provider, child) {
+        return Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            height: screen.displayHeight(context) * 0.075,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: provider.getStatus(widget.goal.goalId as String)!
+                  ? Color.fromARGB(255, 234, 233, 233)
+                  : Colors.white,
+              boxShadow: provider.getStatus(widget.goal.goalId as String)!
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset:
+                            const Offset(0, 0), // changes position of shadow
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: .1,
+                        blurRadius: .5,
+                        offset:
+                            const Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0, left: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /// The checkbox
+                  Expanded(
+                    flex: 1,
+                    child: Checkbox(
+                      activeColor: Colors.orange,
+                      value: provider.getStatus(widget.goal.goalId as String),
+                      onChanged: (value) {
+                        setState(() {
+                          _isCompleted = !_isCompleted;
+                        });
+                        provider.setStatus(
+                            widget.goal.goalId as String, value!);
+                        provider.updateStatus(widget.goal.goalId as String);
+                      },
+                    ),
                   ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: .1,
-                    blurRadius: .5,
-                    offset: const Offset(0, 2), // changes position of shadow
+                  const Spacer(flex: 1),
+
+                  /// The goal title
+                  Expanded(
+                    flex: 5,
+
+                    /// The title of the goal
+                    /// If the goal is in edit mode, a text field is shown
+                    child: _isEditing
+                        ? TextField(
+                            cursorColor: Colors.orangeAccent,
+                            controller: _titleController,
+                            decoration: InputDecoration(
+                                focusedBorder: const UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange)),
+                                errorText:
+                                    _showError ? 'Title cannot be empty' : null,
+                                hintText: 'Edit title'),
+                            onChanged: (value) {
+                              if (!_isEditing && value.isNotEmpty) {
+                                setState(() {
+                                  value = _titleController.text;
+                                });
+                                provider.setTitle(
+                                    widget.goal.goalId as String, value);
+                              }
+                            },
+                          )
+                        : Text(provider.getTitle(widget.goal.goalId as String)!,
+                            style: TextStyle(
+                                fontSize: 16,
+                                // TODO: use change notifier to update the text color
+                                color: provider.getStatus(
+                                        widget.goal.goalId as String)!
+                                    ? Colors.black26
+                                    : Colors.black)),
+                  ),
+                  const Spacer(flex: 1),
+
+                  /// The edit button
+                  Expanded(
+                    flex: 1,
+                    child: AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 100),
+                      crossFadeState: _isEditing
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      firstChild: IconButton(
+                        splashColor: Colors.transparent,
+                        icon: Icon(Icons.edit,
+                            size: screen.displayWidth(context) * 0.05),
+                        onPressed: () {
+                          setState(() {
+                            _isEditing = !_isEditing;
+                          });
+                        },
+                      ),
+                      secondChild: IconButton(
+                        splashColor: Colors.transparent,
+                        icon: Icon(Icons.check,
+                            size: screen.displayWidth(context) * 0.05),
+                        onPressed: () async {
+                          if (_titleController.text.isNotEmpty) {
+                            setState(() {
+                              _isEditing = !_isEditing;
+                            });
+                            await provider
+                                .updateTitle(widget.goal.goalId as String);
+                          } else {
+                            showError();
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 ],
-        ),
-        child: ListTile(
-          leading: Checkbox(
-            activeColor: Colors.orange,
-            onChanged: (value) {
-              setState(() {
-                _isCompleted = value!;
-                // updateGoalStatus();
-              });
-            },
-            value: _isCompleted,
+              ),
+            ),
           ),
-          title: _isEditing
-              ? TextField(
-                  cursorColor: Colors.orangeAccent,
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orange)),
-                      errorText: _showError ? 'Title cannot be empty' : null,
-                      hintText: 'Enter a title'),
-                  onChanged: (value) {
-                    setState(() {
-                      value = _titleController.text;
-                      // TODO: Update title with provider
-                    });
-                  },
-                )
-
-              /// TODO: Add a provider to update the title
-              : Text('${widget.goal.title}',
-                  style: TextStyle(
-                      color: _isCompleted ? Colors.black26 : Colors.black)),
-          trailing: IconButton(
-            onPressed: () async {
-              // TODO: Add a provider to update the title in the database
-            },
-            icon: Icon(Icons.edit,
-                size: MediaQuery.of(context).size.width * 0.05,
-                color: _isCompleted ? Colors.grey[400] : Colors.grey[550]),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class LongTermGoalCard extends StatefulWidget {
-  /// The title of the goal
-  String? title;
-
-  /// The index of the goal in the list of goals inside the goal view
-  String? goalId;
-
   /// This is the goal that will be displayed
   final LongTermGoal goal;
 
@@ -287,6 +339,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = _duration;
       _progress = 1.0;
       _progressAsPercentage = 100.0;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -294,6 +349,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = newTimeDedicated;
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -306,6 +364,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     _timeDedicated -= 1;
     _progress = _timeDedicated / _duration;
     _progressAsPercentage = _progress * 100;
+    GOAL_STATES.setTimeDedicated(widget.goal.goalId as String, _timeDedicated);
+    GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     if (_timeDedicated >= _duration) {
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
@@ -325,6 +385,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = _duration;
       _progress = 1.0;
       _progressAsPercentage = 100.0;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -332,6 +395,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       _timeDedicated = newTimeDedicated;
       _progress = _timeDedicated / _duration;
       _progressAsPercentage = _progress * 100;
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
       // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
@@ -348,6 +414,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
         _progress = _timeDedicated / _duration;
         _progressAsPercentage = _progress * 100;
       });
+      GOAL_STATES.setTimeDedicated(
+          widget.goal.goalId as String, _timeDedicated);
+      GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     }
     if (_timeDedicated >= _duration) {
       // TODO: Use change notifier to update the goal status
@@ -369,27 +438,20 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
           /// The goal card
           child: AnimatedContainer(
-            curve: Curves.easeInOutBack,
+            curve: Curves.easeInOut,
             height: _height,
             duration: const Duration(milliseconds: 500),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-
-              /// The color of the goal card
-              /// If the goal is completed, the color is grey
               color: provider.getStatus(widget.goal.goalId as String)!
-                  ? Color.fromARGB(166, 224, 224, 224)
+                  ? Color.fromARGB(255, 234, 233, 233)
                   : Colors.white,
-
-              // TODO: use change notifier to update the shadow color
-              /// The shadow of the goal card
-              /// If the goal is completed, the shadow is grey
               boxShadow: provider.getStatus(widget.goal.goalId as String)!
                   ? [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
-                        spreadRadius: .001,
-                        blurRadius: 1,
+                        spreadRadius: 0,
+                        blurRadius: 0,
                         offset:
                             const Offset(0, 0), // changes position of shadow
                       ),
@@ -465,12 +527,15 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       value.isNotEmpty) {
                                     setState(() {
                                       value = _titleController.text;
-                                      widget.title = value;
                                     });
+                                    provider.setTitle(
+                                        widget.goal.goalId as String, value);
                                   }
                                 },
                               )
-                            : Text(widget.goal.goalTitle,
+                            : Text(
+                                provider
+                                    .getTitle(widget.goal.goalId as String)!,
                                 style: TextStyle(
                                     fontSize: 16,
                                     // TODO: use change notifier to update the text color
@@ -542,7 +607,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         width: MediaQuery.of(context).size.width * 0.9,
                         lineHeight: 5.0,
                         // TODO: Use change notifier to update the progress bar
-                        percent: _progressAsPercentage / 100,
+                        percent: provider.getTimeDedicated(
+                                widget.goal.goalId as String)! /
+                            provider.getDuration(widget.goal.goalId as String)!,
                         linearGradient: LinearGradient(
                           //TODO: Use change notifier to update the progress bar colors
                           colors:
@@ -597,11 +664,18 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 curve: Curves.bounceInOut,
                                 radius: screen.displayWidth(context) * 0.125,
                                 lineWidth: 10,
-                                percent: _progressAsPercentage / 100,
+                                percent: provider.getTimeDedicated(
+                                        widget.goal.goalId as String)! /
+                                    provider.getDuration(
+                                        widget.goal.goalId as String)!,
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
-                                        value: _progressAsPercentage,
+                                        value: provider.getTimeDedicated(
+                                                widget.goal.goalId as String)! /
+                                            provider.getDuration(
+                                                widget.goal.goalId as String)! *
+                                            100,
                                         suffix: "%",
                                       ),
                                 backgroundColor: Colors.black45),
@@ -669,19 +743,11 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                               _hours--;
                                             });
                                             await subtractHourFromProgress();
-                                            print("progress $_progress");
-                                            print(
-                                                "_time dedicated $_timeDedicated");
-                                            print("Duration $_duration");
                                           } else if (_minutes > 0) {
                                             setState(() {
                                               _minutes--;
                                             });
                                             subtractMinuteFromProgress();
-                                            print("progress $_progress");
-                                            print(
-                                                "_time dedicated $_timeDedicated");
-                                            print("Duration $_duration");
                                           }
                                         },
 
@@ -893,6 +959,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 _timeDedicated = _initialTimeDedicated;
                                 _progressAsPercentage = _progress * 100;
                               });
+                              provider.setProgress(
+                                  widget.goal.goalId as String, _progress);
+                              provider.setTimeDedicated(
+                                  widget.goal.goalId as String, _timeDedicated);
+                              if (_initialProgress != 1) {
+                                provider.setStatus(
+                                    widget.goal.goalId as String, false);
+                              }
                             },
                             child: const Text('Cancel')),
                       ),
@@ -941,6 +1015,13 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       screen.displayHeight(context) * 0.08;
                                   _hours = 0;
                                   _minutes = 0;
+                                  _initialProgress = provider.getProgress(
+                                      widget.goal.goalId as String);
+                                  _initialTimeDedicated =
+                                      provider.getTimeDedicated(
+                                          widget.goal.goalId as String);
+                                  _initialDuration = provider.getDuration(
+                                      widget.goal.goalId as String);
                                 });
                               }
                             },
