@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:getup_csc450/models/authController.dart';
+import 'package:getup_csc450/models/data_points.dart';
 import 'package:getup_csc450/models/firebaseController.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage>
   /// This is the boolean that will determine if the icon is visible
   late bool _iconIsVisible;
 
+  ///THIS CODE HAS BEEN PLACED IN THE MAIN SCREEN
   @override
   void initState() {
     super.initState();

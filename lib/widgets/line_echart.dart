@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
+import 'package:getup_csc450/models/metrics_Queue.dart';
+import 'package:provider/provider.dart';
 
 import '../models/goals.dart';
 
@@ -26,15 +28,19 @@ class _LineEchartState extends State<LineEchart> {
 
     var lineData = setLineData();
 
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.zero,
-      margin: EdgeInsets.zero,
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 3.5,
-      child: Echarts(
-        ///${lineData.elementAt(0).val}
-        option: '''
+    return Consumer<GoalDataState>(builder: (context, provider, child) {
+      print('Consumer called');
+      List<dynamic> todaysGoals = provider.goals;
+
+      return Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.zero,
+        margin: EdgeInsets.zero,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 3.5,
+        child: Echarts(
+          ///${lineData.elementAt(0).val}
+          option: '''
     {
 
       title: {
@@ -74,7 +80,8 @@ class _LineEchartState extends State<LineEchart> {
 
     }
   ''',
-      ),
-    );
+        ),
+      );
+    });
   }
 }

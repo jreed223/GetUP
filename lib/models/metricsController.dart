@@ -59,8 +59,15 @@ class MetricsController {
         }
       }
     }
+
     //calculates percnet of short term goals complete
     double completionPrcnt = (shortCmpltCnt / numShortGoals) * 100;
+
+    if (goalList.isEmpty) {
+      shortCmpltCnt = 0.0;
+      numShortGoals = 0.0;
+      completionPrcnt = 0.0;
+    }
     return [
       shortCmpltCnt,
       numShortGoals,
@@ -89,6 +96,14 @@ class MetricsController {
     }
     double durationPrcnt =
         (totalProgress / totalDuration) * 100; //calulcates percentage
+
+    if (goalList.isEmpty) {
+      totalProgress = 0;
+      totalDuration = 0;
+      numLongGoals = 0;
+      durationPrcnt = 0;
+    }
+
     return [
       totalProgress,
       totalDuration,

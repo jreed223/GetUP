@@ -1,8 +1,86 @@
+import 'package:getup_csc450/models/data_points.dart';
 import 'package:getup_csc450/models/metricsController.dart';
 import 'package:intl/intl.dart';
 
 import 'goals.dart';
 import 'package:getup_csc450/constants.dart';
+
+DateTime todaysDate =
+    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+String dayOfWeek = DateFormat('EEE').format(DateTime.now());
+late MetricsData currentMetrics;
+
+class MetricsQueue {
+  static final MetricsQueue _instance = MetricsQueue._internal();
+
+  List<MetricsData> _currentMetricsQ = [];
+
+  factory MetricsQueue() {
+    return _instance;
+  }
+
+  MetricsQueue._internal();
+
+  bool metricsLoaded = false;
+
+  List<MetricsData> getMetricsData() {
+    setMetrics();
+    return _currentMetricsQ;
+  }
+
+  void setMetrics() {
+    if (_currentMetricsQ.isEmpty) {
+      data.goalListOrganizer();
+      metricsLoaded = true;
+      _currentMetricsQ = data.metricsQueue;
+    } else if (_currentMetricsQ.isNotEmpty) {
+      addMetrics();
+      sizeMetrics();
+    }
+  }
+
+  void sizeMetrics() {
+    if ((_currentMetricsQ.length > 7) &
+        (_currentMetricsQ[6]
+            .dataCollectionDate
+            .isAtSameMomentAs(_currentMetricsQ[7].dataCollectionDate))) {
+      _currentMetricsQ.removeAt(6);
+    } else if ((_currentMetricsQ.length > 7) &
+        (_currentMetricsQ[6]
+            .dataCollectionDate
+            .isBefore(_currentMetricsQ[7].dataCollectionDate))) {
+      _currentMetricsQ.removeAt(0);
+    }
+  }
+
+  List<MetricsData> addMetrics() {
+    List todaysGoals = [];
+    for (var currentGoal in GOAL_STATES.goals) {
+      DateTime goalDate = DateTime(currentGoal.goalCreationDate.year,
+          currentGoal.goalCreationDate.month, currentGoal.goalCreationDate.day);
+      DateTime completionDate = DateTime(
+          currentGoal.goalCompletionDate.year,
+          currentGoal.goalCompletionDate.month,
+          currentGoal.goalCompletionDate.day);
+      if ((goalDate.isAtSameMomentAs(todaysDate)) ||
+          (completionDate.isAtSameMomentAs(todaysDate))) {
+        todaysGoals.add(currentGoal);
+      } else if ((currentGoal.isLongTerm == true) &
+          (currentGoal.isCompleted == false)) {
+        if (currentGoal.dateCreated.isBefore(todaysDate)) {
+          todaysGoals.add(currentGoal);
+        }
+      }
+    }
+    var currentMetrics = calcData(todaysGoals);
+    currentMetrics.dataCollectionDate = todaysDate;
+    currentMetrics.dayOfWeek = DateFormat('EEEE').format(todaysDate);
+    _currentMetricsQ.add(currentMetrics);
+    sizeMetrics(); // automatic removal
+    metricsLoaded = true;
+    return _currentMetricsQ;
+  }
+}
 
 class DataQueue {
   final List goalList = GOAL_STATES.goals;
@@ -22,13 +100,6 @@ class DataQueue {
     overallCmpltPrcnt: 0,
     overallProgressPrcnt: 0,
   );
-
-  Goal g0 = Goal(title: 'No Goal Data. Create More Goals!');
-
-  DateTime todaysDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  String dayOfWeek = DateFormat('EEE').format(DateTime.now());
-  late MetricsData currentMetrics;
 
   ///initializes goals into Queue organize by date last 7 days
   void goalListOrganizer() {
@@ -123,45 +194,15 @@ class DataQueue {
     int i = 7;
     for (listGoal in goalQueue) {
       i--;
-      if (listGoal.isEmpty) {
-        listGoal.add(g0);
-        currentMetrics = calcData(listGoal);
-        currentMetrics.dataCollectionDate =
-            todaysDate.subtract(Duration(days: i));
-        currentMetrics.dayOfWeek =
-            DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
-        metricsQueue.add(currentMetrics);
-      } else {
-        currentMetrics = calcData(listGoal);
-        currentMetrics.dataCollectionDate =
-            todaysDate.subtract(Duration(days: i));
-        currentMetrics.dayOfWeek =
-            DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
-        metricsQueue.add(currentMetrics);
-      }
-    }
-  }
 
-  //Adds Goals for current date to metrics Queue
-  void addGoals() {
-    List todaysGoals = [];
-    for (var i = goalList.length - 1; i > 0; i--) {
-      var currentGoal = goalList[i];
-      if (currentGoal.dateCreated == todaysDate) {
-        todaysGoals.add(currentGoal);
-      } else if ((currentGoal.isLongTerm == true) &
-          (currentGoal.isCompleted == false)) {
-        if (currentGoal.dateCreated.isBefore(todaysDate)) {
-          todaysGoals.add(currentGoal);
-        }
-      }
+      currentMetrics = calcData(listGoal);
+      currentMetrics.dataCollectionDate =
+          todaysDate.subtract(Duration(days: i));
+      currentMetrics.dayOfWeek =
+          DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
+      metricsQueue.add(currentMetrics);
     }
-    goalQueue.add(todaysGoals); //Function call add todays goal's to goalQueue
-    currentMetrics = calcData(todaysGoals);
-    currentMetrics.dataCollectionDate = todaysDate;
-    currentMetrics.dayOfWeek = DateFormat('EEEE').format(todaysDate);
-    metricsQueue.add(currentMetrics);
-    mSize(); // automatic removal
+    METRICS_QUEUE._currentMetricsQ = metricsQueue;
   }
 
   void mSize() {
@@ -179,11 +220,66 @@ class DataQueue {
   }
 }
 
+// List<MetricsData> addGoals(DataQueue data) {
+//   List todaysGoals = [];
+//   for (var currentGoal in data.goalList) {
+//     DateTime goalDate = DateTime(currentGoal.goalCreationDate.year,
+//         currentGoal.goalCreationDate.month, currentGoal.goalCreationDate.day);
+//     DateTime completionDate = DateTime(
+//         currentGoal.goalCompletionDate.year,
+//         currentGoal.goalCompletionDate.month,
+//         currentGoal.goalCompletionDate.day);
+//     if ((goalDate.isAtSameMomentAs(data.todaysDate)) ||
+//         (completionDate.isAtSameMomentAs(data.todaysDate))) {
+//       todaysGoals.add(currentGoal);
+//     } else if ((currentGoal.isLongTerm == true) &
+//         (currentGoal.isCompleted == false)) {
+//       if (currentGoal.dateCreated.isBefore(data.todaysDate)) {
+//         todaysGoals.add(currentGoal);
+//       }
+//     }
+//   }
+//   var currentMetrics = calcData(todaysGoals);
+//   currentMetrics.dataCollectionDate = data.todaysDate;
+//   currentMetrics.dayOfWeek = DateFormat('EEEE').format(data.todaysDate);
+//   data.metricsQueue.add(currentMetrics);
+//   data.mSize(); // automatic removal
+// }
+
 List<MetricsData> metricsInitializer(DataQueue data) {
-  if (data.metricsQueue.isEmpty) {
-    data.goalListOrganizer();
-  } else {
-    data.addGoals();
-  }
+  data.goalListOrganizer();
   return data.metricsQueue;
 }
+
+// List<MetricsData> setMetrics(
+//     DataQueue data, List<MetricsData> currentMetricsQ) {
+//   if (currentMetricsQ.isEmpty) {
+//     currentMetricsQ = metricsInitializer(data);
+//   } else if (currentMetricsQ.isNotEmpty) {
+//     List todaysGoals = [];
+//     for (var currentGoal in data.goalList) {
+//       DateTime goalDate = DateTime(currentGoal.goalCreationDate.year,
+//           currentGoal.goalCreationDate.month, currentGoal.goalCreationDate.day);
+//       DateTime completionDate = DateTime(
+//           currentGoal.goalCompletionDate.year,
+//           currentGoal.goalCompletionDate.month,
+//           currentGoal.goalCompletionDate.day);
+//       if ((goalDate.isAtSameMomentAs(data.todaysDate)) ||
+//           (completionDate.isAtSameMomentAs(data.todaysDate))) {
+//         todaysGoals.add(currentGoal);
+//       } else if ((currentGoal.isLongTerm == true) &
+//           (currentGoal.isCompleted == false)) {
+//         if (currentGoal.dateCreated.isBefore(data.todaysDate)) {
+//           todaysGoals.add(currentGoal);
+//         }
+//       }
+//     }
+//     var currentMetrics = calcData(todaysGoals);
+//     currentMetrics.dataCollectionDate = data.todaysDate;
+//     currentMetrics.dayOfWeek = DateFormat('EEEE').format(data.todaysDate);
+//     data.metricsQueue.add(currentMetrics);
+//     data.mSize();
+//     currentMetricsQ = data.metricsQueue; // automatic removal
+//   }
+//   return currentMetricsQ;
+// }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/models/data_points.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -340,6 +341,10 @@ class GoalDataState extends ChangeNotifier {
   //     }
   //   }
   // }
+
+  List getGoals() {
+    return goals;
+  }
 
   /// This will return the title of the goal that is being edited.
   String? getTitle(String goalId) {

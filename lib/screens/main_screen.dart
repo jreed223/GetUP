@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/models/data_points.dart';
 import 'package:getup_csc450/models/profileController.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
+import "package:getup_csc450/constants.dart";
 
 /// The Home screen widget.
 class HomeScreen extends StatefulWidget {
@@ -13,6 +15,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    GOAL_STATES.loadGoalsFromFirebase();
+  }
+
   /// The list of data to use for the item squares.
   final List<String> items = [
     'Scroll',
