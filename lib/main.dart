@@ -5,6 +5,7 @@ import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
+import 'package:getup_csc450/widgets/filter.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:getup_csc450/models/profileController.dart';
@@ -16,8 +17,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => GoalDataState.mainInstance,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<GoalDataState>(
+          create: (context) => GoalDataState(),
+        ),
+        ChangeNotifierProvider<FilterState>(
+          create: (context) => FilterState(),
+        ),
+      ],
       child: MyApp(),
     ),
   );

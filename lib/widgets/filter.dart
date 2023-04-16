@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/helpers/screen_size.dart';
 import 'package:provider/provider.dart';
 
 /// This is the filter widget that will be used to filter the goals
@@ -13,56 +14,74 @@ class Filter extends StatefulWidget {
     'Incomplete',
   ];
 
+  static String filterSelection = 'All';
+
+  String getFilterSelection() {
+    return filterSelection;
+  }
+
+  void setFilterSelection(String value) {
+    filterSelection = value;
+  }
+
   @override
   State<Filter> createState() => _FilterState();
 }
 
 class _FilterState extends State<Filter> {
-  String selectedFilterOption = 'All';
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, provider, child) {
-      return Container(
-        child: Row(
-          children: [
-            const Text(
-              'Filter by: ',
-              style: TextStyle(
-                color: Color.fromARGB(129, 0, 0, 0),
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.bold,
+      return Padding(
+        padding: EdgeInsets.only(
+            left: 8.0, right: displayWidth(context) * .5, top: 15),
+        child: Container(
+          child: Row(
+            children: [
+              const Text(
+                'Filter by: ',
+                style: TextStyle(
+                  color: Color.fromARGB(129, 0, 0, 0),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Expanded(
-              flex: 10,
-              child: DropdownButton<String>(
-                isDense: true,
-                // TODO: Change this to the provider method that grabs the filter value
-                value: selectedFilterOption,
-                icon: const Icon(Icons.arrow_downward, size: 15),
-                elevation: 16,
-                style: const TextStyle(color: Colors.orange),
-                onChanged: (String? value) {
-                  // This is called when the user selects an item.
-                  setState(() {
-                    // TODO: Change this to the provider method that sets the filter value
-                    selectedFilterOption = value!;
-                  });
-                },
-                items: widget.filterOptionsList
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              const Spacer(
+                flex: 2,
               ),
-            ),
-          ],
+              Expanded(
+                flex: 10,
+                child: DropdownButton<String>(
+                  isDense: true,
+                  // TODO: Change this to the provider method that grabs the filter value
+                  value: widget.getFilterSelection(),
+                  icon: const Icon(Icons.arrow_downward,
+                      color: Colors.transparent),
+                  elevation: 16,
+                  style: const TextStyle(
+                      color: Colors.orange, fontWeight: FontWeight.bold),
+                  onChanged: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      // TODO: Change this to the provider method that sets the filter value
+                      widget.setFilterSelection(value!);
+                      FilterState.mainInstance
+                          .setFilterSelection(widget.getFilterSelection());
+                      print(widget.getFilterSelection());
+                    });
+                  },
+                  items: widget.filterOptionsList
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     });
@@ -84,5 +103,16 @@ class FilterState extends ChangeNotifier {
   /// If the instance has not been created yet, it will create the instance
   factory FilterState() {
     return mainInstance;
+  }
+
+  String filterSelection = 'All';
+
+  String getFilterSelection() {
+    return filterSelection;
+  }
+
+  void setFilterSelection(String value) {
+    filterSelection = value;
+    notifyListeners();
   }
 }
