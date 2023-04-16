@@ -16,15 +16,15 @@ class LineEchart extends StatefulWidget {
 class _LineEchartState extends State<LineEchart> {
   @override
   Widget build(BuildContext context) {
-    final List<Goal> _sampleGoalsM = [
-      LongTermGoal(title: 'Learn Flutter', duration: 20),
-      Goal(title: 'ijbib'),
-      LongTermGoal(title: 'Read', duration: 5),
-      Goal(title: 'Go to the gym'),
-      LongTermGoal(title: 'Learn Dart', duration: 10),
-      Goal(title: 'Go to the dentist'),
-      LongTermGoal(title: 'Learn Python', duration: 15),
-    ];
+    // final List<Goal> _sampleGoalsM = [
+    //   LongTermGoal(title: 'Learn Flutter', duration: 20),
+    //   Goal(title: 'ijbib'),
+    //   LongTermGoal(title: 'Read', duration: 5),
+    //   Goal(title: 'Go to the gym'),
+    //   LongTermGoal(title: 'Learn Dart', duration: 10),
+    //   Goal(title: 'Go to the dentist'),
+    //   LongTermGoal(title: 'Learn Python', duration: 15),
+    // ];
 
     var lineData = setLineData();
 
