@@ -21,6 +21,7 @@ class GoalView extends StatelessWidget {
       builder: (context, provider, child) {
         List<dynamic> filteredGoalsBySelectedDate = [];
         for (dynamic goal in provider.goals) {
+          print('This is the length of goals list ${provider.goals.length}');
           if (goal.formattedCreationDate == selectedDate) {
             filteredGoalsBySelectedDate.add(goal);
           }
