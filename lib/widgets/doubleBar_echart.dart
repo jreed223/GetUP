@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:getup_csc450/models/data_points.dart';
 
 class DoubleBarEchart extends StatefulWidget {
   const DoubleBarEchart({super.key});
@@ -9,6 +10,7 @@ class DoubleBarEchart extends StatefulWidget {
 }
 
 class _DoubleBarEchartState extends State<DoubleBarEchart> {
+  var barData = setBarData();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +25,7 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
   title: {
         left: 'center',
         top: 'top',
-        text: 'Short-Term vs. Long-Term Progress'
+        text: 'Short-Term Goal Completion'
       },
   legend: {
     top: 30
@@ -32,22 +34,32 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
   
   dataset: {
     source: [
-      ['Date', 'Short Term', 'Long Term' ],
-      ['Sun', 43.3, 85.8],
-      ['Mon', 83.1, 73.4],
-      ['Tues', 86.4, 65.2],
-      ['Wed', 72.4, 53.9],
-      ['Thur', 42.4, 73.9],
-      ['Fri', 62.4, 43.9],
-      ['Sat', 32.4, 53.9,]
+      ['Date', 'Total Goals', 'Total Completed' ],
+      ['${barData[0].day}', ${barData[0].val}, ${barData[0].val2}],
+      ['${barData[1].day}', ${barData[1].val}, ${barData[0].val2}],
+      ['${barData[2].day}', ${barData[2].val}, ${barData[0].val2}],
+      ['${barData[3].day}', ${barData[3].val}, ${barData[0].val2}],
+      ['${barData[4].day}', ${barData[4].val}, ${barData[0].val2}],
+      ['${barData[5].day}', ${barData[5].val}, ${barData[0].val2}],
+      ['${barData[6].day}', ${barData[6].val}, ${barData[0].val2}],
     ]
   },
   xAxis: { type: 'category' },
   yAxis: {
   },
+
   // Declare several bar series, each will be mapped
   // to a column of dataset.source by default.
-  series: [{ type: 'bar' }, { type: 'bar' }]
+  series: [{ 
+    type: 'bar',  
+    itemStyle: {
+      color: '#F7AD19'
+      }}, 
+  { type: 'bar',
+    itemStyle: {
+      color: '#F27F0C'
+      } 
+  }]
 }
   ''',
       ),

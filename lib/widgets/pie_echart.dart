@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:getup_csc450/models/data_points.dart';
 
 class PieEchart extends StatefulWidget {
   const PieEchart({super.key});
@@ -9,6 +10,7 @@ class PieEchart extends StatefulWidget {
 }
 
 class _PieEchartState extends State<PieEchart> {
+  var pieData = setPieData();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,18 +24,61 @@ class _PieEchartState extends State<PieEchart> {
  
   tooltip: {
       trigger: 'item',
-      position: 'left'
+      position: 'left',
+      formatter: '{b}<br> {c} hours ({d}%)'
+
     },
+
+  visualMap: {
+    show: false,
+    min: 60,
+    max: 1000,
+    inRange: {
+      colorLightness: [.5, .85]
+    }
+    },
+
+   title: {
+    text: 'Long-Term Goal Progress',
+    left: 10
+  },
+    
 
   series: [
     {
-      name: 'Goal Completion',
+      name: 'Long Term Goal Completion',
+      type: 'pie',
+      radius: [0, '40%'],
+      label: {
+        show: false,
+        position: 'inner',
+      },
+      labelLine: {
+        show: false
+      },
+      data: [
+        { value: ${double.parse(pieData[1].toStringAsFixed(2))}, 
+        name: 'Time Dedicated',
+        itemStyle: {
+        color: "#23C552"} 
+      },
+        { value: ${double.parse(pieData[2].toStringAsFixed(2))}, 
+        name: 'Time Remaining',
+        itemStyle: {
+        color: "#F84F31"} 
+        },
+      ],
+      left: '46%'
+    },
+    {
+      name: 'Long Term Goal Completion',
       type: 'pie',
       radius: ['55%', '85%'],
       avoidLabelOverlap: false,
       itemStyle: {
+        color: '#F27F0C',
         borderRadius: 10,
-        borderColor: '#fff',
+        
         borderWidth: 2
       },
       label: {
@@ -50,14 +95,9 @@ class _PieEchartState extends State<PieEchart> {
       labelLine: {
         show: false
       },
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ],
-      left: '40%'
+      data: ${pieData[0]},
+
+      left: '46%'
     }
   ]
 }

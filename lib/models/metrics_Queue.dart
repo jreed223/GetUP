@@ -90,7 +90,7 @@ class DataQueue {
   MetricsData m0 = MetricsData(
     numSTcompleted: 0,
     numShortGoals: 0,
-    completionPrcnt: 0,
+    stCompletionPrcnt: 0,
     totalLTprogress: 0,
     totalDuration: 0,
     numLongGoals: 0,
@@ -188,6 +188,7 @@ class DataQueue {
           }
         }
       }
+      print("Goal List accessed length =  ${goalList.length}");
     }
     //intializes days with no goals with 1 empty goal and calculates Metrics for each list of goals
     List listGoal;

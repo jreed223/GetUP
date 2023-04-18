@@ -29,18 +29,18 @@ class _LineEchartState extends State<LineEchart> {
     var lineData = setLineData();
 
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      print('Consumer called');
-      List<dynamic> todaysGoals = provider.goals;
+      List<dynamic> userGoals = [];
 
-      return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.zero,
-        margin: EdgeInsets.zero,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 3.5,
-        child: Echarts(
-          ///${lineData.elementAt(0).val}
-          option: '''
+      if (provider.goals.isNotEmpty) {
+        return Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.zero,
+          margin: EdgeInsets.zero,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 3.5,
+          child: Echarts(
+            ///${lineData.elementAt(0).val}
+            option: '''
     {
 
       title: {
@@ -75,13 +75,23 @@ class _LineEchartState extends State<LineEchart> {
         ${lineData.elementAt(5).val}, 
         ${lineData.elementAt(6).val}], 
         type: 'line',
-        smooth: true
+        smooth: true,
+        showSymbol: true,
+        lineStyle: {
+          color: '#F7AD19'
+        }, 
+        itemStyle: {
+        color: '#FF7D02'
+      }
       }],
 
     }
   ''',
-        ),
-      );
+          ),
+        );
+      } else {
+        return const Center(child: Text("No Data"));
+      }
     });
   }
 }

@@ -24,11 +24,11 @@ DataQueue data = DataQueue();
 
 /// this class represents one bar in a bar graph
 class DataPoints {
-  final String day; //weekday
+  final String? day; //weekday
   final double val;
   final double? val2; //overall percentage
 
-  DataPoints({required this.day, required this.val, this.val2});
+  DataPoints({this.day, required this.val, this.val2});
 }
 
 List<DataPoints> setLineData() {
@@ -57,54 +57,59 @@ List<DataPoints> setLineData() {
   ];
 }
 
-List<DataPoints> setBarData(List<Goal> sampleList) {
-  DataPoints barData1 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek,
-      val: weeklyMetrics[0].completionPrcnt,
-      val2: weeklyMetrics[0].durationPrcnt);
-  DataPoints barData2 = DataPoints(
-      day: weeklyMetrics[1].dayOfWeek,
-      val: weeklyMetrics[1].completionPrcnt,
-      val2: weeklyMetrics[1].durationPrcnt);
-  DataPoints barData3 = DataPoints(
-      day: weeklyMetrics[2].dayOfWeek,
-      val: weeklyMetrics[2].completionPrcnt,
-      val2: weeklyMetrics[2].durationPrcnt);
-  DataPoints barData4 = DataPoints(
-      day: weeklyMetrics[3].dayOfWeek,
-      val: weeklyMetrics[3].completionPrcnt,
-      val2: weeklyMetrics[3].durationPrcnt);
-  DataPoints barData5 = DataPoints(
-      day: weeklyMetrics[4].dayOfWeek,
-      val: weeklyMetrics[4].completionPrcnt,
-      val2: weeklyMetrics[4].durationPrcnt);
-  DataPoints barData6 = DataPoints(
-      day: weeklyMetrics[5].dayOfWeek,
-      val: weeklyMetrics[5].completionPrcnt,
-      val2: weeklyMetrics[5].durationPrcnt);
-  DataPoints barData7 = DataPoints(
-      day: weeklyMetrics[6].dayOfWeek,
-      val: weeklyMetrics[6].completionPrcnt,
-      val2: weeklyMetrics[6].durationPrcnt);
-  return [barData1, barData2, barData3, barData4, barData5, barData6, barData7];
+dynamic setPieData() {
+  double totalLTduration = 0;
+  double totalTimeDedicated = 0;
+  List<String> pieDataset = [];
+  String noProgress = '';
+
+  for (var goal in data.goalList) {
+    if ((goal.isCompleted == false) & (goal.isLongTerm == true)) {
+      totalLTduration = totalLTduration + goal.duration;
+      totalTimeDedicated = totalTimeDedicated + goal.timeDedicated;
+      if (goal.timeDedicated == 0) {
+        noProgress = '$noProgress<br/>${goal.goalTitle}';
+      }
+      String data =
+          "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
+      pieDataset.add(data);
+    }
+  }
+  double incompleteDuration = totalLTduration - totalTimeDedicated;
+
+  return [pieDataset, totalTimeDedicated, incompleteDuration];
 }
 
 /// this class represents a single slice in a pie chart
 
-List<DataPoints> setPieData(List<Goal> sampleList) {
-  DataPoints pieData1 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData2 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData3 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData4 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData5 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData6 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  DataPoints pieData7 = DataPoints(
-      day: weeklyMetrics[0].dayOfWeek, val: weeklyMetrics[6].completionPrcnt);
-  return [pieData1, pieData2, pieData3, pieData4, pieData5, pieData6, pieData7];
+List<DataPoints> setBarData() {
+  DataPoints barData1 = DataPoints(
+      day: weeklyMetrics[0].dayOfWeek,
+      val: weeklyMetrics[0].numShortGoals,
+      val2: weeklyMetrics[0].numSTcompleted);
+  DataPoints barData2 = DataPoints(
+      day: weeklyMetrics[1].dayOfWeek,
+      val: weeklyMetrics[1].numShortGoals,
+      val2: weeklyMetrics[1].numSTcompleted);
+  DataPoints barData3 = DataPoints(
+      day: weeklyMetrics[2].dayOfWeek,
+      val: weeklyMetrics[2].numShortGoals,
+      val2: weeklyMetrics[2].numSTcompleted);
+  DataPoints barData4 = DataPoints(
+      day: weeklyMetrics[3].dayOfWeek,
+      val: weeklyMetrics[3].numShortGoals,
+      val2: weeklyMetrics[3].numSTcompleted);
+  DataPoints barData5 = DataPoints(
+      day: weeklyMetrics[4].dayOfWeek,
+      val: weeklyMetrics[4].numSTcompleted,
+      val2: weeklyMetrics[4].numSTcompleted);
+  DataPoints barData6 = DataPoints(
+      day: weeklyMetrics[5].dayOfWeek,
+      val: weeklyMetrics[5].numShortGoals,
+      val2: weeklyMetrics[5].numSTcompleted);
+  DataPoints barData7 = DataPoints(
+      day: weeklyMetrics[6].dayOfWeek,
+      val: weeklyMetrics[6].numShortGoals,
+      val2: weeklyMetrics[6].numSTcompleted);
+  return [barData1, barData2, barData3, barData4, barData5, barData6, barData7];
 }

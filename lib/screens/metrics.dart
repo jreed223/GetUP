@@ -47,15 +47,20 @@ class _MetricsPageState extends State<MetricsPage> {
                     alignment: Alignment.centerLeft,
                     children: [
                       Container(
-                        color: Colors.orangeAccent,
                         padding: EdgeInsets.symmetric(
                             vertical: MediaQuery.of(context).size.width / 14,
                             horizontal: MediaQuery.of(context).size.width / 14),
                         margin: EdgeInsets.symmetric(
                             vertical: MediaQuery.of(context).size.width / 14,
-                            horizontal: MediaQuery.of(context).size.width / 14),
+                            horizontal: MediaQuery.of(context).size.width / 20),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.orangeAccent, width: 3),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                        ),
                         child: const Text(
-                          "You have\n completed\n 4/7 Goals",
+                          "You Have\n Completed\n 14 Goals\n the Last 30 Days",
                           textAlign: TextAlign.center,
                         ),
                       ),

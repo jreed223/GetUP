@@ -1,3 +1,5 @@
+import "package:flutter/widgets.dart";
+
 import "goals.dart";
 
 ///Class holds data needed to create visualizations for goal Data
@@ -5,7 +7,7 @@ class MetricsData {
   //short term data
   double numSTcompleted; // total completed short term goals
   double numShortGoals; //total short term goals
-  double completionPrcnt; //percent of completed short term goals
+  double stCompletionPrcnt; //percent of completed short term goals
   //long term data
   double totalLTprogress; //total long term goal progress
   double totalDuration; //total long term goal duration
@@ -24,7 +26,7 @@ class MetricsData {
   MetricsData(
       {required this.numSTcompleted,
       required this.numShortGoals,
-      required this.completionPrcnt,
+      required this.stCompletionPrcnt,
       required this.totalLTprogress,
       required this.totalDuration,
       required this.numLongGoals,
@@ -53,6 +55,7 @@ class MetricsController {
       //if statement targets each short term goal
       if (currentGoal.isLongTerm == false) {
         numShortGoals = numShortGoals + 1;
+        //debugPrint(currentGoal.isCompleted);
         //if statement targets each completed short term goal
         if (currentGoal.isCompleted == true) {
           shortCmpltCnt = shortCmpltCnt + 1;
@@ -170,7 +173,7 @@ MetricsData calcData(List sampleList) {
       numShortGoals: sampleController
           .shortPrcntCmplt()
           .elementAt(1), //return idx[1] prcntComplete  func
-      completionPrcnt: sampleController
+      stCompletionPrcnt: sampleController
           .shortPrcntCmplt()
           .elementAt(2), //return idx[2] for prcntComplete func
       //Long term data
