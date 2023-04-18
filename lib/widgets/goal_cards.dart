@@ -479,7 +479,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Consumer<GoalDataState>(
                             builder: (context, provider, child) {
-                              debugPrint('Checkbox is being built');
                               return Checkbox(
                                 activeColor: Colors.orange,
                                 onChanged: (_) async {

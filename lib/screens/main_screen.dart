@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/profileController.dart';
+import '../constants.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
@@ -36,6 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
   /// The profile to be used by the Profile screen.
   Profile profile = Profile.profiles[
       0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
+
+  @override
+  initState() {
+    super.initState();
+    GOAL_STATES.loadGoalsFromFirebase();
+  }
 
   @override
   Widget build(BuildContext context) {
