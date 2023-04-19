@@ -269,6 +269,10 @@ class GoalDataState extends ChangeNotifier {
     }
     _goalsLoaded = true;
     notifyListeners();
+
+    if (goals.isNotEmpty) {
+      print('Goals loaded from Firebase');
+    }
   }
 
   /// This will add a new goal to the list of long term goals.
@@ -365,7 +369,6 @@ class GoalDataState extends ChangeNotifier {
     if (status == null) {
       print('** getStatus ** => goal not found');
     } else {
-      print('** getStatus ** => goal found');
       return status;
     }
   }
