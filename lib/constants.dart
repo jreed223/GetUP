@@ -6,5 +6,3 @@ import 'package:getup_csc450/models/metrics_Queue.dart';
 
 /// This will hold the state of all the goals in the app
 GoalDataState GOAL_STATES = GoalDataState.mainInstance;
-
-MetricsQueue METRICS_QUEUE = MetricsQueue();

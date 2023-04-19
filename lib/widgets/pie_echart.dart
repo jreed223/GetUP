@@ -3,14 +3,14 @@ import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
 
 class PieEchart extends StatefulWidget {
-  const PieEchart({super.key});
+  List data;
+  PieEchart({Key? key, required this.data}) : super(key: key);
 
   @override
   State<PieEchart> createState() => _PieEchartState();
 }
 
 class _PieEchartState extends State<PieEchart> {
-  var pieData = setPieData();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,12 +57,12 @@ class _PieEchartState extends State<PieEchart> {
         show: false
       },
       data: [
-        { value: ${double.parse(pieData[1].toStringAsFixed(2))}, 
+        { value: ${double.parse(widget.data[1].toStringAsFixed(2))}, 
         name: 'Time Dedicated',
         itemStyle: {
         color: "#23C552"} 
       },
-        { value: ${double.parse(pieData[2].toStringAsFixed(2))}, 
+        { value: ${double.parse(widget.data[2].toStringAsFixed(2))}, 
         name: 'Time Remaining',
         itemStyle: {
         color: "#F84F31"} 
@@ -95,7 +95,7 @@ class _PieEchartState extends State<PieEchart> {
       labelLine: {
         show: false
       },
-      data: ${pieData[0]},
+      data: ${widget.data[0]},
 
       left: '46%'
     }

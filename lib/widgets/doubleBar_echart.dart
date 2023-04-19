@@ -3,14 +3,14 @@ import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
 
 class DoubleBarEchart extends StatefulWidget {
-  const DoubleBarEchart({super.key});
+  List<DataPoints> data;
+  DoubleBarEchart({Key? key, required this.data}) : super(key: key);
 
   @override
   State<DoubleBarEchart> createState() => _DoubleBarEchartState();
 }
 
 class _DoubleBarEchartState extends State<DoubleBarEchart> {
-  var barData = setBarData();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,13 +35,13 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
   dataset: {
     source: [
       ['Date', 'Total Goals', 'Total Completed' ],
-      ['${barData[0].day}', ${barData[0].val}, ${barData[0].val2}],
-      ['${barData[1].day}', ${barData[1].val}, ${barData[0].val2}],
-      ['${barData[2].day}', ${barData[2].val}, ${barData[0].val2}],
-      ['${barData[3].day}', ${barData[3].val}, ${barData[0].val2}],
-      ['${barData[4].day}', ${barData[4].val}, ${barData[0].val2}],
-      ['${barData[5].day}', ${barData[5].val}, ${barData[0].val2}],
-      ['${barData[6].day}', ${barData[6].val}, ${barData[0].val2}],
+      ['${widget.data[0].day}', ${widget.data[0].val}, ${widget.data[0].val2}],
+      ['${widget.data[1].day}', ${widget.data[1].val}, ${widget.data[1].val2}],
+      ['${widget.data[2].day}', ${widget.data[2].val}, ${widget.data[2].val2}],
+      ['${widget.data[3].day}', ${widget.data[3].val}, ${widget.data[3].val2}],
+      ['${widget.data[4].day}', ${widget.data[4].val}, ${widget.data[4].val2}],
+      ['${widget.data[5].day}', ${widget.data[5].val}, ${widget.data[5].val2}],
+      ['${widget.data[6].day}', ${widget.data[6].val}, ${widget.data[6].val2}],
     ]
   },
   xAxis: { type: 'category' },

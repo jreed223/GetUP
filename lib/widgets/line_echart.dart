@@ -1,13 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
 import 'package:getup_csc450/models/metrics_Queue.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
 import '../models/goals.dart';
 
 class LineEchart extends StatefulWidget {
-  const LineEchart({super.key});
+  List<DataPoints> data;
+  LineEchart({Key? key, required this.data}) : super(key: key);
 
   @override
   State<LineEchart> createState() => _LineEchartState();
@@ -25,22 +29,17 @@ class _LineEchartState extends State<LineEchart> {
     //   Goal(title: 'Go to the dentist'),
     //   LongTermGoal(title: 'Learn Python', duration: 15),
     // ];
+    inspect(widget.data);
 
-    var lineData = setLineData();
-
-    return Consumer<GoalDataState>(builder: (context, provider, child) {
-      List<dynamic> userGoals = [];
-
-      if (provider.goals.isNotEmpty) {
-        return Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.zero,
-          margin: EdgeInsets.zero,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 3.5,
-          child: Echarts(
-            ///${lineData.elementAt(0).val}
-            option: '''
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.zero,
+      margin: EdgeInsets.zero,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 3.5,
+      child: Echarts(
+        ///${lineData.elementAt(0).val}
+        option: '''
     {
 
       title: {
@@ -54,26 +53,26 @@ class _LineEchartState extends State<LineEchart> {
 
       xAxis: {
         type: 'category',
-        data: ['${lineData.elementAt(0).day}', 
-        '${lineData.elementAt(1).day}', 
-        '${lineData.elementAt(2).day}', 
-        '${lineData.elementAt(3).day}', 
-        '${lineData.elementAt(4).day}', 
-        '${lineData.elementAt(5).day}',
-        '${lineData.elementAt(6).day}']
+        data: ['${widget.data.elementAt(0).day}', 
+        '${widget.data.elementAt(1).day}', 
+        '${widget.data.elementAt(2).day}', 
+        '${widget.data.elementAt(3).day}', 
+        '${widget.data.elementAt(4).day}', 
+        '${widget.data.elementAt(5).day}',
+        '${widget.data.elementAt(6).day}']
       },
       yAxis: [{
         type: 'value',
         max: 100
       }],
       series: [{
-        data: [ ${lineData.elementAt(0).val},
-        ${lineData.elementAt(1).val}, 
-        ${lineData.elementAt(2).val}, 
-        ${lineData.elementAt(3).val}, 
-        ${lineData.elementAt(4).val}, 
-        ${lineData.elementAt(5).val}, 
-        ${lineData.elementAt(6).val}], 
+        data: [ ${widget.data.elementAt(0).val},
+        ${widget.data.elementAt(1).val}, 
+        ${widget.data.elementAt(2).val}, 
+        ${widget.data.elementAt(3).val}, 
+        ${widget.data.elementAt(4).val}, 
+        ${widget.data.elementAt(5).val}, 
+        ${widget.data.elementAt(6).val}], 
         type: 'line',
         smooth: true,
         showSymbol: true,
@@ -87,11 +86,7 @@ class _LineEchartState extends State<LineEchart> {
 
     }
   ''',
-          ),
-        );
-      } else {
-        return const Center(child: Text("No Data"));
-      }
-    });
+      ),
+    );
   }
 }

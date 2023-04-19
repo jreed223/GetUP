@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:flutter/widgets.dart";
 
 import "goals.dart";
@@ -5,19 +7,19 @@ import "goals.dart";
 ///Class holds data needed to create visualizations for goal Data
 class MetricsData {
   //short term data
-  double numSTcompleted; // total completed short term goals
-  double numShortGoals; //total short term goals
-  double stCompletionPrcnt; //percent of completed short term goals
+  double numSTcompleted = 0; // total completed short term goals
+  double numShortGoals = 0; //total short term goals
+  double stCompletionPrcnt = 0; //percent of completed short term goals
   //long term data
-  double totalLTprogress; //total long term goal progress
-  double totalDuration; //total long term goal duration
-  double numLongGoals;
-  double durationPrcnt; //percent of duration completed for ong term goals
+  double totalLTprogress = 0; //total long term goal progress
+  double totalDuration = 0; //total long term goal duration
+  double numLongGoals = 0;
+  double durationPrcnt = 0; //percent of duration completed for ong term goals
   //overall data
-  double numOverallCmplt;
-  double totalGoals;
-  double overallCmpltPrcnt;
-  double overallProgressPrcnt; // percent of progress of all goals
+  double numOverallCmplt = 0;
+  double totalGoals = 0;
+  double overallCmpltPrcnt = 0;
+  double overallProgressPrcnt = 0; // percent of progress of all goals
 
   late DateTime dataCollectionDate;
   late String dayOfWeek;
@@ -39,7 +41,7 @@ class MetricsData {
 
 ///Class used to calculate and handle data received for the MetricsData class
 class MetricsController {
-  final List goalList;
+  List goalList = [];
 
   MetricsController({required this.goalList});
 
@@ -48,9 +50,10 @@ class MetricsController {
   List<double> shortPrcntCmplt() {
     double shortCmpltCnt = 0; //completed goal counter
     double numShortGoals = 0; //short term goal counter
+    double completionPrcnt = 0;
 
     // for loop iterates through the goalList
-    for (var i = 0; i < goalList.length; i++) {
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       //if statement targets each short term goal
       if (currentGoal.isLongTerm == false) {
@@ -62,9 +65,11 @@ class MetricsController {
         }
       }
     }
-
     //calculates percnet of short term goals complete
-    double completionPrcnt = (shortCmpltCnt / numShortGoals) * 100;
+    completionPrcnt = (shortCmpltCnt / numShortGoals) * 100;
+    if (completionPrcnt.isNaN) {
+      completionPrcnt = 0;
+    }
 
     if (goalList.isEmpty) {
       shortCmpltCnt = 0.0;
@@ -83,22 +88,29 @@ class MetricsController {
   List<double> prcntDuration() {
     double totalProgress = 0; //progress counter
     double totalDuration = 0; //duration counter
+    double totalTime = 0; //progress counter
     double numLongGoals = 0;
+    double durationPrcnt = 0;
 
     // for loop iterates through the goalList
-    for (var i = 0; i < goalList.length; i++) {
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       //if statement targets each long term goal
       if (currentGoal.isLongTerm == true) {
         numLongGoals = numLongGoals + 1;
         //adds the getter stored value to the progress counter
-        totalProgress = totalProgress + currentGoal.timeDedicated;
+        totalProgress = totalProgress + currentGoal.goalProgress;
+        totalTime = totalTime + currentGoal.timeDedicated;
         //adds the getter stored value to the duration counter
         totalDuration = totalDuration + currentGoal.goalDuration;
       }
     }
-    double durationPrcnt =
-        (totalProgress / totalDuration) * 100; //calulcates percentage
+    durationPrcnt =
+        (totalProgress / numLongGoals) * 100; //calulcates percentage
+
+    if (durationPrcnt.isNaN) {
+      durationPrcnt = 0;
+    }
 
     if (goalList.isEmpty) {
       totalProgress = 0;
@@ -106,9 +118,10 @@ class MetricsController {
       numLongGoals = 0;
       durationPrcnt = 0;
     }
+    print("Goal List accessed length =  ${goalList.length}");
 
     return [
-      totalProgress,
+      totalTime,
       totalDuration,
       numLongGoals,
       durationPrcnt
@@ -121,14 +134,15 @@ class MetricsController {
     // for loop iterates through the goalList
     double totalGoals = 0;
     double overallCmpltCnt = 0;
-    for (var i = 0; i < goalList.length; i++) {
+    double overallCompltPrcnt = 0;
+
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       totalGoals = totalGoals + 1;
       //if statement targets each long term goal
       if (currentGoal.isLongTerm == true) {
         //if statement targets each completed long term goal
-        if (currentGoal.isCompleted == true ||
-            currentGoal.duration == currentGoal.timeDedicated) {
+        if (currentGoal.isCompleted == true) {
           overallCmpltCnt = overallCmpltCnt + 1;
         }
       } else if (currentGoal.isLongTerm == false) {
@@ -138,15 +152,46 @@ class MetricsController {
         }
       }
     }
-    double overallCompltPrcnt = (overallCmpltCnt / totalGoals) * 100;
+
+    if (goalList.isEmpty) {
+      overallCmpltCnt = 0;
+      totalGoals = 0;
+      overallCompltPrcnt = 0;
+    }
+    print("Goal List accessed length =  ${goalList.length}");
+    overallCompltPrcnt = (overallCmpltCnt / totalGoals) * 100;
+
+    if (overallCompltPrcnt.isNaN) {
+      overallCompltPrcnt = 0;
+    }
     return [overallCmpltCnt, totalGoals, overallCompltPrcnt];
   }
 
 //Method calculates percentage of all goals completed using the prcntComplete and prcntDuration methods
   double prcntOverallProgress() {
+    int numSTgoals = 0;
+    int numLTgoals = 0;
     //averages the the values of the two function calls
-    double overallPrcnt =
+    double overallPrcnt = 0;
+    for (var goal in goalList) {
+      if (goal.isLongTerm == false) {
+        numSTgoals += 1;
+      } else if (goal.isLongTerm == true) {
+        numLTgoals += 1;
+      }
+    }
+
+    if ((numSTgoals == 0) & (numLTgoals > 0)) {
+      return prcntDuration().elementAt(3);
+    } else if ((numLTgoals == 0) & (numSTgoals > 0)) {
+      return shortPrcntCmplt().elementAt(2);
+    } else if ((numSTgoals == 0) & (numLTgoals == 0)) {
+      return 0;
+    }
+
+    overallPrcnt =
         (shortPrcntCmplt().elementAt(2) + prcntDuration().elementAt(3)) / 2;
+
     return overallPrcnt;
   }
 }
