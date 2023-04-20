@@ -34,7 +34,7 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
   
   dataset: {
     source: [
-      ['Date', 'Total Goals', 'Total Completed' ],
+      ['Date', 'Total Goals', 'Goals Completed' ],
       ['${widget.data[0].day}', ${widget.data[0].val}, ${widget.data[0].val2}],
       ['${widget.data[1].day}', ${widget.data[1].val}, ${widget.data[1].val2}],
       ['${widget.data[2].day}', ${widget.data[2].val}, ${widget.data[2].val2}],

@@ -37,6 +37,37 @@ class MetricsData {
       required this.totalGoals,
       required this.overallCmpltPrcnt,
       required this.overallProgressPrcnt});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'numSTcompleted': numSTcompleted,
+      'numShortGoals': numShortGoals,
+      'stCompletionPrcnt': stCompletionPrcnt,
+      'totalLTprogress': totalLTprogress,
+      'totalDuration': totalDuration,
+      'numLongGoals': numLongGoals,
+      'durationPrcnt': durationPrcnt,
+      'numOverallCmplt': numOverallCmplt,
+      'totalGoals': totalGoals,
+      'overallCmpltPrcnt': overallCmpltPrcnt,
+      'overallProgressPrcnt': overallProgressPrcnt
+    };
+  }
+
+  factory MetricsData.fromJson(dynamic json) {
+    return MetricsData(
+        durationPrcnt: json['durationPrcnt'] as double,
+        numLongGoals: json['numLongGoals'] as double,
+        numOverallCmplt: json['numOverallPrcnt'] as double,
+        numSTcompleted: json['numSTcompleted'] as double,
+        numShortGoals: json['numShortGoals'] as double,
+        overallCmpltPrcnt: json['overallCmpltPrcnt'] as double,
+        overallProgressPrcnt: json['overallProgressPrct'] as double,
+        stCompletionPrcnt: json['stCompletionPrcnt'] as double,
+        totalDuration: json['totalDuration'] as double,
+        totalGoals: json['totalGoals'] as double,
+        totalLTprogress: json['totalLTprogress'] as double);
+  }
 }
 
 ///Class used to calculate and handle data received for the MetricsData class

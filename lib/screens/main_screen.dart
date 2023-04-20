@@ -47,12 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
       0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
 
   @override
-  initState() {
-    super.initState();
-    GOAL_STATES.loadGoalsFromFirebase();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

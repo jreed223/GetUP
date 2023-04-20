@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
@@ -7,7 +10,10 @@ import 'package:provider/provider.dart';
 
 import '../models/data_points.dart';
 import '../models/goals.dart';
+import '../models/metricsController.dart';
 import '../models/metrics_Queue.dart';
+import 'package:text_scroll/text_scroll.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MetricsPage extends StatefulWidget {
   const MetricsPage({super.key});
@@ -17,6 +23,10 @@ class MetricsPage extends StatefulWidget {
 }
 
 class _MetricsPageState extends State<MetricsPage> {
+  List longTermGoals = [];
+  int i = 0;
+  late Timer everySecond;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
@@ -24,6 +34,27 @@ class _MetricsPageState extends State<MetricsPage> {
       List<DataPoints> lineData = setLineData(METRICS_QUEUE.getMetricsData());
       List<DataPoints> barData = setBarData(METRICS_QUEUE.getMetricsData());
       List pieData = setPieData(provider.goals);
+
+      for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
+
+      // int secondCount = 0;
+      // everySecond = Timer.periodic(const Duration(seconds: 10), (Timer t) {
+      //   secondCount += 1;
+      //   if (secondCount == 5) {
+      //     setState(() {
+      //       i += 1;
+      //       if (i > longTermGoals.length) {
+      //         i = 0;
+      //       }
+      //     });
+      //   }
+      // });
+
+      for (var goal in provider.goals) {
+        if (goal.isLongTerm) {
+          longTermGoals.add(goal);
+        }
+      }
 
       return Scaffold(
         backgroundColor: Colors.white,
@@ -58,10 +89,12 @@ class _MetricsPageState extends State<MetricsPage> {
                       alignment: Alignment.centerLeft,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: MediaQuery.of(context).size.width / 14,
-                              horizontal:
-                                  MediaQuery.of(context).size.width / 14),
+                          height: MediaQuery.of(context).size.width / 3,
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          // padding: EdgeInsets.symmetric(
+                          //     vertical: MediaQuery.of(context).size.width / 14,
+                          //     horizontal:
+                          //         MediaQuery.of(context).size.width / 14),
                           margin: EdgeInsets.symmetric(
                               vertical: MediaQuery.of(context).size.width / 14,
                               horizontal:
@@ -72,9 +105,69 @@ class _MetricsPageState extends State<MetricsPage> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20)),
                           ),
-                          child: const Text(
-                            "You Have\n Completed\n 14 Goals\n the Last 30 Days",
-                            textAlign: TextAlign.center,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 5),
+                                  child: TextScroll(
+                                      fadedBorderWidth: .05,
+                                      fadedBorder: true,
+                                      pauseBetween: const Duration(seconds: 3),
+                                      velocity: const Velocity(
+                                          pixelsPerSecond: Offset(50, 0)),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontFamily: 'Open Sans',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                      ("${longTermGoals[i].title}")),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.orangeAccent,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            textAlign: TextAlign.right,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Open Sans',
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                            "${double.parse((longTermGoals[i].duration - longTermGoals[i].timeDedicated).toStringAsFixed(2))}"),
+                                        const Center(
+                                          child: Text(
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Open Sans',
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.w600),
+                                              "Hours\nRemain"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontFamily: 'Open Sans',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                      ("${(double.parse((longTermGoals[i].goalProgress * 100).toStringAsFixed(2)))}% Complete ")),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -82,6 +175,19 @@ class _MetricsPageState extends State<MetricsPage> {
                           height: MediaQuery.of(context).size.height / 3.5,
                           child: PieEchart(data: pieData),
                         ),
+                        Container(
+                          height: MediaQuery.of(context).size.width / 3,
+                          width: MediaQuery.of(context).size.width / 2.25,
+                          child: GestureDetector(onTap: () {
+                            setState(() {
+                              i += 1;
+                              if (i >= longTermGoals.length) {
+                                i = 0;
+                              }
+                            });
+                            print('Tapped Container');
+                          }),
+                        )
                       ],
                     ),
                   ],

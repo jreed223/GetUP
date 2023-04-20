@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:getup_csc450/models/data_points.dart';
 import 'package:getup_csc450/models/metricsController.dart';
+import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'goals.dart';
 import 'package:getup_csc450/constants.dart';
@@ -33,11 +36,49 @@ class MetricsQueue {
     return _currentMetricsQ;
   }
 
+  saveData(MetricsData metricsData) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String json = jsonEncode(metricsData);
+    String dataDate = DateFormat('yyyy-MM-dd HH:mm:ss')
+        .format(metricsData.dataCollectionDate);
+    pref.setString(dataDate, json);
+    print(json);
+  }
+
+  loadData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+
+    String? json = pref.getString(dataDate);
+    MetricsData cachedData = MetricsData.fromJson(json);
+    _currentMetricsQ.add(cachedData);
+    print('$cachedData loaded');
+  }
+
+  deleteData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+    pref.remove(dataDate);
+    print("data deleted");
+  }
+
+  goalInit() {
+    int counter = 7;
+    while (counter > 0) {
+      counter--;
+      loadData(todaysDate.subtract(Duration(days: counter)));
+    }
+    if (_currentMetricsQ.isEmpty) {
+      goalListOrganizer();
+    }
+  }
+
   void goalListOrganizer() {
     goalList.sort((a, b) {
       return b.dateCreated
           .compareTo(a.dateCreated); //sorts list using dates ascending order
     });
+
     // goalList.sort();
     dynamic currentGoal;
     List goalQueue = [[], [], [], [], [], [], []];
@@ -55,6 +96,8 @@ class MetricsQueue {
         } else if ((currentGoal.isLongTerm == true) &
             (currentGoal.isCompleted = true)) {
           if (goalDate
+
+              ///CHANGE TO DATE COMPLETED
               .isAtSameMomentAs(todaysDate.subtract(const Duration(days: 0)))) {
             goalQueue[6].add(currentGoal);
           }
@@ -183,6 +226,7 @@ class MetricsQueue {
             DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
 
         _currentMetricsQ.add(emptyMetrics);
+
         inspect(emptyMetrics);
         inspect(listGoal);
       } else {
@@ -193,6 +237,10 @@ class MetricsQueue {
             DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
         _currentMetricsQ.add(currentMetrics);
       }
+
+      for (MetricsData data in _currentMetricsQ) {
+        saveData(data);
+      }
     }
 
     inspect(_currentMetricsQ);
@@ -200,7 +248,7 @@ class MetricsQueue {
 
   void setMetrics() {
     if (_currentMetricsQ.isEmpty) {
-      goalListOrganizer();
+      goalInit();
       metricsLoaded = true;
     } else if (_currentMetricsQ.isNotEmpty) {
       addMetrics();
@@ -209,7 +257,7 @@ class MetricsQueue {
   }
 
   void sizeMetrics() {
-    if (_currentMetricsQ.length > 7) {
+    if (_currentMetricsQ.length == 7) {
       if (_currentMetricsQ[6]
           .dataCollectionDate
           .isAtSameMomentAs(_currentMetricsQ[7].dataCollectionDate)) {
@@ -231,6 +279,7 @@ class MetricsQueue {
       if ((goalDate.isAtSameMomentAs(todaysDate)) ||
           ((currentGoal.isLongTerm == true) &
               (currentGoal.isCompleted == false))) {
+        deleteData(todaysDate);
         todaysGoals.add(currentGoal);
       } else if (currentGoal.goalCompletionDate != null) {
         DateTime completionDate = DateTime(
@@ -238,6 +287,7 @@ class MetricsQueue {
             currentGoal.goalCompletionDate.month,
             currentGoal.goalCompletionDate.day);
         if (completionDate.isAtSameMomentAs(todaysDate)) {
+          deleteData(todaysDate);
           todaysGoals.add(currentGoal);
         }
       }
@@ -245,6 +295,7 @@ class MetricsQueue {
     var currentMetrics = calcData(todaysGoals);
     currentMetrics.dataCollectionDate = todaysDate;
     currentMetrics.dayOfWeek = DateFormat('EEEE').format(todaysDate);
+    saveData(currentMetrics);
     _currentMetricsQ.add(currentMetrics);
     sizeMetrics(); // automatic removal
     metricsLoaded = true;
