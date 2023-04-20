@@ -120,6 +120,10 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                         provider.setStatus(
                             widget.goal.goalId as String, value!);
                         provider.updateStatus(widget.goal.goalId as String);
+                        if (value) {
+                          provider.updateDateCompleted(
+                              widget.goal.goalId as String, DateTime.now());
+                        }
                       },
                     ),
                   ),
@@ -481,7 +485,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                             builder: (context, provider, child) {
                               return Checkbox(
                                 activeColor: Colors.orange,
-                                onChanged: (_) async {
+                                onChanged: (_) {
                                   if (provider.getStatus(
                                           widget.goal.goalId as String) ==
                                       true) {
@@ -494,6 +498,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         widget.goal.goalId as String, true);
                                     provider.updateStatus(
                                         widget.goal.goalId as String);
+                                    provider.updateDateCompleted(
+                                        widget.goal.goalId as String,
+                                        DateTime.now());
                                   }
                                 },
                                 value: provider

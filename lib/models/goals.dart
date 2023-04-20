@@ -43,7 +43,8 @@ class Goal {
     DateTime? dateCompleted,
   })  : id = id ?? const Uuid().v4(),
         dateCreated = dateCreated ?? DateTime.now(),
-        isCompleted = isCompleted ?? false;
+        isCompleted = isCompleted ?? false,
+        dateCompleted = dateCompleted;
 
   /// Sets the title of the goal.
   void setTitle(String newTitle) {
@@ -53,6 +54,11 @@ class Goal {
   /// Sets the status of the goal.
   void setStatus(bool newStatus) {
     isCompleted = newStatus;
+  }
+
+  /// Sets the date the goal was completed.
+  void setCompletionDate(DateTime newDate) {
+    dateCompleted = newDate;
   }
 
   /// Gets the ID of the goal.
@@ -98,7 +104,7 @@ class Goal {
 
         /// This ensures that the date is in the correct format.
         /// If the date is null, it will be set to null.
-        dateCompleted: (json['dateCreated'] as Timestamp).toDate(),
+        dateCompleted: (json['dateCompleted'] as Timestamp).toDate(),
         id: json['goalId']);
   }
 }
@@ -166,9 +172,16 @@ class LongTermGoal extends Goal {
     timeDedicated = newTimeDedicated;
   }
 
+  /// Sets the status of the goal.
   @override
   void setStatus(bool newStatus) {
     isCompleted = newStatus;
+  }
+
+  /// Sets the date the goal was completed.
+  @override
+  void setCompletionDate(DateTime newDate) {
+    dateCompleted = newDate;
   }
 
   /// Gets the duration of the goal.
@@ -275,9 +288,29 @@ class GoalDataState extends ChangeNotifier {
   }
 
   /// This will add a new goal to the list of long term goals.
-  void addGoal(dynamic newGoal) {
+  addGoal(dynamic newGoal) {
     goals.add(newGoal);
     notifyListeners();
+  }
+
+  /// This will delete a goal from the list of goals.
+  Future<void> deleteGoal(String goalId) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        goals.remove(goal);
+
+        /// This is the reference to the goals collection in Firebase
+        /// This is used to delete the goal from Firebase
+        final CollectionReference goalsCollection = FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals');
+
+        await goalsCollection.doc(goalId).delete();
+        notifyListeners();
+        break;
+      }
+    }
   }
 
   /// This will set the new title of the goal that is being edited.
@@ -459,6 +492,22 @@ class GoalDataState extends ChangeNotifier {
             .collection('goals')
             .doc(goalId)
             .update({'isCompleted': goal.isCompleted});
+      }
+    }
+  }
+
+  // This will update the date completed in Firebase and local storage.
+  Future<void> updateDateCompleted(String goalId, dateTime) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        goal.setCompletionDate(DateTime.now());
+        notifyListeners();
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals')
+            .doc(goalId)
+            .update({'dateCompleted': dateTime});
       }
     }
   }
