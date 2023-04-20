@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
+import '../screens/home.dart';
+import '../screens/metrics.dart';
+import 'package:getup_csc450/models/profileController.dart';
+import '../screens/profile.dart';
+import '../screens/main_screen.dart';
+
 
 class MetricsPage extends StatefulWidget {
   const MetricsPage({super.key});
@@ -96,6 +102,71 @@ class _MetricsPageState extends State<MetricsPage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Metrics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
+  }
+
+// Setting up Profile
+Profile profile = Profile.profiles[
+      0];
+int _selectedIndex = 0;
+
+  /// The function to call when a navigation bar item is tapped.
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MetricsPage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(profile: profile)),
+        );
+        break;
+    }
   }
 }

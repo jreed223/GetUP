@@ -4,6 +4,10 @@ import '../models/profileController.dart';
 import '../helpers/themes.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../screens/home.dart';
+import '../screens/metrics.dart';
+import '../screens/profile.dart';
+import '../screens/main_screen.dart';
 
 /// The [ProfileScreen] widget displays the user's profile information and allows them to edit their bio and interests.
 class ProfileScreen extends StatefulWidget {
@@ -205,10 +209,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+        bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Metrics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
       ),
     );
   }
+// Setting up Profile
+Profile profile = Profile.profiles[
+      0];
+int _selectedIndex = 0;
+
+  /// The function to call when a navigation bar item is tapped.
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MetricsPage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(profile: profile)),
+        );
+        break;
+    }
+  }
 }
+
 
 void main() {
   // Create sample data for testing

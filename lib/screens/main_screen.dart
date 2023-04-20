@@ -33,11 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'In',
     'Here',
   ];
-
-  /// The profile to be used by the Profile screen.
-  Profile profile = Profile.profiles[
-      0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
-
   @override
   initState() {
     super.initState();
@@ -106,7 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
+// Setting up Profile
+ /// The profile to be used by the Profile screen.
+  Profile profile = Profile.profiles[
+      0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
   int _selectedIndex = 0;
 
   /// The function to call when a navigation bar item is tapped.
