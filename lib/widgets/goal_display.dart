@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/constants.dart';
+import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,7 @@ class GoalView extends StatelessWidget {
         var goals = filteredGoalsBySelectedDate;
 
         if (goals.isEmpty) {
-          return Center(
+          return const Center(
             child: Text('No goals for selected date'),
           );
         }
@@ -41,15 +42,24 @@ class GoalView extends StatelessWidget {
               if (Provider.of<FilterState>(context).getFilterSelection() ==
                   'All') {
                 return goals[index].isLongTerm == true
-                    ? LongTermGoalCard(goal: goals[index])
-                    : ShortTermGoalCard(goal: goals[index]);
+                    ? GoalAnimation(
+                        key: ValueKey(goals[index].id),
+                        goalCard: LongTermGoalCard(goal: goals[index]),
+                        goal: goals[index])
+                    : GoalAnimation(
+                        key: ValueKey(goals[index].id),
+                        goalCard: ShortTermGoalCard(goal: goals[index]),
+                        goal: goals[index]);
               }
 
               /// if the filter is set to long term, display only long term goals
               if (Provider.of<FilterState>(context).getFilterSelection() ==
                   'Long Term') {
                 if (goals[index].isLongTerm == true) {
-                  return LongTermGoalCard(goal: goals[index]);
+                  return GoalAnimation(
+                      key: ValueKey(goals[index].id),
+                      goalCard: LongTermGoalCard(goal: goals[index]),
+                      goal: goals[index]);
                 } else {
                   return Container();
                 }
@@ -59,7 +69,10 @@ class GoalView extends StatelessWidget {
               if (Provider.of<FilterState>(context).getFilterSelection() ==
                   'Short Term') {
                 if (goals[index].isLongTerm == false) {
-                  return ShortTermGoalCard(goal: goals[index]);
+                  return GoalAnimation(
+                      key: ValueKey(goals[index].id),
+                      goalCard: ShortTermGoalCard(goal: goals[index]),
+                      goal: goals[index]);
                 } else {
                   return Container();
                 }
@@ -70,8 +83,14 @@ class GoalView extends StatelessWidget {
                   'Completed') {
                 if (goals[index].isCompleted == true) {
                   return goals[index].isLongTerm == true
-                      ? LongTermGoalCard(goal: goals[index])
-                      : ShortTermGoalCard(goal: goals[index]);
+                      ? GoalAnimation(
+                          key: ValueKey(goals[index].id),
+                          goalCard: LongTermGoalCard(goal: goals[index]),
+                          goal: goals[index])
+                      : GoalAnimation(
+                          key: ValueKey(goals[index].id),
+                          goalCard: ShortTermGoalCard(goal: goals[index]),
+                          goal: goals[index]);
                 } else {
                   return Container();
                 }
@@ -82,8 +101,14 @@ class GoalView extends StatelessWidget {
                   'Incomplete') {
                 if (goals[index].isCompleted == false) {
                   return goals[index].isLongTerm == true
-                      ? LongTermGoalCard(goal: goals[index])
-                      : ShortTermGoalCard(goal: goals[index]);
+                      ? GoalAnimation(
+                          key: ValueKey(goals[index].id),
+                          goalCard: LongTermGoalCard(goal: goals[index]),
+                          goal: goals[index])
+                      : GoalAnimation(
+                          key: ValueKey(goals[index].id),
+                          goalCard: ShortTermGoalCard(goal: goals[index]),
+                          goal: goals[index]);
                 } else {
                   return Container();
                 }

@@ -275,9 +275,29 @@ class GoalDataState extends ChangeNotifier {
   }
 
   /// This will add a new goal to the list of long term goals.
-  void addGoal(dynamic newGoal) {
+  addGoal(dynamic newGoal) {
     goals.add(newGoal);
     notifyListeners();
+  }
+
+  /// This will delete a goal from the list of goals.
+  Future<void> deleteGoal(String goalId) async {
+    for (dynamic goal in goals) {
+      if (goal.goalId == goalId) {
+        goals.remove(goal);
+
+        /// This is the reference to the goals collection in Firebase
+        /// This is used to delete the goal from Firebase
+        final CollectionReference goalsCollection = FirebaseFirestore.instance
+            .collection('Users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals');
+
+        await goalsCollection.doc(goalId).delete();
+        notifyListeners();
+        break;
+      }
+    }
   }
 
   /// This will set the new title of the goal that is being edited.
