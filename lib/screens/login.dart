@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: Center(
             child: Padding(
-                padding: EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Form(
                     key: _formKey,
                     child: SingleChildScrollView(
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                           Card(
                               elevation: 5,
-                              color: Color.fromARGB(255, 171, 211, 250)
+                              color: const Color.fromARGB(255, 171, 211, 250)
                                   .withOpacity(0.4),
                               child: Container(
                                   width: 600,
@@ -125,8 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           20)),
                                               labelText: 'Email',
-                                              prefixIcon:
-                                                  Icon(Icons.email_outlined)),
+                                              prefixIcon: const Icon(
+                                                  Icons.email_outlined)),
                                           validator: (value) {
                                             if (value == null) {
                                               return 'Please enter your email';
@@ -202,10 +202,10 @@ class _LoginPageState extends State<LoginPage> {
                                                       ? null
                                                       : _signInWithEmailAndPassword,
                                                   child: _isLoading
-                                                      ? CircularProgressIndicator()
-                                                      : Text('Login')),
+                                                      ? const CircularProgressIndicator()
+                                                      : const Text('Login')),
                                             ])),
-                                        SizedBox(height: 40),
+                                        const SizedBox(height: 40),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.push(context,
@@ -219,10 +219,10 @@ class _LoginPageState extends State<LoginPage> {
                                               style:
                                                   TextStyle(color: Colors.red),
                                             )),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 20,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 40,
                                         ),
                                       ])))

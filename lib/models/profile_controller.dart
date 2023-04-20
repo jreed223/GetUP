@@ -1,4 +1,4 @@
-import 'userController.dart';
+import 'user_controller.dart';
 
 /// Represents a user profile containing user details, bio and interests.
 class Profile {
@@ -18,9 +18,9 @@ class Profile {
     required String userBio,
     required String userInterests,
   }) {
-    this._user = user;
-    this._userBio = userBio;
-    this._userInterests = userInterests;
+    _user = user;
+    _userBio = userBio;
+    _userInterests = userInterests;
     _profiles.add(this);
   }
 

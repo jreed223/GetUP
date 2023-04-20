@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/models/profile_controller.dart';
+import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
 import '../constants.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
@@ -33,10 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
     'In',
     'Here',
   ];
+
   @override
   initState() {
     super.initState();
     GOAL_STATES.loadGoalsFromFirebase();
+    Future.delayed(const Duration(milliseconds: 1), () {
+      setState(() {});
+    });
   }
 
   @override
@@ -69,8 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              color: Colors.pink,
-              child: buildItemSquareList(items),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(1, 0, 0, 0),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 20,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: buildGoalCards(GOAL_STATES.longTermGoals),
             ),
           ),
         ],
@@ -101,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 // Setting up Profile
- /// The profile to be used by the Profile screen.
+  /// The profile to be used by the Profile screen.
   Profile profile = Profile.profiles[
       0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
   int _selectedIndex = 0;
@@ -117,20 +133,21 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
         break;
       case 2:
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MetricsPage()), //Change to metrics screen
+              builder: (context) =>
+                  const MetricsPage()), //Change to metrics screen
         );
         break;
       case 3:
@@ -172,8 +189,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-void main() {
-  runApp(const MaterialApp(
-    home: HomeScreen(),
-  ));
+Widget buildGoalCards(List<dynamic> goals) {
+  // List<LongTermGoal> longTermGoals = [];
+  // for (var goal in goals) {
+  //   if (goal is LongTermGoal) {
+  //     longTermGoals.add(goal);
+  //   }
+  // }
+  return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: goals.length,
+      itemBuilder: (BuildContext context, int index) {
+        try {
+          return GeneralGoalCard(goal: goals[index]);
+        } catch (e) {
+          return Container();
+        }
+      });
 }
+
+// void main() {
+//   runApp(const MaterialApp(
+//     home: HomeScreen(),
+//   ));
+// }

@@ -1,5 +1,5 @@
 import 'package:getup_csc450/models/goals.dart';
-import 'metricsController.dart';
+import 'metrics_controller.dart';
 
 final List<Goal> _sampleGoalsM = [
   LongTermGoal(title: 'Learn Flutter', duration: 20),

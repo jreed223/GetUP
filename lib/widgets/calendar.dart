@@ -22,7 +22,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       .collection('goals');
 
   /// This is the list of goals for the selected date
-  List<dynamic> _selectedGoals = [];
+  final List<dynamic> _selectedGoals = [];
 
   /// This is the formatter for the selected date
   DateFormat formatter = DateFormat.yMMMMd('en_US');

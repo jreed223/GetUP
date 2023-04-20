@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
-import 'package:getup_csc450/models/authController.dart';
-import 'package:getup_csc450/models/firebaseController.dart';
+import 'package:getup_csc450/models/firebase_controller.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
 import 'package:getup_csc450/widgets/checkmark.dart';
 import 'package:getup_csc450/widgets/calendar.dart';
-import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/screens/profile.dart';
 import 'package:getup_csc450/screens/metrics.dart';
 import 'package:getup_csc450/constants.dart';
@@ -40,9 +38,6 @@ class _HomePageState extends State<HomePage>
 
   /// This is the duration of the goal that will capture the user input
   String _goalDuration = "";
-
-  /// This is the controller for database access
-  final FirestoreController _firestoreDatabase = FirestoreController();
 
   /// This is the key for the form
   /// It is used to validate and check the state of the form
@@ -146,8 +141,6 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  // TODO: Rename function to something more appropriate
-  // TODO: Add another function for the other half of the animation
   /// This function is the entire animation
   /// It will call all the other functions that will animate the button
   /// The functions need to wrapped due to dart's syntax
@@ -193,7 +186,7 @@ class _HomePageState extends State<HomePage>
         ),
         body: Stack(
           children: [
-            CalendarWidget(),
+            const CalendarWidget(),
 
             /// This is the floating action button
             /// It is positioned at the bottom right of the screen
@@ -239,7 +232,7 @@ class _HomePageState extends State<HomePage>
                       ],
                       color: _isButtonForm
                           ? Colors.white
-                          : Color.fromARGB(255, 255, 119, 0),
+                          : const Color.fromARGB(255, 255, 119, 0),
                       borderRadius: BorderRadius.all(
                         Radius.circular(_buttonBorderRadius),
                       ),
@@ -301,7 +294,6 @@ class _HomePageState extends State<HomePage>
                                     ),
                                   ),
 
-                                  /// TODO: Make this space relative to the screen size
                                   const SizedBox(height: 5),
 
                                   /// This is the first text field for the form
@@ -311,7 +303,6 @@ class _HomePageState extends State<HomePage>
                                         milliseconds:
                                             _isButtonForm ? 3000 : 700),
                                     curve: Curves.easeOutCubic,
-                                    // TODO: Ensure title doesnt already exist in goals
                                     child: TextFormField(
                                       cursorColor: Colors.black38,
                                       controller: _goalTitleController,
@@ -342,7 +333,6 @@ class _HomePageState extends State<HomePage>
                                     ),
                                   ),
 
-                                  // TODO: Make this space relative to the screen size
                                   const SizedBox(height: 5),
 
                                   Column(
@@ -366,7 +356,6 @@ class _HomePageState extends State<HomePage>
                                             ),
                                           ),
 
-                                          // TODO: Make this space relative to the screen size
                                           const SizedBox(width: 5),
 
                                           /// This determines if the goal is long term
@@ -399,8 +388,6 @@ class _HomePageState extends State<HomePage>
                                         duration:
                                             const Duration(milliseconds: 500),
                                         curve: Curves.easeInBack,
-                                        // TODO: Ensure that the input is a number
-                                        // TODO: Ensure that if button is unckecked, the input is cleared
                                         child: TextFormField(
                                           cursorColor: Colors.black12,
                                           controller: _goalDurationController,
@@ -433,11 +420,9 @@ class _HomePageState extends State<HomePage>
                                         ),
                                       ),
 
-                                      //TODO: Make this space relative to the screen size
                                       const SizedBox(height: 30),
 
                                       /// This is the button that will submit the form
-                                      // TODO: Make this button an animated container
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -457,7 +442,7 @@ class _HomePageState extends State<HomePage>
                                                     BorderRadius.circular(30),
                                               ),
                                               child: const Center(
-                                                  child: const Text('Cancel')),
+                                                  child: Text('Cancel')),
                                             ),
                                           ),
                                           InkWell(
@@ -520,7 +505,6 @@ class _HomePageState extends State<HomePage>
                                                         milliseconds: 5000),
                                                     () {
                                                   setState(() {
-                                                    // TODO: Add a wrapper function that will reset all the fields
                                                     _goalDurationController
                                                         .clear();
                                                     _goalTitleController
@@ -540,7 +524,6 @@ class _HomePageState extends State<HomePage>
                                                   });
                                                 });
                                               }
-                                              // TODO: Add a function that will reset checkbox and text field
                                             },
 
                                             /// This is the submit button for the form
@@ -551,7 +534,7 @@ class _HomePageState extends State<HomePage>
                                                 decoration: BoxDecoration(
                                                     color: _submitSuccessful
                                                         ? Colors.green
-                                                        : Color.fromARGB(
+                                                        : const Color.fromARGB(
                                                             14, 0, 0, 0),
                                                     borderRadius: BorderRadius
                                                         .all(Radius.circular(
@@ -603,36 +586,36 @@ class _HomePageState extends State<HomePage>
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Metrics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Metrics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       );
     });
   }
+
 // Setting up Profile
-Profile profile = Profile.profiles[
-      0];
-int _selectedIndex = 0;
+  Profile profile = Profile.profiles[0];
+  int _selectedIndex = 0;
 
   /// The function to call when a navigation bar item is tapped.
   void _onItemTapped(int index) {
@@ -644,20 +627,19 @@ int _selectedIndex = 0;
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => MetricsPage()),
+          MaterialPageRoute(builder: (context) => const MetricsPage()),
         );
         break;
       case 3:

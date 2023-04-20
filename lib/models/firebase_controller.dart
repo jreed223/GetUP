@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:intl/intl.dart';
@@ -61,8 +60,6 @@ class FirestoreController {
 
     // Create a query that filters goals by their createdAt field
     Query query = goalsRef.where('dateCreated', isEqualTo: formattedTimestamp);
-
-    print(formattedTimestamp);
 
     // Return a stream of the query snapshots
     return query.snapshots().map((querySnapshot) => querySnapshot.docs);

@@ -1,15 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'dart:math';
 import 'dart:async';
-import 'package:getup_csc450/constants.dart';
 import 'package:provider/provider.dart';
 
 /// This will be holding the state of all the goals
@@ -21,7 +16,7 @@ class ShortTermGoalCard extends StatefulWidget {
   /// This is the goal that will be displayed
   final Goal goal;
 
-  ShortTermGoalCard({super.key, required this.goal});
+  const ShortTermGoalCard({super.key, required this.goal});
 
   @override
   State<ShortTermGoalCard> createState() => _ShortTermGoalCardState();
@@ -80,7 +75,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: provider.getStatus(widget.goal.goalId as String)!
-                  ? Color.fromARGB(255, 234, 233, 233)
+                  ? const Color.fromARGB(255, 234, 233, 233)
                   : Colors.white,
               boxShadow: provider.getStatus(widget.goal.goalId as String)!
                   ? [
@@ -159,7 +154,6 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                         : Text(provider.getTitle(widget.goal.goalId as String)!,
                             style: TextStyle(
                                 fontSize: 16,
-                                // TODO: use change notifier to update the text color
                                 color: provider.getStatus(
                                         widget.goal.goalId as String)!
                                     ? Colors.black26
@@ -217,7 +211,7 @@ class LongTermGoalCard extends StatefulWidget {
   /// This is the goal that will be displayed
   final LongTermGoal goal;
 
-  LongTermGoalCard({super.key, required this.goal});
+  const LongTermGoalCard({super.key, required this.goal});
 
   @override
   State<LongTermGoalCard> createState() => _LongTermGoalCardState();
@@ -251,9 +245,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
   /// Duration of the goal
   late var _duration;
-
-  /// The local variable for the goal status
-  late bool _isCompleted;
 
   /// Whether or not the title is being edited
   late bool _isEditing;
@@ -346,7 +337,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       GOAL_STATES.setTimeDedicated(
           widget.goal.goalId as String, _timeDedicated);
       GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     } else {
@@ -356,7 +346,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       GOAL_STATES.setTimeDedicated(
           widget.goal.goalId as String, _timeDedicated);
       GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     }
@@ -371,11 +360,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
     GOAL_STATES.setTimeDedicated(widget.goal.goalId as String, _timeDedicated);
     GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     if (_timeDedicated >= _duration) {
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     } else {
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     }
@@ -392,7 +379,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       GOAL_STATES.setTimeDedicated(
           widget.goal.goalId as String, _timeDedicated);
       GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     } else {
@@ -402,7 +388,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       GOAL_STATES.setTimeDedicated(
           widget.goal.goalId as String, _timeDedicated);
       GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     }
@@ -423,11 +408,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
       GOAL_STATES.setProgress(widget.goal.goalId as String, _progress);
     }
     if (_timeDedicated >= _duration) {
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, true);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     } else {
-      // TODO: Use change notifier to update the goal status
       GOAL_STATES.setStatus(widget.goal.goalId as String, false);
       await GOAL_STATES.updateStatus(widget.goal.goalId as String);
     }
@@ -448,7 +431,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: provider.getStatus(widget.goal.goalId as String)!
-                  ? Color.fromARGB(255, 234, 233, 233)
+                  ? const Color.fromARGB(255, 234, 233, 233)
                   : Colors.white,
               boxShadow: provider.getStatus(widget.goal.goalId as String)!
                   ? [
@@ -544,7 +527,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     .getTitle(widget.goal.goalId as String)!,
                                 style: TextStyle(
                                     fontSize: 16,
-                                    // TODO: use change notifier to update the text color
                                     color: provider.getStatus(
                                             widget.goal.goalId as String)!
                                         ? Colors.black26
@@ -612,12 +594,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         animation: true,
                         width: MediaQuery.of(context).size.width * 0.9,
                         lineHeight: 5.0,
-                        // TODO: Use change notifier to update the progress bar
                         percent: provider.getTimeDedicated(
                                 widget.goal.goalId as String)! /
                             provider.getDuration(widget.goal.goalId as String)!,
                         linearGradient: LinearGradient(
-                          //TODO: Use change notifier to update the progress bar colors
                           colors:
                               provider.getStatus(widget.goal.goalId as String)!
                                   ? const [
@@ -629,7 +609,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       Colors.deepOrangeAccent
                                     ],
                         ),
-                        // TODO: Use change notifier to update the progress bar colors
                         backgroundColor:
                             provider.getStatus(widget.goal.goalId as String)!
                                 ? Colors.blueGrey[150]
@@ -654,7 +633,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
                             /// The progress circle
                             child: CircularPercentIndicator(
-                                // TODO: Use change notifier to update the progress circle
                                 linearGradient: provider.getStatus(
                                         widget.goal.goalId as String)!
                                     ? const LinearGradient(colors: [
@@ -713,7 +691,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
-                                          ? Color.fromARGB(79, 255, 153, 0)
+                                          ? const Color.fromARGB(
+                                              79, 255, 153, 0)
                                           : Colors.transparent,
                                     ),
                                     child: Padding(
@@ -760,7 +739,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         /// Long press on the minus to decrease the minutes
                                         onLongPress: () {
                                           _timer = Timer.periodic(
-                                              Duration(milliseconds: 50),
+                                              const Duration(milliseconds: 50),
                                               (timer) {
                                             if (!_isEditingHours &&
                                                 _minutes > 0) {
@@ -768,10 +747,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                                 _minutes--;
                                               });
                                               subtractMinuteFromProgress();
-                                              print("progress $_progress");
-                                              print(
-                                                  "_time dedicated $_timeDedicated");
-                                              print("Duration $_duration");
                                             }
                                           });
                                         },
@@ -811,11 +786,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                               _hours += 1;
                                             });
                                             addHourToProgress();
-                                            print("progress $_progress");
-                                            print(
-                                                "_time dedicated $_timeDedicated");
-                                            print("Duration $_duration");
-                                            // TODO: Use change notifier to update the progress circle
                                           } else if (provider.getStatus(widget
                                                   .goal.goalId as String)! ==
                                               false) {
@@ -823,20 +793,15 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                               _minutes++;
                                             });
                                             addMinuteToProgress();
-                                            print("progress $_progress");
-                                            print(
-                                                "_time dedicated $_timeDedicated");
-                                            print("Duration $_duration");
                                           }
                                         },
 
                                         /// Long press to continuously add
                                         onLongPress: () {
                                           _timer = Timer.periodic(
-                                              Duration(milliseconds: 50),
+                                              const Duration(milliseconds: 50),
                                               (timer) {
                                             if (!_isEditingHours &&
-                                                // TODO: Use change notifier to update the progress circle
                                                 provider.getStatus(widget.goal
                                                         .goalId as String)! ==
                                                     false) {
@@ -844,10 +809,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                                 _minutes++;
                                               });
                                               addMinuteToProgress();
-                                              print("progress $_progress");
-                                              print(
-                                                  "_time dedicated $_timeDedicated");
-                                              print("Duration $_duration");
                                             }
                                           });
                                         },
@@ -863,7 +824,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                                 milliseconds: 300),
                                             curve: Curves.easeInOut,
                                             decoration: BoxDecoration(
-                                              // TODO: Use change notifier to update the progress circle
                                               color: provider.getStatus(widget
                                                       .goal.goalId as String)!
                                                   ? Colors.black12
@@ -874,7 +834,6 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                             child: Center(
                                                 child: Text('+',
                                                     style: TextStyle(
-                                                        // TODO: Use change notifier to update the progress circle
                                                         color: provider
                                                                 .getStatus(widget
                                                                         .goal
@@ -908,7 +867,8 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
                                           ? Colors.transparent
-                                          : Color.fromARGB(79, 255, 153, 0),
+                                          : const Color.fromARGB(
+                                              79, 255, 153, 0),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
@@ -946,7 +906,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         child: ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  Color.fromARGB(255, 255, 123, 0)),
+                                  const Color.fromARGB(255, 255, 123, 0)),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
@@ -984,7 +944,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         child: ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  Color.fromARGB(255, 255, 123, 0)),
+                                  const Color.fromARGB(255, 255, 123, 0)),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(

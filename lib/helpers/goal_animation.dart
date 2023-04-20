@@ -4,10 +4,9 @@ import "package:provider/provider.dart";
 import "../models/goals.dart";
 
 class GoalAnimation extends StatefulWidget {
-  final Key? key;
-  dynamic goalCard;
-  dynamic goal;
-  GoalAnimation({required this.key, this.goalCard, required this.goal});
+  final dynamic goalCard;
+  final dynamic goal;
+  const GoalAnimation({super.key, this.goalCard, required this.goal});
 
   @override
   State<GoalAnimation> createState() => _GoalAnimationState();
@@ -25,7 +24,7 @@ class _GoalAnimationState extends State<GoalAnimation>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {
@@ -75,7 +74,6 @@ class _GoalAnimationState extends State<GoalAnimation>
     return InkWell(
       onLongPress: () async {
         final confirmed = await _showConfirmationDialog(widget.key);
-        print(confirmed);
         if (confirmed == true) {
           _controller!.reverse();
           // delay the deletion of the goal until the animation is complete
