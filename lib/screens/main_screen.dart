@@ -75,12 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(1, 0, 0, 0),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 20,
+                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
+                    spreadRadius: .5,
+                    blurRadius: 30,
                     offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
