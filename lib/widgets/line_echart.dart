@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
-import 'package:getup_csc450/models/data_points.dart';
 
 class LineEchart extends StatefulWidget {
   const LineEchart({super.key});

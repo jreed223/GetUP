@@ -22,7 +22,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       .collection('goals');
 
   /// This is the list of goals for the selected date
-  List<dynamic> _selectedGoals = [];
+  final List<dynamic> _selectedGoals = [];
 
   /// This is the formatter for the selected date
   DateFormat formatter = DateFormat.yMMMMd('en_US');
@@ -76,8 +76,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               weekOrMonthView();
             },
             selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
-            calendarFormat:
-                expanded ? CalendarFormat.twoWeeks : CalendarFormat.week,
+            calendarFormat: CalendarFormat.week,
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: const TextStyle(
+                fontFamily: 'PT-Serif',
+                color: Colors.black54,
+                fontSize: 14,
+              ),
+              weekendStyle: const TextStyle(
+                fontFamily: 'PT-Serif',
+                color: Colors.black54,
+                fontSize: 14,
+              ),
+            ),
             headerStyle: const HeaderStyle(
               leftChevronIcon: Icon(
                 Icons.chevron_left,
@@ -87,11 +98,13 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 Icons.chevron_right,
                 color: Color.fromARGB(255, 255, 119, 0),
               ),
-              formatButtonVisible: true,
+              formatButtonVisible: false,
               titleCentered: true,
               titleTextStyle: TextStyle(
+                letterSpacing: 1.25,
+                fontFamily: 'PT-Serif',
                 color: Colors.black54,
-                fontSize: 20,
+                fontSize: 22,
               ),
             ),
             calendarStyle: const CalendarStyle(
@@ -99,7 +112,20 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 color: Color.fromARGB(255, 255, 119, 0),
                 shape: BoxShape.circle,
               ),
-              selectedTextStyle: TextStyle(color: Colors.white),
+              weekendTextStyle: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: Colors.black54,
+                fontSize: 14,
+              ),
+              defaultTextStyle: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: Colors.black54,
+                fontSize: 14,
+              ),
+              selectedTextStyle: TextStyle(
+                  fontFamily: 'PT-Serif',
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600),
               todayDecoration: BoxDecoration(
                 color: Color.fromARGB(54, 0, 0, 0),
                 shape: BoxShape.circle,

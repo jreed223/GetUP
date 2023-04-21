@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class Filter extends StatefulWidget {
   Filter({super.key});
 
-  List<String> filterOptionsList = [
+  final List<String> filterOptionsList = [
     'All',
     'Short Term',
     'Long Term',
@@ -35,53 +35,50 @@ class _FilterState extends State<Filter> {
       return Padding(
         padding: EdgeInsets.only(
             left: 8.0, right: displayWidth(context) * .5, top: 15),
-        child: Container(
-          child: Row(
-            children: [
-              const Text(
-                'Filter by: ',
-                style: TextStyle(
-                  color: Color.fromARGB(129, 0, 0, 0),
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.bold,
-                ),
+        child: Row(
+          children: [
+            const Text(
+              'Filter by: ',
+              style: TextStyle(
+                color: Color.fromARGB(129, 0, 0, 0),
+                fontSize: 14,
+                fontFamily: 'PT-Serif',
+                fontWeight: FontWeight.bold,
               ),
-              const Spacer(
-                flex: 2,
+            ),
+            const Spacer(
+              flex: 2,
+            ),
+            Expanded(
+              flex: 10,
+              child: DropdownButton<String>(
+                isDense: true,
+                value: widget.getFilterSelection(),
+                icon:
+                    const Icon(Icons.arrow_downward, color: Colors.transparent),
+                elevation: 16,
+                style: const TextStyle(
+                    fontFamily: 'PT-Serif',
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold),
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    widget.setFilterSelection(value!);
+                    FilterState.mainInstance
+                        .setFilterSelection(widget.getFilterSelection());
+                  });
+                },
+                items: widget.filterOptionsList
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
-              Expanded(
-                flex: 10,
-                child: DropdownButton<String>(
-                  isDense: true,
-                  // TODO: Change this to the provider method that grabs the filter value
-                  value: widget.getFilterSelection(),
-                  icon: const Icon(Icons.arrow_downward,
-                      color: Colors.transparent),
-                  elevation: 16,
-                  style: const TextStyle(
-                      color: Colors.orange, fontWeight: FontWeight.bold),
-                  onChanged: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      // TODO: Change this to the provider method that sets the filter value
-                      widget.setFilterSelection(value!);
-                      FilterState.mainInstance
-                          .setFilterSelection(widget.getFilterSelection());
-                      print(widget.getFilterSelection());
-                    });
-                  },
-                  items: widget.filterOptionsList
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     });

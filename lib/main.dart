@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/goals.dart';
-import 'package:getup_csc450/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
 import 'package:getup_csc450/widgets/filter.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,26 +25,26 @@ void main() async {
           create: (context) => FilterState(),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<User?> user;
+  @override
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
-        print('User is currently signed out');
-      } else {
-        print('User is signed in');
-      }
+      } else {}
     });
   }
 
@@ -61,18 +60,18 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-            scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+            scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
             textTheme: const TextTheme(
               displayLarge: TextStyle(
                 color: Color.fromARGB(255, 189, 216, 255),
-                fontSize: 30,
-                fontFamily: 'Inter',
+                fontSize: 22,
+                fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
               ),
               displayMedium: TextStyle(
                 color: Color.fromARGB(255, 189, 216, 255),
                 fontSize: 15,
-                fontFamily: 'Inter',
+                fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
               ),
             )),

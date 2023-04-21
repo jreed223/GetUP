@@ -12,7 +12,7 @@ class _PieEchartState extends State<PieEchart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       alignment: const Alignment(1, 0),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3.5,
