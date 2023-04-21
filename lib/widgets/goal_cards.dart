@@ -72,31 +72,43 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             height: screen.displayHeight(context) * 0.075,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: provider.getStatus(widget.goal.goalId as String)!
-                  ? const Color.fromARGB(255, 234, 233, 233)
-                  : Colors.white,
-              boxShadow: provider.getStatus(widget.goal.goalId as String)!
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset:
-                            const Offset(0, 0), // changes position of shadow
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: .1,
-                        blurRadius: .5,
-                        offset:
-                            const Offset(0, 2), // changes position of shadow
-                      ),
-                    ],
-            ),
+            decoration: provider.getStatus(widget.goal.goalId as String) != null
+                ? provider.getStatus(widget.goal.goalId as String)!
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromARGB(255, 219, 255, 222),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 244, 255, 245),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(20, 0, 0, 0),
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                    : BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromARGB(255, 255, 236, 226),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 255, 249, 245),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(20, 0, 0, 0),
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                : null,
             child: Padding(
               padding: const EdgeInsets.only(right: 10.0, left: 4),
               child: Row(
@@ -106,7 +118,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                   Expanded(
                     flex: 1,
                     child: Checkbox(
-                      activeColor: Colors.orange,
+                      activeColor: Color.fromARGB(255, 113, 216, 119),
                       value: provider.getStatus(widget.goal.goalId as String),
                       onChanged: (value) {
                         setState(() {
@@ -132,6 +144,14 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                     /// If the goal is in edit mode, a text field is shown
                     child: _isEditing
                         ? TextField(
+                            style: TextStyle(
+                                fontFamily: 'PT-Serif',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: provider.getStatus(
+                                        widget.goal.goalId as String)!
+                                    ? Colors.black26
+                                    : Colors.black54),
                             cursorColor: Colors.orangeAccent,
                             controller: _titleController,
                             decoration: InputDecoration(
@@ -141,23 +161,17 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                                 errorText:
                                     _showError ? 'Title cannot be empty' : null,
                                 hintText: 'Edit title'),
-                            onChanged: (value) {
-                              if (!_isEditing && value.isNotEmpty) {
-                                setState(() {
-                                  value = _titleController.text;
-                                });
-                                provider.setTitle(
-                                    widget.goal.goalId as String, value);
-                              }
-                            },
                           )
                         : Text(provider.getTitle(widget.goal.goalId as String)!,
                             style: TextStyle(
+                                letterSpacing: 1.25,
                                 fontSize: 16,
+                                fontFamily: 'PT-Serif',
+                                fontWeight: FontWeight.w600,
                                 color: provider.getStatus(
                                         widget.goal.goalId as String)!
                                     ? Colors.black26
-                                    : Colors.black)),
+                                    : Colors.black54)),
                   ),
                   const Spacer(flex: 1),
 
@@ -188,8 +202,12 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                             setState(() {
                               _isEditing = !_isEditing;
                             });
+                            provider.setTitle(widget.goal.goalId as String,
+                                _titleController.text);
                             await provider
                                 .updateTitle(widget.goal.goalId as String);
+                            print(provider
+                                .getTitle(widget.goal.goalId as String));
                           } else {
                             showError();
                           }
@@ -425,34 +443,46 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
           /// The goal card
           child: AnimatedContainer(
-            curve: Curves.easeInOut,
+            curve: Curves.easeIn,
             height: _height,
             duration: const Duration(milliseconds: 500),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: provider.getStatus(widget.goal.goalId as String)!
-                  ? const Color.fromARGB(255, 234, 233, 233)
-                  : Colors.white,
-              boxShadow: provider.getStatus(widget.goal.goalId as String)!
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset:
-                            const Offset(0, 0), // changes position of shadow
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: .1,
-                        blurRadius: .5,
-                        offset:
-                            const Offset(0, 2), // changes position of shadow
-                      ),
-                    ],
-            ),
+            decoration: provider.getStatus(widget.goal.goalId as String) != null
+                ? provider.getStatus(widget.goal.goalId as String)!
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromARGB(255, 231, 237, 232),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 235, 255, 240),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(20, 0, 0, 0),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                    : BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromARGB(255, 255, 234, 221),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 255, 244, 237),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(20, 0, 0, 0),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                : null,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -467,7 +497,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                           child: Consumer<GoalDataState>(
                             builder: (context, provider, child) {
                               return Checkbox(
-                                activeColor: Colors.orange,
+                                activeColor: Color.fromARGB(255, 113, 216, 119),
                                 onChanged: (_) {
                                   if (provider.getStatus(
                                           widget.goal.goalId as String) ==
@@ -501,6 +531,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         /// If the goal is in edit mode, a text field is shown
                         child: _isEditing
                             ? TextField(
+                                style: TextStyle(
+                                    fontFamily: 'PT-Serif',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: provider.getStatus(
+                                            widget.goal.goalId as String)!
+                                        ? Colors.black12
+                                        : Colors.black12),
                                 cursorColor: Colors.orangeAccent,
                                 controller: _titleController,
                                 decoration: InputDecoration(
@@ -526,11 +564,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 provider
                                     .getTitle(widget.goal.goalId as String)!,
                                 style: TextStyle(
+                                    letterSpacing: 1.25,
+                                    fontFamily: 'PT-Serif',
                                     fontSize: 16,
+                                    fontWeight: FontWeight.w700,
                                     color: provider.getStatus(
                                             widget.goal.goalId as String)!
                                         ? Colors.black26
-                                        : Colors.black)),
+                                        : Colors.black54)),
                       ),
                       const Spacer(flex: 1),
                       Expanded(
@@ -601,12 +642,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                           colors:
                               provider.getStatus(widget.goal.goalId as String)!
                                   ? const [
-                                      Color.fromARGB(181, 255, 172, 40),
-                                      Color.fromARGB(173, 255, 109, 40)
+                                      Color.fromARGB(157, 105, 240, 175),
+                                      Color.fromARGB(170, 76, 175, 79)
                                     ]
                                   : const [
                                       Colors.orangeAccent,
-                                      Colors.deepOrangeAccent
+                                      Colors.orange,
+                                      Colors.deepOrangeAccent,
+                                      Colors.deepOrange
                                     ],
                         ),
                         backgroundColor:
@@ -655,6 +698,11 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
+                                        textStyle: const TextStyle(
+                                            fontFamily: 'PT-Serif',
+                                            color: Colors.black54,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
                                         value: provider.getTimeDedicated(
                                                 widget.goal.goalId as String)! /
                                             provider.getDuration(
@@ -691,8 +739,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
-                                          ? const Color.fromARGB(
-                                              79, 255, 153, 0)
+                                          ? Color.fromARGB(255, 255, 213, 177)
                                           : Colors.transparent,
                                     ),
                                     child: Padding(
@@ -705,6 +752,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
                                         textStyle: const TextStyle(
+                                            fontFamily: 'PT-Serif',
                                             fontSize: 18,
                                             color: Colors.black54),
                                       ),
@@ -880,6 +928,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
                                         textStyle: const TextStyle(
+                                            fontFamily: 'PT-Serif',
                                             fontSize: 18,
                                             color: Colors.black54),
                                       ),
@@ -904,37 +953,43 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
                         /// Cancel button
                         child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromARGB(255, 255, 123, 0)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      screen.displaySize(context).width * 0.05),
-                                ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 255, 144, 39)),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    screen.displaySize(context).width * 0.05),
                               ),
                             ),
-                            onPressed: () {
-                              menuButtonController.reverse();
-                              setState(() {
-                                _isEditing = !_isEditing;
-                                _height = screen.displayHeight(context) * 0.08;
-                                _hours = 0;
-                                _minutes = 0;
-                                _progress = _initialProgress;
-                                _timeDedicated = _initialTimeDedicated;
-                                _progressAsPercentage = _progress * 100;
-                              });
-                              provider.setProgress(
-                                  widget.goal.goalId as String, _progress);
-                              provider.setTimeDedicated(
-                                  widget.goal.goalId as String, _timeDedicated);
-                              if (_initialProgress != 1) {
-                                provider.setStatus(
-                                    widget.goal.goalId as String, false);
-                              }
-                            },
-                            child: const Text('Cancel')),
+                          ),
+                          onPressed: () {
+                            menuButtonController.reverse();
+                            setState(() {
+                              _isEditing = !_isEditing;
+                              _height = screen.displayHeight(context) * 0.08;
+                              _hours = 0;
+                              _minutes = 0;
+                              _progress = _initialProgress;
+                              _timeDedicated = _initialTimeDedicated;
+                              _progressAsPercentage = _progress * 100;
+                            });
+                            provider.setProgress(
+                                widget.goal.goalId as String, _progress);
+                            provider.setTimeDedicated(
+                                widget.goal.goalId as String, _timeDedicated);
+                            if (_initialProgress != 1) {
+                              provider.setStatus(
+                                  widget.goal.goalId as String, false);
+                            }
+                          },
+                          child: const Text('Cancel',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'PT-Serif')),
+                        ),
                       ),
                       const Spacer(flex: 1),
                       Expanded(
@@ -944,7 +999,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         child: ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromARGB(255, 255, 123, 0)),
+                                  Color.fromARGB(255, 255, 144, 39)),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
@@ -991,7 +1046,12 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 });
                               }
                             },
-                            child: const Text('Save')),
+                            child: const Text('Save',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    fontFamily: 'PT-Serif'))),
                       ),
                       const Spacer(flex: 1),
                     ],

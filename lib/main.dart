@@ -64,14 +64,14 @@ class _MyAppState extends State<MyApp> {
             textTheme: const TextTheme(
               displayLarge: TextStyle(
                 color: Color.fromARGB(255, 189, 216, 255),
-                fontSize: 30,
-                fontFamily: 'Inter',
+                fontSize: 22,
+                fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
               ),
               displayMedium: TextStyle(
                 color: Color.fromARGB(255, 189, 216, 255),
                 fontSize: 15,
-                fontFamily: 'Inter',
+                fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
               ),
             )),

@@ -94,10 +94,15 @@ flutter:
     # list giving the asset and other descriptors for the font. For
     # example:
     fonts:
-        - family: Inter
+        - family: PT-Serif
           fonts:
-              - asset: assets/fonts/Inter-Regular.ttf
+              - asset: assets/fonts/PTSerif-Regular.ttf
                 weight: 400
+              - asset: assets/fonts/PTSerif-Bold.ttf
+                weight: 900
+              - asset: assets/fonts/PTSerif-Italic.ttf
+                weight: 400
+                style: italic
     #   - family: Trajan Pro
     #     fonts:
     #       - asset: fonts/TrajanPro.ttf

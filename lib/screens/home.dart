@@ -76,6 +76,9 @@ class _HomePageState extends State<HomePage>
   /// This is the boolean that will determine if the icon is visible
   late bool _iconIsVisible;
 
+  /// selected index for the bottom navigation bar
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -173,16 +176,17 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       return Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Color.fromARGB(255, 255, 247, 244),
         appBar: AppBar(
           shadowColor: Colors.transparent,
-          backgroundColor: Colors.grey[50],
+          backgroundColor: Color.fromARGB(255, 255, 247, 244),
           title: const Text('Calendar View',
               style: TextStyle(
-                color: Color.fromARGB(132, 0, 0, 0),
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              )),
+                  letterSpacing: 1.25,
+                  color: Colors.black54,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'PT-Serif')),
         ),
         body: Stack(
           children: [
@@ -586,8 +590,11 @@ class _HomePageState extends State<HomePage>
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Color.fromARGB(255, 255, 247, 244),
+          selectedItemColor: Colors.black87,
+          unselectedItemColor: Colors.black54,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           items: const [
@@ -615,7 +622,6 @@ class _HomePageState extends State<HomePage>
 
 // Setting up Profile
   Profile profile = Profile.profiles[0];
-  int _selectedIndex = 0;
 
   /// The function to call when a navigation bar item is tapped.
   void _onItemTapped(int index) {

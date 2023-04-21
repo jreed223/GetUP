@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 247, 244),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
@@ -74,24 +75,18 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
-                    spreadRadius: .5,
-                    blurRadius: 30,
-                    offset: const Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
+              decoration: BoxDecoration(),
               child: buildGoalCards(GOAL_STATES.longTermGoals),
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color.fromARGB(255, 255, 247, 244),
+        selectedItemColor: Color.fromARGB(214, 0, 0, 0),
+        unselectedItemColor: Colors.black54,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [

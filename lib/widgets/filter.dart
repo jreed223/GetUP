@@ -42,7 +42,7 @@ class _FilterState extends State<Filter> {
               style: TextStyle(
                 color: Color.fromARGB(129, 0, 0, 0),
                 fontSize: 14,
-                fontFamily: 'Inter',
+                fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -58,7 +58,9 @@ class _FilterState extends State<Filter> {
                     const Icon(Icons.arrow_downward, color: Colors.transparent),
                 elevation: 16,
                 style: const TextStyle(
-                    color: Colors.orange, fontWeight: FontWeight.bold),
+                    fontFamily: 'PT-Serif',
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold),
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
