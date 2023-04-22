@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/firebase_controller.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
@@ -174,16 +175,17 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 247, 244),
+        backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
           shadowColor: Colors.transparent,
-          backgroundColor: Color.fromARGB(255, 255, 247, 244),
-          title: const Text('Calendar View',
+          backgroundColor: themeProvider.scaffoldColor,
+          title: Text('Calendar',
               style: TextStyle(
                   letterSpacing: 1.25,
-                  color: Colors.black54,
+                  color: themeProvider.textColor,
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
                   fontFamily: 'PT-Serif')),
@@ -592,7 +594,7 @@ class _HomePageState extends State<HomePage>
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Color.fromARGB(255, 255, 247, 244),
+          backgroundColor: themeProvider.scaffoldColor,
           selectedItemColor: Colors.black87,
           unselectedItemColor: Colors.black54,
           currentIndex: _selectedIndex,

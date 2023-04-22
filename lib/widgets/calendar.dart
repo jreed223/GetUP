@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/goal_display.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../helpers/theme_provider.dart';
 import 'filter.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -62,6 +64,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -78,53 +81,53 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             selectedDayPredicate: (day) => isSameDay(_focusedDay, day),
             calendarFormat: CalendarFormat.week,
             daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: const TextStyle(
+              weekdayStyle: TextStyle(
                 fontFamily: 'PT-Serif',
-                color: Colors.black54,
+                color: themeProvider.textColor,
                 fontSize: 14,
               ),
-              weekendStyle: const TextStyle(
+              weekendStyle: TextStyle(
                 fontFamily: 'PT-Serif',
-                color: Colors.black54,
+                color: themeProvider.textColor,
                 fontSize: 14,
               ),
             ),
-            headerStyle: const HeaderStyle(
+            headerStyle: HeaderStyle(
               leftChevronIcon: Icon(
                 Icons.chevron_left,
-                color: Color.fromARGB(255, 255, 119, 0),
+                color: themeProvider.buttonColor,
               ),
               rightChevronIcon: Icon(
                 Icons.chevron_right,
-                color: Color.fromARGB(255, 255, 119, 0),
+                color: themeProvider.buttonColor,
               ),
               formatButtonVisible: false,
               titleCentered: true,
               titleTextStyle: TextStyle(
                 letterSpacing: 1.25,
                 fontFamily: 'PT-Serif',
-                color: Colors.black54,
+                color: themeProvider.textColor,
                 fontSize: 22,
               ),
             ),
-            calendarStyle: const CalendarStyle(
+            calendarStyle: CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 119, 0),
+                color: themeProvider.buttonColor,
                 shape: BoxShape.circle,
               ),
               weekendTextStyle: TextStyle(
                 fontFamily: 'PT-Serif',
-                color: Colors.black54,
+                color: themeProvider.textColor,
                 fontSize: 14,
               ),
               defaultTextStyle: TextStyle(
                 fontFamily: 'PT-Serif',
-                color: Colors.black54,
+                color: themeProvider.textColor,
                 fontSize: 14,
               ),
               selectedTextStyle: TextStyle(
                   fontFamily: 'PT-Serif',
-                  color: Colors.white,
+                  color: themeProvider.textColor,
                   fontWeight: FontWeight.w600),
               todayDecoration: BoxDecoration(
                 color: Color.fromARGB(54, 0, 0, 0),

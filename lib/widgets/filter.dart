@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/theme_provider.dart';
+
 /// This is the filter widget that will be used to filter the goals
 class Filter extends StatefulWidget {
   Filter({super.key});
@@ -31,16 +33,17 @@ class Filter extends StatefulWidget {
 class _FilterState extends State<Filter> {
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer(builder: (context, provider, child) {
       return Padding(
         padding: EdgeInsets.only(
             left: 8.0, right: displayWidth(context) * .5, top: 15),
         child: Row(
           children: [
-            const Text(
+            Text(
               'Filter by: ',
               style: TextStyle(
-                color: Color.fromARGB(129, 0, 0, 0),
+                color: themeProvider.textColor,
                 fontSize: 14,
                 fontFamily: 'PT-Serif',
                 fontWeight: FontWeight.bold,
@@ -52,6 +55,7 @@ class _FilterState extends State<Filter> {
             Expanded(
               flex: 10,
               child: DropdownButton<String>(
+                dropdownColor: themeProvider.scaffoldColor,
                 isDense: true,
                 value: widget.getFilterSelection(),
                 icon:

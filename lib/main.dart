@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/constants.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
@@ -23,6 +25,9 @@ void main() async {
         ),
         ChangeNotifierProvider<FilterState>(
           create: (context) => FilterState(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
         ),
       ],
       child: const MyApp(),

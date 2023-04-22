@@ -155,7 +155,7 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                                   provider.getDuration(widget.goal.goalId as String)!
                               : 0.0,
                           center: Text(
-                            '${((provider.getTimeDedicated(widget.goal.goalId as String) ?? 0) / (provider.getDuration(widget.goal.goalId as String) ?? 1) * 100).toInt()}%',
+                            '${((provider.getTimeDedicated(widget.goal.goalId as String) ?? 0) / (provider.getDuration(widget.goal.goalId as String) ?? 1) * 100).roundToDouble().toInt()}%',
                             style: const TextStyle(
                                 fontFamily: 'PT-Serif',
                                 fontSize: 16,
