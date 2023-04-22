@@ -31,6 +31,7 @@ class ThemeProvider extends ChangeNotifier {
   Color _incompleteCardBorderColor = const Color.fromARGB(255, 255, 230, 214);
   Color _completeCardColor = const Color.fromARGB(255, 235, 255, 240);
   Color _completeCardBorderColor = const Color.fromARGB(255, 219, 255, 222);
+  Color _minHourSelectorColor = const Color.fromARGB(255, 255, 213, 177);
   Color _shadowColor = const Color.fromARGB(23, 0, 0, 0);
   LinearGradient _incompleteGradient = const LinearGradient(
     colors: [
@@ -58,6 +59,7 @@ class ThemeProvider extends ChangeNotifier {
   Color get incompleteCardBorderColor => _incompleteCardBorderColor;
   Color get completeCardColor => _completeCardColor;
   Color get completeCardBorderColor => _completeCardBorderColor;
+  Color get minHourSelectorColor => _minHourSelectorColor;
   Color get shadowColor => _shadowColor;
   LinearGradient get incompleteGradient => _incompleteGradient;
   LinearGradient get completeGradient => _completeGradient;
@@ -66,16 +68,17 @@ class ThemeProvider extends ChangeNotifier {
   void toggleTheme(bool isDarkMode) {
     _isDarkMode = isDarkMode;
     if (_isDarkMode) {
-      _scaffoldColor = Color.fromARGB(255, 42, 38, 36);
+      _scaffoldColor = const Color.fromARGB(255, 42, 38, 36);
       _textColor = const Color.fromARGB(255, 255, 247, 244);
       _buttonColor = const Color.fromARGB(255, 255, 144, 39);
       _buttonTextColor = Colors.white;
       _buttonIconColor = Colors.white;
-      _incompleteCardColor = Color.fromARGB(255, 77, 69, 65);
-      _incompleteCardBorderColor = Color.fromARGB(255, 104, 71, 41);
-      _completeCardColor = Color.fromARGB(255, 69, 96, 76);
-      _completeCardBorderColor = Color.fromARGB(255, 22, 83, 38);
-      _shadowColor = const Color.fromARGB(23, 0, 0, 0);
+      _incompleteCardColor = const Color.fromARGB(255, 77, 69, 65);
+      _incompleteCardBorderColor = const Color.fromARGB(255, 104, 71, 41);
+      _completeCardColor = const Color.fromARGB(255, 69, 96, 76);
+      _completeCardBorderColor = const Color.fromARGB(255, 22, 83, 38);
+      _minHourSelectorColor = const Color.fromARGB(95, 14, 13, 13);
+      _shadowColor = Color.fromARGB(166, 0, 0, 0);
       _incompleteGradient = const LinearGradient(
         colors: [
           Colors.orangeAccent,
@@ -86,8 +89,8 @@ class ThemeProvider extends ChangeNotifier {
       );
       _completeGradient = const LinearGradient(
         colors: [
-          Colors.greenAccent,
-          Colors.green,
+          Color.fromARGB(255, 39, 203, 124),
+          Color.fromARGB(255, 22, 161, 24),
         ],
       );
       notifyListeners();
@@ -97,11 +100,12 @@ class ThemeProvider extends ChangeNotifier {
       _buttonColor = const Color.fromARGB(255, 255, 144, 39);
       _buttonTextColor = Colors.white;
       _buttonIconColor = Colors.white;
-      _incompleteCardColor = const Color.fromARGB(255, 255, 244, 237);
+      _incompleteCardColor = const Color.fromARGB(255, 255, 242, 235);
       _incompleteCardBorderColor = const Color.fromARGB(255, 255, 230, 214);
       _completeCardColor = const Color.fromARGB(255, 235, 255, 240);
       _completeCardBorderColor = const Color.fromARGB(255, 219, 255, 222);
-      _shadowColor = const Color.fromARGB(23, 0, 0, 0);
+      _minHourSelectorColor = const Color.fromARGB(255, 255, 213, 177);
+      _shadowColor = const Color.fromARGB(20, 0, 0, 0);
       _incompleteGradient = const LinearGradient(
         colors: [
           Colors.orangeAccent,

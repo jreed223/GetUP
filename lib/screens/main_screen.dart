@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
 import 'package:provider/provider.dart';
-import '../constants.dart';
 import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
@@ -46,15 +46,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 247, 244),
+      backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'Home',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              letterSpacing: 1.5),
         ),
       ),
       body: Column(
@@ -84,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromARGB(255, 255, 247, 244),
-        selectedItemColor: Color.fromARGB(214, 0, 0, 0),
-        unselectedItemColor: Colors.black54,
+        backgroundColor: themeProvider.scaffoldColor,
+        selectedItemColor: themeProvider.buttonColor,
+        unselectedItemColor: themeProvider.textColor,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [

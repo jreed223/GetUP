@@ -3,6 +3,7 @@ import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/theme_provider.dart';
 import '../models/goals.dart';
 import 'filter.dart';
 
@@ -14,6 +15,7 @@ class GoalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         List<dynamic> filteredGoalsBySelectedDate = [];
@@ -25,8 +27,13 @@ class GoalView extends StatelessWidget {
         var goals = filteredGoalsBySelectedDate;
 
         if (goals.isEmpty) {
-          return const Center(
-            child: Text('No goals for selected date'),
+          return Center(
+            child: Text('No goals for selected date',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'PT-Serif',
+                    color: themeProvider.textColor)),
           );
         }
 

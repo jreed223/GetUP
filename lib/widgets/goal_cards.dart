@@ -697,9 +697,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
-                                            color: Colors.black54,
+                                            color: themeProvider.textColor,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600),
                                         value: provider.getTimeDedicated(
@@ -738,7 +738,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
-                                          ? Color.fromARGB(255, 255, 213, 177)
+                                          ? themeProvider.minHourSelectorColor
                                           : Colors.transparent,
                                     ),
                                     child: Padding(
@@ -750,10 +750,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         value: _hours,
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
                                             fontSize: 18,
-                                            color: Colors.black54),
+                                            color: themeProvider.textColor),
                                       ),
                                     ),
                                   ),
@@ -914,8 +914,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
                                           ? Colors.transparent
-                                          : const Color.fromARGB(
-                                              79, 255, 153, 0),
+                                          : themeProvider.minHourSelectorColor,
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
@@ -926,10 +925,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         value: _minutes,
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
                                             fontSize: 18,
-                                            color: Colors.black54),
+                                            color: themeProvider.textColor),
                                       ),
                                     ),
                                   ),
