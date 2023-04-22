@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/helpers/goal_animation.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
-import '../constants.dart';
+import 'package:provider/provider.dart';
+import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
@@ -38,23 +41,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
-    GOAL_STATES.loadGoalsFromFirebase();
-    Future.delayed(const Duration(milliseconds: 1), () {
-      setState(() {});
-    });
+    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
   }
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 247, 244),
+      backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'Home',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              letterSpacing: 1.5),
         ),
       ),
       body: Column(
@@ -76,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(),
-              child: buildGoalCards(GOAL_STATES.longTermGoals),
+              child: buildGoalCards(),
             ),
           ),
         ],
@@ -84,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromARGB(255, 255, 247, 244),
-        selectedItemColor: Color.fromARGB(214, 0, 0, 0),
-        unselectedItemColor: Colors.black54,
+        backgroundColor: themeProvider.scaffoldColor,
+        selectedItemColor: themeProvider.buttonColor,
+        unselectedItemColor: themeProvider.textColor,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
@@ -183,24 +188,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget buildGoalCards(List<dynamic> goals) {
-  // List<LongTermGoal> longTermGoals = [];
-  // for (var goal in goals) {
-  //   if (goal is LongTermGoal) {
-  //     longTermGoals.add(goal);
-  //   }
-  // }
-  return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: goals.length,
-      itemBuilder: (BuildContext context, int index) {
-        try {
-          return GeneralGoalCard(goal: goals[index]);
-        } catch (e) {
-          return Container();
-        }
-      });
+Widget buildGoalCards() {
+  return Consumer<GoalDataState>(
+    builder:
+        (BuildContext context, GoalDataState goalDataState, Widget? child) {
+      List<dynamic> goals = goalDataState.longTermGoals;
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: goals.length,
+        itemBuilder: (BuildContext context, int index) {
+          try {
+            if (goals.length == 0) {
+              return const Text('No goals');
+            }
+            return GoalAnimation(
+                goalCard: GeneralGoalCard(goal: goals[index]),
+                goal: goals[index]);
+          } catch (e) {
+            return null;
+          }
+        },
+      );
+    },
+  );
 }
+
 
 // void main() {
 //   runApp(const MaterialApp(

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/firebase_controller.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
@@ -11,6 +12,8 @@ import 'package:getup_csc450/screens/profile.dart';
 import 'package:getup_csc450/screens/metrics.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:provider/provider.dart';
+
+import '../helpers/validator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -174,16 +177,17 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 247, 244),
+        backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
           shadowColor: Colors.transparent,
-          backgroundColor: Color.fromARGB(255, 255, 247, 244),
-          title: const Text('Calendar View',
+          backgroundColor: themeProvider.scaffoldColor,
+          title: Text('Calendar',
               style: TextStyle(
                   letterSpacing: 1.25,
-                  color: Colors.black54,
+                  color: themeProvider.textColor,
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
                   fontFamily: 'PT-Serif')),
@@ -235,8 +239,8 @@ class _HomePageState extends State<HomePage>
                         ),
                       ],
                       color: _isButtonForm
-                          ? Colors.white
-                          : const Color.fromARGB(255, 255, 119, 0),
+                          ? themeProvider.scaffoldColor
+                          : themeProvider.buttonColor,
                       borderRadius: BorderRadius.all(
                         Radius.circular(_buttonBorderRadius),
                       ),
@@ -289,11 +293,14 @@ class _HomePageState extends State<HomePage>
                                         milliseconds:
                                             _isButtonForm ? 3000 : 700),
                                     curve: Curves.easeOutExpo,
-                                    child: const Text(
+                                    child: Text(
                                       'Add a goal',
                                       style: TextStyle(
-                                        color: Colors.black87,
+                                        fontFamily: 'PT-Serif',
+                                        color: themeProvider.textColor,
                                         fontSize: 20,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 1.25,
                                       ),
                                     ),
                                   ),
@@ -308,7 +315,11 @@ class _HomePageState extends State<HomePage>
                                             _isButtonForm ? 3000 : 700),
                                     curve: Curves.easeOutCubic,
                                     child: TextFormField(
-                                      cursorColor: Colors.black38,
+                                      style: TextStyle(
+                                        fontFamily: 'PT-Serif',
+                                        color: themeProvider.textColor,
+                                      ),
+                                      cursorColor: themeProvider.buttonColor,
                                       controller: _goalTitleController,
 
                                       /// This ensures that the title is not empty
@@ -324,14 +335,17 @@ class _HomePageState extends State<HomePage>
                                         setState(() => _goalTitle = input);
                                       },
 
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Colors.black54, width: 3),
+                                              color: themeProvider.buttonColor,
+                                              width: 2),
                                         ),
                                         hintText: 'Title',
                                         hintStyle: TextStyle(
-                                          color: Colors.black38,
+                                          fontFamily: 'PT-Serif',
+                                          color: themeProvider.textColor
+                                              .withOpacity(0.8),
                                         ),
                                       ),
                                     ),
@@ -352,10 +366,11 @@ class _HomePageState extends State<HomePage>
                                                     ? 3000
                                                     : 1000),
                                             curve: Curves.easeOutCubic,
-                                            child: const Text(
+                                            child: Text(
                                               'Is this a long term goal?',
                                               style: TextStyle(
-                                                color: Colors.black38,
+                                                fontFamily: 'PT-Serif',
+                                                color: themeProvider.textColor,
                                               ),
                                             ),
                                           ),
@@ -373,7 +388,8 @@ class _HomePageState extends State<HomePage>
 
                                             /// This is the checkbox that will determine if the goal is long term
                                             child: Checkbox(
-                                              activeColor: Colors.black54,
+                                              activeColor:
+                                                  themeProvider.buttonColor,
                                               value: _isLongTermGoal,
                                               onChanged: (bool? value) {
                                                 setState(() {
@@ -393,13 +409,19 @@ class _HomePageState extends State<HomePage>
                                             const Duration(milliseconds: 500),
                                         curve: Curves.easeInBack,
                                         child: TextFormField(
-                                          cursorColor: Colors.black12,
+                                          style: TextStyle(
+                                              fontFamily: 'PT-Serif',
+                                              color: themeProvider.textColor),
+                                          cursorColor:
+                                              themeProvider.buttonColor,
                                           controller: _goalDurationController,
                                           validator: (input) {
                                             /// This ensures the validation only occurs if the checkbox is checked
                                             if (_isLongTermGoal) {
-                                              if (input!.isEmpty) {
-                                                return 'Please enter a number of hours to dedicate to this goal';
+                                              if (input!.isEmpty ||
+                                                  !isNumber(input) ||
+                                                  int.parse(input) < 1) {
+                                                return 'Please enter a valid number';
                                               }
                                             }
                                             return null;
@@ -410,15 +432,18 @@ class _HomePageState extends State<HomePage>
                                             setState(
                                                 () => _goalDuration = input);
                                           },
-                                          decoration: const InputDecoration(
+                                          decoration: InputDecoration(
                                             focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.black54,
+                                                  color:
+                                                      themeProvider.buttonColor,
                                                   width: 3),
                                             ),
                                             hintText: 'Hours to deditcate',
                                             hintStyle: TextStyle(
-                                              color: Colors.black38,
+                                              fontFamily: 'PT-Serif',
+                                              color: themeProvider.textColor
+                                                  .withOpacity(0.8),
                                             ),
                                           ),
                                         ),
@@ -441,12 +466,21 @@ class _HomePageState extends State<HomePage>
                                               height: 30,
                                               width: 55,
                                               decoration: BoxDecoration(
-                                                color: Colors.black12,
+                                                color: Colors.black38,
                                                 borderRadius:
                                                     BorderRadius.circular(30),
                                               ),
                                               child: const Center(
-                                                  child: Text('Cancel')),
+                                                  child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                  fontFamily: 'PT-Serif',
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  letterSpacing: 1.25,
+                                                ),
+                                              )),
                                             ),
                                           ),
                                           InkWell(
@@ -538,8 +572,8 @@ class _HomePageState extends State<HomePage>
                                                 decoration: BoxDecoration(
                                                     color: _submitSuccessful
                                                         ? Colors.green
-                                                        : const Color.fromARGB(
-                                                            14, 0, 0, 0),
+                                                        : themeProvider
+                                                            .buttonColor,
                                                     borderRadius: BorderRadius
                                                         .all(Radius.circular(
                                                             _submitButtonBorderRadius))),
@@ -556,11 +590,15 @@ class _HomePageState extends State<HomePage>
                                                           _submitSuccessful,
                                                     ),
                                                   ),
-                                                  secondChild: const Center(
+                                                  secondChild: Center(
                                                     child: Text(
                                                       'Submit',
                                                       style: TextStyle(
-                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontFamily: 'PT-Serif',
+                                                        color: themeProvider
+                                                            .textColor,
                                                       ),
                                                     ),
                                                   ),
@@ -592,9 +630,9 @@ class _HomePageState extends State<HomePage>
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Color.fromARGB(255, 255, 247, 244),
-          selectedItemColor: Colors.black87,
-          unselectedItemColor: Colors.black54,
+          backgroundColor: themeProvider.scaffoldColor,
+          selectedItemColor: themeProvider.buttonColor,
+          unselectedItemColor: themeProvider.textColor,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           items: const [

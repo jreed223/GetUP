@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../helpers/theme_provider.dart';
 import '../models/profile_controller.dart';
 import '../helpers/themes.dart';
 import 'login.dart';
@@ -60,7 +62,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Light Theme'),
                 onTap: () {
                   setState(() {
-                    _currentTheme = Themes.lightTheme;
+                    final themeProvider =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    themeProvider.toggleTheme(false);
                   });
                   Navigator.of(context).pop();
                 },
@@ -69,7 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Dark Theme'),
                 onTap: () {
                   setState(() {
-                    _currentTheme = Themes.darkTheme;
+                    final themeProvider =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    themeProvider.toggleTheme(true);
                   });
                   Navigator.of(context).pop();
                 },
@@ -83,9 +89,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      theme: _currentTheme,
       home: Scaffold(
+        backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
           title: const Text('Profile',
               style: TextStyle(

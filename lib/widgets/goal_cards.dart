@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/constants.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
@@ -436,6 +437,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         return Padding(
@@ -450,11 +452,11 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                 ? provider.getStatus(widget.goal.goalId as String)!
                     ? BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 231, 237, 232),
+                          color: themeProvider.completeCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 235, 255, 240),
+                        color: themeProvider.completeCardColor,
                         boxShadow: [
                           BoxShadow(
                             color: Color.fromARGB(20, 0, 0, 0),
@@ -467,11 +469,11 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                       )
                     : BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 255, 234, 221),
+                          color: themeProvider.incompleteCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 255, 244, 237),
+                        color: themeProvider.incompleteCardColor,
                         boxShadow: [
                           BoxShadow(
                             color: Color.fromARGB(20, 0, 0, 0),
@@ -525,54 +527,51 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                       ),
                       const Spacer(flex: 1),
                       Expanded(
-                        flex: 5,
+                          flex: 5,
 
-                        /// The title of the goal
-                        /// If the goal is in edit mode, a text field is shown
-                        child: _isEditing
-                            ? TextField(
-                                style: TextStyle(
-                                    fontFamily: 'PT-Serif',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: provider.getStatus(
-                                            widget.goal.goalId as String)!
-                                        ? Colors.black12
-                                        : Colors.black12),
-                                cursorColor: Colors.orangeAccent,
-                                controller: _titleController,
-                                decoration: InputDecoration(
-                                    focusedBorder: const UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.orange)),
-                                    errorText: _showError
-                                        ? 'Title cannot be empty'
-                                        : null,
-                                    hintText: 'Edit title'),
-                                onChanged: (value) {
-                                  if (!_isEditingCancelled &&
-                                      value.isNotEmpty) {
-                                    setState(() {
-                                      value = _titleController.text;
-                                    });
-                                    provider.setTitle(
-                                        widget.goal.goalId as String, value);
-                                  }
-                                },
-                              )
-                            : Text(
-                                provider
-                                    .getTitle(widget.goal.goalId as String)!,
-                                style: TextStyle(
-                                    letterSpacing: 1.25,
-                                    fontFamily: 'PT-Serif',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: provider.getStatus(
-                                            widget.goal.goalId as String)!
-                                        ? Colors.black26
-                                        : Colors.black54)),
-                      ),
+                          /// The title of the goal
+                          /// If the goal is in edit mode, a text field is shown
+                          child: _isEditing
+                              ? TextField(
+                                  style: TextStyle(
+                                      fontFamily: 'PT-Serif',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: provider.getStatus(
+                                              widget.goal.goalId as String)!
+                                          ? Colors.black12
+                                          : Colors.black12),
+                                  cursorColor: Colors.orangeAccent,
+                                  controller: _titleController,
+                                  decoration: InputDecoration(
+                                      focusedBorder: const UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.orange)),
+                                      errorText: _showError
+                                          ? 'Title cannot be empty'
+                                          : null,
+                                      hintText: 'Edit title'),
+                                  onChanged: (value) {
+                                    if (!_isEditingCancelled &&
+                                        value.isNotEmpty) {
+                                      setState(() {
+                                        value = _titleController.text;
+                                      });
+                                      provider.setTitle(
+                                          widget.goal.goalId as String, value);
+                                    }
+                                  },
+                                )
+                              : Text(
+                                  provider
+                                      .getTitle(widget.goal.goalId as String)!,
+                                  style: TextStyle(
+                                      letterSpacing: 1.25,
+                                      fontFamily: 'PT-Serif',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: themeProvider.textColor),
+                                )),
                       const Spacer(flex: 1),
                       Expanded(
                         flex: 1,
@@ -698,9 +697,9 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                 center: _progressAsPercentage == null
                                     ? const CircularProgressIndicator()
                                     : AnimatedFlipCounter(
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
-                                            color: Colors.black54,
+                                            color: themeProvider.textColor,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600),
                                         value: provider.getTimeDedicated(
@@ -739,7 +738,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
-                                          ? Color.fromARGB(255, 255, 213, 177)
+                                          ? themeProvider.minHourSelectorColor
                                           : Colors.transparent,
                                     ),
                                     child: Padding(
@@ -751,10 +750,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         value: _hours,
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
                                             fontSize: 18,
-                                            color: Colors.black54),
+                                            color: themeProvider.textColor),
                                       ),
                                     ),
                                   ),
@@ -915,8 +914,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       borderRadius: BorderRadius.circular(10),
                                       color: _isEditingHours
                                           ? Colors.transparent
-                                          : const Color.fromARGB(
-                                              79, 255, 153, 0),
+                                          : themeProvider.minHourSelectorColor,
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
@@ -927,10 +925,10 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                         value: _minutes,
                                         duration: const Duration(seconds: 1),
                                         curve: Curves.bounceOut,
-                                        textStyle: const TextStyle(
+                                        textStyle: TextStyle(
                                             fontFamily: 'PT-Serif',
                                             fontSize: 18,
-                                            color: Colors.black54),
+                                            color: themeProvider.textColor),
                                       ),
                                     ),
                                   ),

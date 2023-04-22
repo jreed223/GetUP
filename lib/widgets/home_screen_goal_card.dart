@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
+import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class GeneralGoalCard extends StatefulWidget {
 class _GeneralGoalCardState extends State<GeneralGoalCard> {
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         return Container(
@@ -23,14 +25,14 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                 ? provider.getStatus(widget.goal.goalId)!
                     ? BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 219, 255, 222),
+                          color: themeProvider.completeCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(20),
-                        color: Color.fromARGB(255, 244, 255, 245),
+                        color: themeProvider.completeCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 3,
                             offset: const Offset(
@@ -40,14 +42,14 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                       )
                     : BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 255, 230, 214),
+                          color: themeProvider.incompleteCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(20),
-                        color: Color.fromARGB(255, 255, 242, 235),
+                        color: themeProvider.incompleteCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 3,
                             offset: const Offset(
@@ -69,12 +71,12 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                         screen.displayHeight(context) * 0.005,
                       ),
                       child: Text('${widget.goal.goalTitle}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               letterSpacing: 1.5,
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'PT-Serif',
-                              color: Color.fromARGB(180, 0, 0, 0))),
+                              color: themeProvider.textColor)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -82,19 +84,19 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                           ? RichText(
                               text: TextSpan(
                                 style: DefaultTextStyle.of(context).style,
-                                children: const <TextSpan>[
+                                children: <TextSpan>[
                                   TextSpan(
                                       text: 'Status:',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(180, 0, 0, 0),
+                                          color: themeProvider.textColor,
                                           fontFamily: 'PT-Serif')),
                                   TextSpan(
                                     text: ' Completed',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontFamily: 'PT-Serif',
-                                      color: Color.fromARGB(180, 0, 0, 0),
+                                      color: themeProvider.textColor,
                                     ),
                                   ),
                                 ],
@@ -103,19 +105,19 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                           : RichText(
                               text: TextSpan(
                                 style: DefaultTextStyle.of(context).style,
-                                children: const <TextSpan>[
+                                children: <TextSpan>[
                                   TextSpan(
                                       text: 'Status:',
                                       style: TextStyle(
                                           fontFamily: 'PT-Serif',
                                           fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(180, 0, 0, 0))),
+                                          color: themeProvider.textColor)),
                                   TextSpan(
                                     text: ' In Progress',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontFamily: 'PT-Serif',
-                                      color: Color.fromARGB(180, 0, 0, 0),
+                                      color: themeProvider.textColor,
                                     ),
                                   ),
                                 ],
@@ -155,12 +157,12 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                                   provider.getDuration(widget.goal.goalId as String)!
                               : 0.0,
                           center: Text(
-                            '${((provider.getTimeDedicated(widget.goal.goalId as String) ?? 0) / (provider.getDuration(widget.goal.goalId as String) ?? 1) * 100).toInt()}%',
-                            style: const TextStyle(
+                            '${((provider.getTimeDedicated(widget.goal.goalId as String) ?? 0) / (provider.getDuration(widget.goal.goalId as String) ?? 1) * 100).roundToDouble().toInt()}%',
+                            style: TextStyle(
                                 fontFamily: 'PT-Serif',
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(180, 0, 0, 0)),
+                                color: themeProvider.textColor),
                           ),
                           backgroundColor: Colors.black54),
                     ),
