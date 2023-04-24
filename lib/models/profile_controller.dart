@@ -64,8 +64,8 @@ class Profile {
       //sampleUsers comes from User which at the time is part of a pull request and is not fully merged into main yet
       final profile = Profile(
         user: user,
-        userBio: "I don't want to procrastinate anymore",
-        userInterests: "Working out, Art, Beer",
+        userBio: "",
+        userInterests: "",
       );
     }
   }

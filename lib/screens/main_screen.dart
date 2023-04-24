@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
         title: Text(
@@ -66,14 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.purple,
+              decoration: BoxDecoration(),
               child: buildItemSquareList(items),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              color: Colors.red,
+              decoration: BoxDecoration(),
               child: buildItemSquareList(items),
             ),
           ),

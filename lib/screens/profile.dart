@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helpers/theme_provider.dart';
 import '../models/profile_controller.dart';
-import '../helpers/themes.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/home.dart';
@@ -25,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _bioController;
   late TextEditingController _interestsController;
   // setting of the themes which can be changed
-  ThemeData _currentTheme = Themes.lightTheme;
+  // ThemeData _currentTheme = Themes.lightTheme;
 
   @override
   void initState() {
@@ -89,19 +88,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    return MaterialApp(
-      home: Scaffold(
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
-          title: const Text('Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-              )),
+          shadowColor: Colors.transparent,
+          backgroundColor: themeProvider.scaffoldColor,
+          title: Text(
+          'Profile',
+          style: TextStyle(
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              letterSpacing: 1.5),
+        ),
           actions: [
             IconButton(
               icon: const Icon(Icons.color_lens),
+              color: themeProvider.buttonColor,
               onPressed: () {
                 _showThemeMenu(context);
               },
@@ -120,49 +125,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Display user's name
-              Text(
-                '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+          Text(
+          '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
+          style: TextStyle(
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
               ),
+            ),
               const SizedBox(height: 20.0), // Space below name
-              const Text(
-                'About:', // User bio
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+          Text(
+          'About', // User's bio
+          style: TextStyle(
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
               ),
+            ),
               TextField(
                 controller: _bioController,
                 decoration: InputDecoration(
                   hintText: 'Write your bio!',
                   hintStyle: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    color: themeProvider.textColor,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(context).textTheme.bodyLarge?.color ??
-                          Colors.grey,
+                      color: themeProvider.textColor,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: themeProvider.textColor,
                     ),
                   ),
                   border: const OutlineInputBorder(),
                 ),
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  color: themeProvider.textColor,
+                  fontFamily: "PT-Serif"
                 ),
               ),
               const SizedBox(height: 20.0), // Space below bio
-              const Text(
+              Text(
                 'Interests:', // User interests
                 style: TextStyle(
+                  color: themeProvider.textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
@@ -172,23 +182,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                   hintText: 'Add your interests here!',
                   hintStyle: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    color: themeProvider.textColor,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(context).textTheme.bodyLarge?.color ??
-                          Colors.grey,
+                      color: themeProvider.textColor
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: themeProvider.textColor,
                     ),
                   ),
                   border: const OutlineInputBorder(),
                 ),
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  color: themeProvider.textColor,
                 ),
               ),
               const SizedBox(
@@ -215,8 +224,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: themeProvider.scaffoldColor,
+          selectedItemColor: themeProvider.buttonColor,
+          unselectedItemColor: themeProvider.textColor,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           items: const [
@@ -238,7 +250,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 
@@ -282,17 +293,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-void main() {
-  // Create sample data for testing
-  Profile.createSampleData();
+// void main() {
+//   // Create sample data for testing
+//   Profile.createSampleData();
 
-  // Get the first profile from the list of profiles
-  Profile profile = Profile.profiles[0];
+//   // Get the first profile from the list of profiles
+//   Profile profile = Profile.profiles[0];
 
-  // Run the app and display the ProfileScreen with the sample data
-  runApp(
-    MaterialApp(
-      home: ProfileScreen(profile: profile),
-    ),
-  );
-}
+//   // Run the app and display the ProfileScreen with the sample data
+//   runApp(
+//     MaterialApp(
+//       home: ProfileScreen(profile: profile),
+//     ),
+//   );
+// }
