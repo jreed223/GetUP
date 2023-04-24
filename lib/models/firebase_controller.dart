@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:intl/intl.dart';
+import 'package:getup_csc450/models/challenge.dart';
+
 
 /// This class is used to control the Firestore database.
 /// It is a singleton class, so only one instance of it can be created.
@@ -47,6 +49,27 @@ class FirestoreController {
 
     await goals.set(goal.toJson());
   }
+
+
+      /// Adding a challenge to the user's challenge subcollection.
+  static Future<void> pushChallenge(Challenge challenge, String id) async {
+    final userCollection = _db.collection('Users').doc(id);
+
+    final challenges = userCollection.collection('challenges').doc(challenge.challengeId);
+
+    await challenges.set(challenge.toJson());
+  }
+
+      /// Adding a challenge to the user's challenge subcollection.
+  static Future<void> pushChallengeShown(Challenge challenge, String id) async {
+    final userCollection = _db.collection('Users').doc(id);
+
+    final challengesShown = userCollection.collection('challengesShown').doc(challenge.challengeId);
+
+    await challengesShown.set(challenge.toJson());
+  }
+
+
 
   /// Used to get the user's goals by date created from the database.
   Stream<List<QueryDocumentSnapshot>> getGoalsByDate(

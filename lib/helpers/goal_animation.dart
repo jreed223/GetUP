@@ -113,4 +113,5 @@ class _GoalAnimationState extends State<GoalAnimation>
                 child: widget.goalCard,
               );
   }
+
 }

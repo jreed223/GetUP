@@ -61,6 +61,10 @@ class Goal {
     dateCompleted = newDate;
   }
 
+  void initState() {
+    // Code to initialize the state of the challenge
+  }
+
   /// Gets the ID of the goal.
   String? get goalId => id;
 

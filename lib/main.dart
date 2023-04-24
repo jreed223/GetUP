@@ -12,6 +12,7 @@ import 'firebase_options.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getup_csc450/models/challenge.dart';
 
 void main() async {
   Profile.createSampleData();
@@ -22,6 +23,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider<GoalDataState>(
           create: (context) => GoalDataState(),
+        ),
+        ChangeNotifierProvider<ChallengeDataState>(
+          create: (context) => ChallengeDataState(),
         ),
         ChangeNotifierProvider<FilterState>(
           create: (context) => FilterState(),

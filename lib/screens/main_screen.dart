@@ -8,16 +8,23 @@ import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
+import 'package:getup_csc450/models/challenge.dart';
+import 'package:getup_csc450/widgets/home_screen_challenge_card.dart';
+import 'package:getup_csc450/helpers/challenge_animation.dart';
+import 'dart:async';
 
 /// The Home screen widget.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
+  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Timer timer;
   /// The list of data to use for the item squares.
   final List<String> items = [
     'Scroll',
@@ -42,6 +49,23 @@ class _HomeScreenState extends State<HomeScreen> {
   initState() {
     super.initState();
     Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
+    Provider.of<ChallengeDataState>(context, listen: false).loadChallengeFromFirebase();
+
+    // Generate a new challenge when the widget is first created
+    // Generate a new challenge if the list is empty
+    if (challengeDataState.challengesShown.isEmpty) {
+        challenge.generateNewChallenges();
+    }
+    // Set a timer to reset the completed challenges list every day at midnight
+    timer = Timer.periodic(const Duration(days: 1), (timer) {
+      setState(() {
+        Challenge chal;
+        for (chal in challengeDataState.challengesShown) {
+          challengeDataState.deleteChallengeShown(chal.challengeId);}
+      });
+      // Generate a new challenge at the start of each day
+      challenge.generateNewChallenges();
+    });
   }
 
   @override
@@ -73,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              color: Colors.red,
-              child: buildItemSquareList(items),
+              decoration: BoxDecoration(),
+              child: buildChallengeCards(),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
@@ -204,6 +228,31 @@ Widget buildGoalCards() {
             return GoalAnimation(
                 goalCard: GeneralGoalCard(goal: goals[index]),
                 goal: goals[index]);
+          } catch (e) {
+            return null;
+          }
+        },
+      );
+    },
+  );
+}
+
+Widget buildChallengeCards() {
+  return Consumer<ChallengeDataState>(
+    builder:
+        (BuildContext context, ChallengeDataState challengeDataState, Widget? child) {
+      List<Challenge> challenges = challengeDataState.challengesShown;
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: challenges.length,
+        itemBuilder: (BuildContext context, int index) {
+          try {
+            if (challenges.length == 0) {
+              return const Text('No challenges');
+            }
+            return ChallengeAnimation(
+                challengeShown: ChallengeShown(challenge: challenges[index]),
+                challenge: challenges[index]);
           } catch (e) {
             return null;
           }
