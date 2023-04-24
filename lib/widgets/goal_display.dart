@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/widgets/goal_cards.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/theme_provider.dart';
 import '../models/goals.dart';
 import 'filter.dart';
 
@@ -14,15 +11,15 @@ class GoalView extends StatelessWidget {
   /// This is the date that is passed in from the calendar view
   final String selectedDate;
 
-  GoalView({super.key, required this.selectedDate});
+  const GoalView({super.key, required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         List<dynamic> filteredGoalsBySelectedDate = [];
         for (dynamic goal in provider.goals) {
-          print('This is the length of goals list ${provider.goals.length}');
           if (goal.formattedCreationDate == selectedDate) {
             filteredGoalsBySelectedDate.add(goal);
           }
@@ -30,8 +27,13 @@ class GoalView extends StatelessWidget {
         var goals = filteredGoalsBySelectedDate;
 
         if (goals.isEmpty) {
-          return const Center(
-            child: Text('No goals for selected date'),
+          return Center(
+            child: Text('No goals for selected date',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'PT-Serif',
+                    color: themeProvider.textColor)),
           );
         }
 
@@ -113,6 +115,7 @@ class GoalView extends StatelessWidget {
                   return Container();
                 }
               }
+              return null;
             });
       },
     );

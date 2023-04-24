@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
+import '../helpers/theme_provider.dart';
 import '../screens/home.dart';
-import '../screens/metrics.dart';
-import 'package:getup_csc450/models/profileController.dart';
+import 'package:getup_csc450/models/profile_controller.dart';
 import '../screens/profile.dart';
 import '../screens/main_screen.dart';
 
@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 
 import '../models/data_points.dart';
 import '../models/goals.dart';
-import '../models/metricsController.dart';
+import '../models/metrics_Controller.dart';
 import '../models/metrics_Queue.dart';
 import 'package:text_scroll/text_scroll.dart';
 
@@ -35,13 +35,13 @@ class _MetricsPageState extends State<MetricsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      inspect(provider.getGoals());
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.getGoals());
+      inspect(provider.goals);
+      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
 
       METRICS_QUEUE.setMetrics();
-      List<DataPoints> lineData = setLineData(METRICS_QUEUE.getMetricsData());
-      List<DataPoints> barData = setBarData(METRICS_QUEUE.getMetricsData());
-      List pieData = setPieData(provider.getGoals());
+      List<DataPoints> lineData = setLineData(METRICS_QUEUE.currentMetricsQ);
+      List<DataPoints> barData = setBarData(METRICS_QUEUE.currentMetricsQ);
+      List pieData = setPieData(provider.goals);
 
       // for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
 
@@ -57,7 +57,7 @@ class _MetricsPageState extends State<MetricsPage> {
       //     });
       //   }
       // });
-
+      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
       for (var goal in provider.getGoals()) {
         if (goal.isLongTerm) {
           longTermGoals.add(goal);
@@ -211,8 +211,42 @@ class _MetricsPageState extends State<MetricsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: DoubleBarEchart(data: barData),
+                    Stack(
+                      children: [
+                        DoubleBarEchart(data: barData),
+                        Positioned(
+                          bottom: 0,
+                          height: MediaQuery.of(context).size.height / 13,
+                          width: MediaQuery.of(context).size.width,
+                          child: BottomNavigationBar(
+                            elevation: 0,
+                            type: BottomNavigationBarType.fixed,
+                            backgroundColor: themeProvider.scaffoldColor,
+                            selectedItemColor: themeProvider.buttonColor,
+                            unselectedItemColor: themeProvider.textColor,
+                            currentIndex: _selectedIndex,
+                            onTap: _onItemTapped,
+                            items: const [
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.home),
+                                label: 'Home',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.calendar_today),
+                                label: 'Calendar',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.analytics),
+                                label: 'Metrics',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.person),
+                                label: 'Profile',
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -224,42 +258,42 @@ class _MetricsPageState extends State<MetricsPage> {
     });
   }
 
-// // Setting up Profile
-//   Profile profile = Profile.profiles[0];
-//   int _selectedIndex = 0;
+// Setting up Profile
+  Profile profile = Profile.profiles[0];
+  int _selectedIndex = 0;
 
-//   /// The function to call when a navigation bar item is tapped.
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
+  /// The function to call when a navigation bar item is tapped.
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
 
-//     switch (index) {
-//       case 0:
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => HomeScreen()),
-//         );
-//         break;
-//       case 1:
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => HomePage()),
-//         );
-//         break;
-//       case 2:
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => MetricsPage()),
-//         );
-//         break;
-//       case 3:
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//               builder: (context) => ProfileScreen(profile: profile)),
-//         );
-//         break;
-//     }
-//   }
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MetricsPage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(profile: profile)),
+        );
+        break;
+    }
+  }
 }

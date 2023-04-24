@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:getup_csc450/models/data_points.dart';
-import 'package:getup_csc450/models/metricsController.dart';
+import 'package:getup_csc450/models/metrics_controller.dart';
 import 'package:getup_csc450/widgets/goal_cards.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'goals.dart';
 import 'package:getup_csc450/constants.dart';
@@ -20,7 +20,7 @@ class MetricsQueue {
   static final MetricsQueue _instance = MetricsQueue._internal();
 
   late List goalList;
-  List<MetricsData> _currentMetricsQ = [];
+  List<MetricsData> currentMetricsQ = [];
   List goalQueue = [[], [], [], [], [], [], []];
 
   List initialMetrics = [];
@@ -35,51 +35,34 @@ class MetricsQueue {
   bool metricsLoaded = false;
 
   List<MetricsData> getMetricsData() {
-    return _currentMetricsQ;
+    return currentMetricsQ;
   }
 
-  // saveData(MetricsData metricsData) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   String json = jsonEncode(metricsData);
-  //   String dataDate =
-  //       DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate);
-  //   pref.setString(dataDate, json);
-  //   print(json);
-  // }
+  saveData(MetricsData metricsData) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String json = jsonEncode(metricsData);
+    String dataDate =
+        DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate);
+    pref.setString(dataDate, json);
+    print(json);
+  }
 
-  // loadData(DateTime dataDateTime) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+  loadData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
 
-  //   String? json = pref.getString(dataDate);
-  //   if (json!.isEmpty) {
-  //      goalListOrganizer();
+    String? json = pref.getString(dataDate);
+    MetricsData cachedData = MetricsData.fromJson(json);
+    currentMetricsQ.add(cachedData);
+    print('$cachedData loaded');
+  }
 
-  //   }
-  //   // MetricsData cachedData = MetricsData.fromJson(json);
-  //   // _currentMetricsQ.add(cachedData);
-  //   print('$cachedData loaded');
-  // }
-
-  // deleteData(DateTime dataDateTime) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
-  //   pref.remove(dataDate);
-  //   print("data deleted");
-  // }
-
-  // goalInit() {
-  //   int counter = 7;
-  //   goalListOrganizer();
-  //   while (counter > 0) {
-  //     counter--;
-
-  //     // loadData(todaysDate.subtract(Duration(days: counter)));
-  //   }
-
-  // if (_currentMetricsQ.isEmpty) {
-  //   goalListOrganizer();
-  // }
+  deleteData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+    pref.remove(dataDate);
+    print("data deleted");
+  }
 
   void goalListOrganizer() {
     goalList.sort((a, b) {
@@ -212,14 +195,17 @@ class MetricsQueue {
     inspect(goalQueue);
     //intializes days with no goals with 1 empty goal and calculates Metrics for each list of goals
     int i = 7;
+
     for (List listGoal in goalQueue) {
+      inspect(listGoal);
       i--;
       currentMetrics = calcData(listGoal);
       currentMetrics.dataCollectionDate =
           todaysDate.subtract(Duration(days: i));
       currentMetrics.dayOfWeek =
           DateFormat('EEEE').format(todaysDate.subtract(Duration(days: i)));
-      _currentMetricsQ.add(currentMetrics);
+      currentMetricsQ.add(currentMetrics);
+      saveData(currentMetrics);
 
       // if (listGoal.isEmpty) {
       //   MetricsData emptyMetrics = M0;
@@ -248,25 +234,28 @@ class MetricsQueue {
   }
 
   void setMetrics() {
-    if (_currentMetricsQ.isEmpty) {
+    if (currentMetricsQ.isEmpty) {
       goalListOrganizer();
       metricsLoaded = true;
-    } else if (_currentMetricsQ.isNotEmpty) {
+    } else if (currentMetricsQ.isNotEmpty) {
       addMetrics();
-      sizeMetrics();
     }
   }
 
   void sizeMetrics() {
-    if (_currentMetricsQ.length == 7) {
-      if (_currentMetricsQ[6]
+    int counter = 0;
+    while (currentMetricsQ.length > 7) {
+      counter--;
+      if (currentMetricsQ[6]
           .dataCollectionDate
-          .isAtSameMomentAs(_currentMetricsQ[7].dataCollectionDate)) {
-        _currentMetricsQ.removeAt(6);
-      } else if (_currentMetricsQ[6]
+          .isAtSameMomentAs(currentMetricsQ[7].dataCollectionDate)) {
+        currentMetricsQ.removeAt(6);
+        deleteData(currentMetricsQ[6].dataCollectionDate);
+      } else if (currentMetricsQ[6]
           .dataCollectionDate
-          .isBefore(_currentMetricsQ[7].dataCollectionDate)) {
-        _currentMetricsQ.removeAt(0);
+          .isBefore(currentMetricsQ[7].dataCollectionDate)) {
+        currentMetricsQ.removeAt(0);
+        deleteData(currentMetricsQ[0].dataCollectionDate);
       }
     }
   }
@@ -294,11 +283,11 @@ class MetricsQueue {
     var currentMetrics = calcData(todaysGoals);
     currentMetrics.dataCollectionDate = todaysDate;
     currentMetrics.dayOfWeek = DateFormat('EEEE').format(todaysDate);
-    // saveData(currentMetrics);
-    _currentMetricsQ.add(currentMetrics);
-    // sizeMetrics(); // automatic removal
+    currentMetricsQ.add(currentMetrics);
+    sizeMetrics();
+    saveData(currentMetrics); // automatic removal
     metricsLoaded = true;
-    return _currentMetricsQ;
+    return currentMetricsQ;
   }
 }
 

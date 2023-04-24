@@ -105,7 +105,6 @@ class Goal {
 
         /// This ensures that the date is in the correct format.
         /// If the date is null, it will be set to null.
-        dateCompleted: (json['dateCompleted'] as Timestamp).toDate(),
         id: json['goalId']);
   }
 }
@@ -217,7 +216,6 @@ class LongTermGoal extends Goal {
       progress: json['progress'].toDouble(),
       timeDedicated: json['timeDedicated'].toDouble(),
       isCompleted: json['isCompleted'],
-      // TODO:
       dateCreated: (json['dateCreated'] as Timestamp).toDate(),
       dateCompleted: (json['dateCreated'] as Timestamp).toDate(),
       id: json['goalId'],
@@ -253,6 +251,17 @@ class GoalDataState extends ChangeNotifier {
 
   /// This is the list that stores all the goals.
   List<dynamic> goals = [];
+
+  /// This method returns a list of only the long-term goals
+  List<LongTermGoal> get longTermGoals {
+    List<LongTermGoal> longTermGoals = [];
+    for (var goal in goals) {
+      if (goal.isLongTerm) {
+        longTermGoals.add(goal);
+      }
+    }
+    return longTermGoals;
+  }
 
   /// This method loads the goals from Firebase
   Future<void> loadGoalsFromFirebase() async {
@@ -383,11 +392,10 @@ class GoalDataState extends ChangeNotifier {
       }
     }
 
-    if (title == '') {
-      print('** getTitle ** => goal not found');
-    } else {
+    if (!(title == '')) {
       return title;
     }
+    return null;
   }
 
   /// This will return the status of the goal that is being edited.
@@ -399,11 +407,10 @@ class GoalDataState extends ChangeNotifier {
         break;
       }
     }
-    if (status == null) {
-      print('** getStatus ** => goal not found');
-    } else {
+    if (!(status == null)) {
       return status;
     }
+    return null;
   }
 
   /// This will return the progress of the goal that is being edited.
@@ -415,11 +422,10 @@ class GoalDataState extends ChangeNotifier {
         break;
       }
     }
-    if (progress == null) {
-      print('** getProgress ** => goal not found');
-    } else {
+    if (!(progress == null)) {
       return progress;
     }
+    return null;
   }
 
   /// This will return the time dedicated to the goal that is being edited.
@@ -431,11 +437,10 @@ class GoalDataState extends ChangeNotifier {
         break;
       }
     }
-    if (timeDedicated == null) {
-      print('** getTimeDedicated ** => goal not found');
-    } else {
+    if (!(timeDedicated == null)) {
       return timeDedicated;
     }
+    return null;
   }
 
   double? getDuration(String goalId) {
@@ -446,11 +451,10 @@ class GoalDataState extends ChangeNotifier {
         break;
       }
     }
-    if (duration == 0) {
-      print('** getDuration ** => goal not found');
-    } else {
+    if (!(duration == 0)) {
       return duration;
     }
+    return null;
   }
 
   /// This will update the goal progress in Firebase.

@@ -2,12 +2,12 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "../models/goals.dart";
+import "../widgets/goal_cards.dart";
 
 class GoalAnimation extends StatefulWidget {
-  final Key? key;
-  dynamic goalCard;
-  dynamic goal;
-  GoalAnimation({required this.key, this.goalCard, required this.goal});
+  final dynamic goalCard;
+  final dynamic goal;
+  const GoalAnimation({super.key, this.goalCard, required this.goal});
 
   @override
   State<GoalAnimation> createState() => _GoalAnimationState();
@@ -25,7 +25,7 @@ class _GoalAnimationState extends State<GoalAnimation>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {
@@ -72,23 +72,45 @@ class _GoalAnimationState extends State<GoalAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () async {
-        final confirmed = await _showConfirmationDialog(widget.key);
-        print(confirmed);
-        if (confirmed == true) {
-          _controller!.reverse();
-          // delay the deletion of the goal until the animation is complete
-          Future.delayed(duration).then((_) {
-            Provider.of<GoalDataState>(context, listen: false)
-                .deleteGoal(widget.goal.goalId);
-          });
-        }
-      },
-      child: FadeTransition(
-        opacity: _animation!,
-        child: widget.goalCard,
-      ),
-    );
+    return widget.goalCard is LongTermGoalCard
+        ? GestureDetector(
+            onLongPress: () async {
+              final confirmed = await _showConfirmationDialog(widget.key);
+              if (confirmed == true) {
+                _controller!.reverse();
+                // delay the deletion of the goal until the animation is complete
+                Future.delayed(duration).then((_) {
+                  Provider.of<GoalDataState>(context, listen: false)
+                      .deleteGoal(widget.goal.goalId);
+                });
+              }
+            },
+            child: FadeTransition(
+              opacity: _animation!,
+              child: widget.goalCard,
+            ),
+          )
+        : widget.goalCard is ShortTermGoalCard
+            ? GestureDetector(
+                onLongPress: () async {
+                  final confirmed = await _showConfirmationDialog(widget.key);
+                  if (confirmed == true) {
+                    _controller!.reverse();
+                    // delay the deletion of the goal until the animation is complete
+                    Future.delayed(duration).then((_) {
+                      Provider.of<GoalDataState>(context, listen: false)
+                          .deleteGoal(widget.goal.goalId);
+                    });
+                  }
+                },
+                child: FadeTransition(
+                  opacity: _animation!,
+                  child: widget.goalCard,
+                ),
+              )
+            : FadeTransition(
+                opacity: _animation!,
+                child: widget.goalCard,
+              );
   }
 }

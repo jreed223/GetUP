@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/models/goals.dart';
-import 'package:intl/intl.dart';
-import 'metricsController.dart';
+import 'metrics_controller.dart';
 
 //import 'goal_organizer.dart';
 import 'goals.dart';
@@ -80,17 +79,16 @@ dynamic setPieData(goalList) {
         String data =
             "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
         pieDataset.add(data);
+      } else if ((goal.isCompleted == true) & (goal.isLongTerm == true)) {
+        if (((goal.goalCompletionDate?.isBefore(todaysDate)) ||
+                goal.goalCompletionDate?.isAtSameMomentAs(todaysDate)) &
+            goal.goalCompletionDate
+                ?.isAfter(todaysDate.subtract(const Duration(days: 7)))) {
+          String data =
+              "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
+          pieDataset.add(data);
+        }
       }
-      // else if ((goal.isCompleted == true) & (goal.isLongTerm == true)) {
-
-      //   if ((goal.goalCompletionDate?.isBefore(todaysDate)) &
-      //       goal.goalCompletionDate
-      //           ?.isAfter(todaysDate.subtract(const Duration(days: 7)))) {
-      //     String data =
-      //         "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
-      //     pieDataset.add(data);
-      //   }
-      // }
     }
   } else {
     pieDataset = ["{value: 0, name:'No Longterm data'}"];

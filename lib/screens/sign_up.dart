@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:getup_csc450/models/userController.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/screens/login.dart';
 
@@ -102,7 +101,7 @@ class _SignupPage extends State<SignupPage> {
     return Scaffold(
         body: Center(
             child: (Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Form(
         key: _formKey,
         child: Column(
@@ -205,10 +204,10 @@ class _SignupPage extends State<SignupPage> {
                           ? null
                           : _createAccountWithEmailAndPassword,
                       child: _isLoading
-                          ? CircularProgressIndicator()
+                          ? const CircularProgressIndicator()
                           : const Text('Sign Up')),
                 ])),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             TextButton(
                 onPressed: () {
                   Navigator.pushReplacement(context,

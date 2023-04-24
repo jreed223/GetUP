@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:getup_csc450/models/data_points.dart';
-import 'package:getup_csc450/models/profileController.dart';
-import '../constants.dart';
+import 'package:getup_csc450/helpers/goal_animation.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
+import 'package:getup_csc450/models/profile_controller.dart';
+import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
+import 'package:provider/provider.dart';
+import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
@@ -41,16 +44,23 @@ class _HomeScreenState extends State<HomeScreen> {
     'In',
     'Here',
   ];
+
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'Home',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              letterSpacing: 1.5),
         ),
       ),
       body: Column(
@@ -71,15 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              color: Colors.pink,
-              child: buildItemSquareList(items),
+              decoration: BoxDecoration(),
+              child: buildGoalCards(),
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: themeProvider.scaffoldColor,
+        selectedItemColor: themeProvider.buttonColor,
+        unselectedItemColor: themeProvider.textColor,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
@@ -103,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 // Setting up Profile
- /// The profile to be used by the Profile screen.
+  /// The profile to be used by the Profile screen.
   Profile profile = Profile.profiles[
       0]; // This exists to allow the nav bar to direct the user to the Profile screen when pressing the button
   int _selectedIndex = 0;
@@ -119,20 +133,21 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
         break;
       case 2:
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MetricsPage()), //Change to metrics screen
+              builder: (context) =>
+                  const MetricsPage()), //Change to metrics screen
         );
         break;
       case 3:
@@ -174,8 +189,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-void main() {
-  runApp(const MaterialApp(
-    home: HomeScreen(),
-  ));
+Widget buildGoalCards() {
+  return Consumer<GoalDataState>(
+    builder:
+        (BuildContext context, GoalDataState goalDataState, Widget? child) {
+      List<dynamic> goals = goalDataState.longTermGoals;
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: goals.length,
+        itemBuilder: (BuildContext context, int index) {
+          try {
+            if (goals.length == 0) {
+              return const Text('No goals');
+            }
+            return GoalAnimation(
+                goalCard: GeneralGoalCard(goal: goals[index]),
+                goal: goals[index]);
+          } catch (e) {
+            return null;
+          }
+        },
+      );
+    },
+  );
 }
+
+
+// void main() {
+//   runApp(const MaterialApp(
+//     home: HomeScreen(),
+//   ));
+// }

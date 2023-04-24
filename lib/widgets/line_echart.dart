@@ -20,15 +20,6 @@ class LineEchart extends StatefulWidget {
 class _LineEchartState extends State<LineEchart> {
   @override
   Widget build(BuildContext context) {
-    // final List<Goal> _sampleGoalsM = [
-    //   LongTermGoal(title: 'Learn Flutter', duration: 20),
-    //   Goal(title: 'ijbib'),
-    //   LongTermGoal(title: 'Read', duration: 5),
-    //   Goal(title: 'Go to the gym'),
-    //   LongTermGoal(title: 'Learn Dart', duration: 10),
-    //   Goal(title: 'Go to the dentist'),
-    //   LongTermGoal(title: 'Learn Python', duration: 15),
-    // ];
     inspect(widget.data);
 
     return Container(
@@ -38,7 +29,6 @@ class _LineEchartState extends State<LineEchart> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
-        ///${lineData.elementAt(0).val}
         option: '''
     {
 
@@ -60,6 +50,7 @@ class _LineEchartState extends State<LineEchart> {
         '${widget.data.elementAt(4).day}', 
         '${widget.data.elementAt(5).day}',
         '${widget.data.elementAt(6).day}']
+        
       },
       yAxis: [{
         type: 'value',

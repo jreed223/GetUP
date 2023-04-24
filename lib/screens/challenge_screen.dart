@@ -5,12 +5,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/models/challenge.dart';
 
-
-final dailyChallenge = DailyChallenge(title: 'Do something challenging', description: 'Challenge yourself to do something new and difficult every day');
+final dailyChallenge = DailyChallenge(
+    title: 'Do something challenging',
+    description:
+        'Challenge yourself to do something new and difficult every day');
 
 final random = Random();
+
 // Define a new stateful widget for the challenge screen
 class ChallengeScreen extends StatefulWidget {
+  const ChallengeScreen({super.key});
+
   @override
   _ChallengeScreenState createState() => _ChallengeScreenState();
 }
@@ -26,7 +31,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   void undoChallengeCompletion(DailyChallenge challenge) {
     completedChallenges.remove(challenge);
     activeChallenges.add(challenge);
-    // TODO: Save the changes to persistent storage
   }
 
   // The initState method is called when the widget is first created
@@ -56,9 +60,10 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     // Only add a new challenge if there are no active challenges
     if (activeChallenges.isEmpty) {
       // Add the first challenge from the challenge list to the active challenges list
-      
+
       setState(() {
-        activeChallenges.add(dailyChallenge.sampleChallengeList[random.nextInt(dailyChallenge.sampleChallengeList.length)]);
+        activeChallenges.add(dailyChallenge.sampleChallengeList[
+            random.nextInt(dailyChallenge.sampleChallengeList.length)]);
       });
     }
   }
@@ -79,7 +84,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   void requestNewChallenge() {
     setState(() {
       // Add the first challenge from the challenge list to the active challenges list
-      activeChallenges.add(dailyChallenge.sampleChallengeList[random.nextInt(dailyChallenge.sampleChallengeList.length)]);
+      activeChallenges.add(dailyChallenge.sampleChallengeList[
+          random.nextInt(dailyChallenge.sampleChallengeList.length)]);
     });
   }
 
@@ -96,42 +102,42 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           final challenge = challenges[index];
           return ListTile(
             title: GestureDetector(
-            child: Text(challenge.challengeTitle,
-                  style: const TextStyle(color: Color.fromARGB(255, 255, 119, 0))),
-            onTap: () {
-              // Show the challenge description when the user taps on the title
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: Text(challenge.challengeTitle),
-                  content: Text(challenge.challengeDescription),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Close',
-                                        style: TextStyle(color: Color.fromARGB(255, 255, 119, 0)))
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          
-          trailing: isCompleted
-              ? null  // Don't show the checkmark if the challenge is completed
-              : Ink(
-                  // decoration: BoxDecoration(
-                  //   color: Colors.deepOrange,
-                  //   shape: BoxShape.circle,
-                  //   boxShadow: [
-                  //     BoxShadow(
-                  //       color: Colors.deepOrange.withOpacity(0.5),
-                  //       blurRadius: 10,
-                  //       offset: Offset(0, 5),
-                  //     ),
-                  //   ],
-                  // ),
-                  child: IconButton(
+              child: Text(challenge.challengeTitle,
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 255, 119, 0))),
+              onTap: () {
+                // Show the challenge description when the user taps on the title
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text(challenge.challengeTitle),
+                    content: Text(challenge.challengeDescription),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 119, 0)))),
+                    ],
+                  ),
+                );
+              },
+            ),
+            trailing: isCompleted
+                ? null // Don't show the checkmark if the challenge is completed
+                : Ink(
+                    // decoration: BoxDecoration(
+                    //   color: Colors.deepOrange,
+                    //   shape: BoxShape.circle,
+                    //   boxShadow: [
+                    //     BoxShadow(
+                    //       color: Colors.deepOrange.withOpacity(0.5),
+                    //       blurRadius: 10,
+                    //       offset: Offset(0, 5),
+                    //     ),
+                    //   ],
+                    // ),
+                    child: IconButton(
                       icon: ShaderMask(
                         shaderCallback: (bounds) => const LinearGradient(
                           begin: Alignment.topLeft,
@@ -151,32 +157,27 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                         // Call the completeChallenge method when the user clicks the checkbox
                         completeChallenge(challenge);
                       },
+                    ),
                   ),
-              ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
-}
-            
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: Colors.grey[50],
       // Define the app bar for the challenge screen
       appBar: AppBar(
-        
         backgroundColor: Colors.grey[50],
-        title: const Text(
-          'Daily Challenges',
-          style: TextStyle(
-            color: Color.fromARGB(132, 0, 0, 0),
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-          )
-        ),
+        title: const Text('Daily Challenges',
+            style: TextStyle(
+              color: Color.fromARGB(132, 0, 0, 0),
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            )),
       ),
       // Define the body of the challenge screen
       body: Container(
@@ -201,11 +202,10 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             // Display the completed challenges with a header
             const Text(
               'Completed Challenges',
-              
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                          ),
+              ),
             ),
             const SizedBox(height: 8.0),
             // Build a list of completed challenges
@@ -214,7 +214,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             ),
             const SizedBox(height: 16.0),
             // If all challenges have been completed, display a message with a button to request a new challenge
-            if (completedChallenges.length == dailyChallenge.sampleChallengeList.length) ...[
+            if (completedChallenges.length ==
+                dailyChallenge.sampleChallengeList.length) ...[
               const Text('Congratulations! You have completed all challenges.'),
               ElevatedButton(
                 onPressed: generateNewChallenge,
@@ -228,8 +229,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   }
 }
 
-
-
 void main() {
   runApp(const MyApp());
 }
@@ -239,7 +238,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return const MaterialApp(
       title: 'test',
       home: ChallengeScreen(),
     );

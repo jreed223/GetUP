@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import '../models/userController.dart';
-import '../models/profileController.dart';
+import 'package:provider/provider.dart';
+import '../helpers/theme_provider.dart';
+import '../models/profile_controller.dart';
 import '../helpers/themes.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
-import '../screens/profile.dart';
 import '../screens/main_screen.dart';
 
 /// The [ProfileScreen] widget displays the user's profile information and allows them to edit their bio and interests.
 class ProfileScreen extends StatefulWidget {
   final Profile profile;
 
-  ProfileScreen({required this.profile});
+  const ProfileScreen({super.key, required this.profile});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -62,7 +62,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Light Theme'),
                 onTap: () {
                   setState(() {
-                    _currentTheme = Themes.lightTheme;
+                    final themeProvider =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    themeProvider.toggleTheme(false);
                   });
                   Navigator.of(context).pop();
                 },
@@ -71,7 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Dark Theme'),
                 onTap: () {
                   setState(() {
-                    _currentTheme = Themes.darkTheme;
+                    final themeProvider =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    themeProvider.toggleTheme(true);
                   });
                   Navigator.of(context).pop();
                 },
@@ -85,9 +89,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      theme: _currentTheme,
       home: Scaffold(
+        backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
           title: const Text('Profile',
               style: TextStyle(
@@ -148,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -180,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -197,9 +202,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     logout();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(106, 172, 51, 51),
+                    backgroundColor: const Color.fromARGB(106, 172, 51, 51),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Log Out',
                     style: TextStyle(
                         color: Colors.red, fontWeight: FontWeight.bold),
@@ -210,36 +215,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Metrics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Metrics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
+
 // Setting up Profile
-Profile profile = Profile.profiles[
-      0];
-int _selectedIndex = 0;
+  Profile profile = Profile.profiles[0];
+  int _selectedIndex = 0;
 
   /// The function to call when a navigation bar item is tapped.
   void _onItemTapped(int index) {
@@ -251,20 +256,19 @@ int _selectedIndex = 0;
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => MetricsPage()),
+          MaterialPageRoute(builder: (context) => const MetricsPage()),
         );
         break;
       case 3:
@@ -277,7 +281,6 @@ int _selectedIndex = 0;
     }
   }
 }
-
 
 void main() {
   // Create sample data for testing
