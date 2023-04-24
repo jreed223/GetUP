@@ -69,29 +69,33 @@ dynamic setPieData(goalList) {
   double totalTimeDedicated = 0;
   List<String> pieDataset = [];
   String noProgress = '';
-
-  for (var goal in goalList) {
-    if ((goal.isCompleted == false) & (goal.isLongTerm == true)) {
-      totalLTduration = totalLTduration + goal.duration;
-      totalTimeDedicated = totalTimeDedicated + goal.timeDedicated;
-      if (goal.timeDedicated == 0) {
-        noProgress = '$noProgress<br/>${goal.goalTitle}';
+  if (goalList.isNotEmpty) {
+    for (var goal in goalList) {
+      if ((goal.isCompleted == false) & (goal.isLongTerm == true)) {
+        totalLTduration = totalLTduration + goal.duration;
+        totalTimeDedicated = totalTimeDedicated + goal.timeDedicated;
+        if (goal.timeDedicated == 0) {
+          noProgress = '$noProgress<br/>${goal.goalTitle}';
+        }
+        String data =
+            "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
+        pieDataset.add(data);
       }
-      String data =
-          "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
-      pieDataset.add(data);
-    }
-    // else if ((goal.isCompleted == true) & (goal.isLongTerm == true)) {
+      // else if ((goal.isCompleted == true) & (goal.isLongTerm == true)) {
 
-    //   if ((goal.goalCompletionDate?.isBefore(todaysDate)) &
-    //       goal.goalCompletionDate
-    //           ?.isAfter(todaysDate.subtract(const Duration(days: 7)))) {
-    //     String data =
-    //         "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
-    //     pieDataset.add(data);
-    //   }
-    // }
+      //   if ((goal.goalCompletionDate?.isBefore(todaysDate)) &
+      //       goal.goalCompletionDate
+      //           ?.isAfter(todaysDate.subtract(const Duration(days: 7)))) {
+      //     String data =
+      //         "{value: ${double.parse((goal.goalTimeDedicated).toStringAsFixed(2))}, name:'${goal.goalTitle}'}";
+      //     pieDataset.add(data);
+      //   }
+      // }
+    }
+  } else {
+    pieDataset = ["{value: 0, name:'No Longterm data'}"];
   }
+
   double incompleteDuration = totalLTduration - totalTimeDedicated;
 
   return [pieDataset, totalTimeDedicated, incompleteDuration];

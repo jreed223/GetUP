@@ -1,10 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
+import '../screens/home.dart';
+import '../screens/metrics.dart';
+import 'package:getup_csc450/models/profileController.dart';
+import '../screens/profile.dart';
+import '../screens/main_screen.dart';
+
 import 'package:getup_csc450/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +20,6 @@ import '../models/goals.dart';
 import '../models/metricsController.dart';
 import '../models/metrics_Queue.dart';
 import 'package:text_scroll/text_scroll.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MetricsPage extends StatefulWidget {
   const MetricsPage({super.key});
@@ -25,17 +31,19 @@ class MetricsPage extends StatefulWidget {
 class _MetricsPageState extends State<MetricsPage> {
   List longTermGoals = [];
   int i = 0;
-  late Timer everySecond;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+      inspect(provider.getGoals());
+      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.getGoals());
+
+      METRICS_QUEUE.setMetrics();
       List<DataPoints> lineData = setLineData(METRICS_QUEUE.getMetricsData());
       List<DataPoints> barData = setBarData(METRICS_QUEUE.getMetricsData());
-      List pieData = setPieData(provider.goals);
+      List pieData = setPieData(provider.getGoals());
 
-      for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
+      // for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
 
       // int secondCount = 0;
       // everySecond = Timer.periodic(const Duration(seconds: 10), (Timer t) {
@@ -50,11 +58,12 @@ class _MetricsPageState extends State<MetricsPage> {
       //   }
       // });
 
-      for (var goal in provider.goals) {
+      for (var goal in provider.getGoals()) {
         if (goal.isLongTerm) {
           longTermGoals.add(goal);
         }
       }
+      if (longTermGoals.isEmpty) {}
 
       return Scaffold(
         backgroundColor: Colors.white,
@@ -112,18 +121,21 @@ class _MetricsPageState extends State<MetricsPage> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 0, horizontal: 5),
                                   child: TextScroll(
-                                      fadedBorderWidth: .05,
-                                      fadedBorder: true,
-                                      pauseBetween: const Duration(seconds: 3),
-                                      velocity: const Velocity(
-                                          pixelsPerSecond: Offset(50, 0)),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontFamily: 'Open Sans',
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500),
-                                      ("${longTermGoals[i].title}")),
+                                    fadedBorderWidth: .05,
+                                    fadedBorder: true,
+                                    pauseBetween: const Duration(seconds: 3),
+                                    velocity: const Velocity(
+                                        pixelsPerSecond: Offset(50, 0)),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontFamily: 'Open Sans',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500),
+                                    (longTermGoals.isNotEmpty
+                                        ? "${longTermGoals[i].title}"
+                                        : "No Long Term Data"),
+                                  ),
                                 ),
                                 Expanded(
                                   child: Container(
@@ -140,7 +152,9 @@ class _MetricsPageState extends State<MetricsPage> {
                                               fontSize: 30,
                                               fontWeight: FontWeight.w800,
                                             ),
-                                            "${double.parse((longTermGoals[i].duration - longTermGoals[i].timeDedicated).toStringAsFixed(2))}"),
+                                            (longTermGoals.isNotEmpty
+                                                ? "${double.parse((longTermGoals[i].duration - longTermGoals[i].timeDedicated).toStringAsFixed(2))}"
+                                                : '0')),
                                         const Center(
                                           child: Text(
                                               textAlign: TextAlign.left,
@@ -164,7 +178,9 @@ class _MetricsPageState extends State<MetricsPage> {
                                           fontFamily: 'Open Sans',
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500),
-                                      ("${(double.parse((longTermGoals[i].goalProgress * 100).toStringAsFixed(2)))}% Complete ")),
+                                      (longTermGoals.isNotEmpty
+                                          ? "${(double.parse((longTermGoals[i].goalProgress * 100).toStringAsFixed(2)))}% Complete "
+                                          : '')),
                                 ),
                               ],
                             ),
@@ -207,4 +223,43 @@ class _MetricsPageState extends State<MetricsPage> {
       );
     });
   }
+
+// // Setting up Profile
+//   Profile profile = Profile.profiles[0];
+//   int _selectedIndex = 0;
+
+//   /// The function to call when a navigation bar item is tapped.
+//   void _onItemTapped(int index) {
+//     setState(() {
+//       _selectedIndex = index;
+//     });
+
+//     switch (index) {
+//       case 0:
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => HomeScreen()),
+//         );
+//         break;
+//       case 1:
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => HomePage()),
+//         );
+//         break;
+//       case 2:
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => MetricsPage()),
+//         );
+//         break;
+//       case 3:
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) => ProfileScreen(profile: profile)),
+//         );
+//         break;
+//     }
+//   }
 }

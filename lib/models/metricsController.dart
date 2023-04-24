@@ -72,7 +72,7 @@ class MetricsData {
 
 ///Class used to calculate and handle data received for the MetricsData class
 class MetricsController {
-  List goalList = [];
+  List goalList;
 
   MetricsController({required this.goalList});
 
