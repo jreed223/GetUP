@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage>
         ),
         body: Stack(
           children: [
-            const CalendarWidget(),
+            CalendarWidget(),
 
             /// This is the floating action button
             /// It is positioned at the bottom right of the screen
