@@ -41,7 +41,15 @@ class _MetricsPageState extends State<MetricsPage> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
-        title: const Text('Daily Data'),
+        title:  
+        Text('Daily Data',
+        style: TextStyle( // Added styling here for consistency among screens
+        color: themeProvider.textColor,
+        fontFamily: 'PT-Serif',
+        fontWeight: FontWeight.bold,
+        fontSize: 30,
+        ),
+      ),
       ),
       body: Center(
         ///Laying text and button vertically on the page
