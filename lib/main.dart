@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';

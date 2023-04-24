@@ -6,6 +6,8 @@ import '../screens/home.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import '../screens/profile.dart';
 import '../screens/main_screen.dart';
+import '../helpers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class MetricsPage extends StatefulWidget {
   const MetricsPage({super.key});
@@ -33,11 +35,21 @@ class _MetricsPageState extends State<MetricsPage> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Daily Data'),
+        shadowColor: Colors.transparent,
+        backgroundColor: themeProvider.scaffoldColor,
+        title:  
+        Text('Daily Data',
+        style: TextStyle( // Added styling here for consistency among screens
+        color: themeProvider.textColor,
+        fontFamily: 'PT-Serif',
+        fontWeight: FontWeight.bold,
+        fontSize: 30,
+        ),
+      ),
       ),
       body: Center(
         ///Laying text and button vertically on the page
@@ -101,29 +113,32 @@ class _MetricsPageState extends State<MetricsPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Metrics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: themeProvider.scaffoldColor,
+          selectedItemColor: themeProvider.buttonColor,
+          unselectedItemColor: themeProvider.textColor,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Metrics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
     );
   }
 
