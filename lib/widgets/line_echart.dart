@@ -7,6 +7,7 @@ import 'package:getup_csc450/models/metrics_Queue.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../helpers/theme_provider.dart';
 import '../models/goals.dart';
 
 class LineEchart extends StatefulWidget {
@@ -20,6 +21,8 @@ class LineEchart extends StatefulWidget {
 class _LineEchartState extends State<LineEchart> {
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
     inspect(widget.data);
 
     return Container(

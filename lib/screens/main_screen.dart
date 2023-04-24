@@ -8,7 +8,10 @@ import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/profile.dart';
-import "package:getup_csc450/constants.dart";
+import 'package:getup_csc450/models/challenge.dart';
+import 'package:getup_csc450/widgets/home_screen_challenge_card.dart';
+import 'package:getup_csc450/helpers/challenge_animation.dart';
+import 'dart:async';
 
 /// The Home screen widget.
 class HomeScreen extends StatefulWidget {
@@ -19,11 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    GOAL_STATES.loadGoalsFromFirebase();
-  }
+  late Timer timer;
 
   /// The list of data to use for the item squares.
   final List<String> items = [
@@ -46,11 +45,37 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  initState() {
+    super.initState();
+    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
+    Provider.of<ChallengeDataState>(context, listen: false)
+        .loadChallengeFromFirebase();
+
+    // Generate a new challenge when the widget is first created
+    // Generate a new challenge if the list is empty
+    if (challengeDataState.challengesShown.isEmpty) {
+      challenge.generateNewChallenges();
+    }
+    // Set a timer to reset the completed challenges list every day at midnight
+    timer = Timer.periodic(const Duration(days: 1), (timer) {
+      setState(() {
+        Challenge chal;
+        for (chal in challengeDataState.challengesShown) {
+          challengeDataState.deleteChallengeShown(chal.challengeId);
+        }
+      });
+      // Generate a new challenge at the start of each day
+      challenge.generateNewChallenges();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
         title: Text(
@@ -67,15 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.purple,
+              decoration: BoxDecoration(),
               child: buildItemSquareList(items),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
           Expanded(
             child: Container(
-              color: Colors.red,
-              child: buildItemSquareList(items),
+              decoration: BoxDecoration(),
+              child: buildChallengeCards(),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
@@ -205,6 +230,31 @@ Widget buildGoalCards() {
             return GoalAnimation(
                 goalCard: GeneralGoalCard(goal: goals[index]),
                 goal: goals[index]);
+          } catch (e) {
+            return null;
+          }
+        },
+      );
+    },
+  );
+}
+
+Widget buildChallengeCards() {
+  return Consumer<ChallengeDataState>(
+    builder: (BuildContext context, ChallengeDataState challengeDataState,
+        Widget? child) {
+      List<Challenge> challenges = challengeDataState.challengesShown;
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: challenges.length,
+        itemBuilder: (BuildContext context, int index) {
+          try {
+            if (challenges.length == 0) {
+              return const Text('No challenges');
+            }
+            return ChallengeAnimation(
+                challengeShown: ChallengeShown(challenge: challenges[index]),
+                challenge: challenges[index]);
           } catch (e) {
             return null;
           }
