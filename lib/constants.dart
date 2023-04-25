@@ -8,4 +8,3 @@ GoalDataState GOAL_STATES = GoalDataState.mainInstance;
 
 /// This will hold the state of all the challenge in the app
 ChallengeDataState CHALLENGE_STATES = ChallengeDataState.mainInstance;
-

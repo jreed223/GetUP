@@ -1,8 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:getup_csc450/models/data_points.dart';
+import 'package:getup_csc450/models/metrics_Queue.dart';
+import 'package:provider/provider.dart';
+
+import '../constants.dart';
+import '../helpers/theme_provider.dart';
+import '../models/goals.dart';
 
 class LineEchart extends StatefulWidget {
-  const LineEchart({super.key});
+  List<DataPoints> data;
+  LineEchart({Key? key, required this.data}) : super(key: key);
 
   @override
   State<LineEchart> createState() => _LineEchartState();
@@ -11,13 +21,17 @@ class LineEchart extends StatefulWidget {
 class _LineEchartState extends State<LineEchart> {
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
+    inspect(widget.data);
+
     return Container(
+      alignment: Alignment.center,
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
-      width: 300,
-      height: MediaQuery.of(context).size.height / 4.5,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
-        ///
         option: '''
     {
 
@@ -26,17 +40,42 @@ class _LineEchartState extends State<LineEchart> {
         top: 'top',
         text: 'Overall Progress'
       },
+       tooltip: {
+      trigger: 'axis'
+    },
+
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['${widget.data.elementAt(0).day}', 
+        '${widget.data.elementAt(1).day}', 
+        '${widget.data.elementAt(2).day}', 
+        '${widget.data.elementAt(3).day}', 
+        '${widget.data.elementAt(4).day}', 
+        '${widget.data.elementAt(5).day}',
+        '${widget.data.elementAt(6).day}']
+        
       },
-      yAxis: {
-        type: 'value'
-      },
+      yAxis: [{
+        type: 'value',
+        max: 100
+      }],
       series: [{
-        data: [23, 46, 52, 63, 81, 76, 98], 
+        data: [ ${double.parse(widget.data[0].val.toStringAsFixed(2))},
+        ${double.parse(widget.data[1].val.toStringAsFixed(2))}, 
+        ${double.parse(widget.data[2].val.toStringAsFixed(2))}, 
+        ${double.parse(widget.data[3].val.toStringAsFixed(2))}, 
+        ${double.parse(widget.data[4].val.toStringAsFixed(2))}, 
+        ${double.parse(widget.data[5].val.toStringAsFixed(2))}, 
+        ${double.parse(widget.data[6].val.toStringAsFixed(2))}], 
         type: 'line',
-        smooth: true
+        smooth: true,
+        showSymbol: true,
+        lineStyle: {
+          color: '#F7AD19'
+        }, 
+        itemStyle: {
+        color: '#FF7D02'
+      }
       }],
 
     }

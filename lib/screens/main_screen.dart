@@ -17,14 +17,13 @@ import 'dart:async';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
-  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   late Timer timer;
+
   /// The list of data to use for the item squares.
   final List<String> items = [
     'Scroll',
@@ -49,19 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
   initState() {
     super.initState();
     Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
-    Provider.of<ChallengeDataState>(context, listen: false).loadChallengeFromFirebase();
+    Provider.of<ChallengeDataState>(context, listen: false)
+        .loadChallengeFromFirebase();
 
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
     if (challengeDataState.challengesShown.isEmpty) {
-        challenge.generateNewChallenges();
+      challenge.generateNewChallenges();
     }
     // Set a timer to reset the completed challenges list every day at midnight
     timer = Timer.periodic(const Duration(days: 1), (timer) {
       setState(() {
         Challenge chal;
         for (chal in challengeDataState.challengesShown) {
-          challengeDataState.deleteChallengeShown(chal.challengeId);}
+          challengeDataState.deleteChallengeShown(chal.challengeId);
+        }
       });
       // Generate a new challenge at the start of each day
       challenge.generateNewChallenges();
@@ -240,8 +241,8 @@ Widget buildGoalCards() {
 
 Widget buildChallengeCards() {
   return Consumer<ChallengeDataState>(
-    builder:
-        (BuildContext context, ChallengeDataState challengeDataState, Widget? child) {
+    builder: (BuildContext context, ChallengeDataState challengeDataState,
+        Widget? child) {
       List<Challenge> challenges = challengeDataState.challengesShown;
       return ListView.builder(
         scrollDirection: Axis.horizontal,
