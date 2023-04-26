@@ -1,5 +1,4 @@
 // Import the material package for the user interface widgets
-import 'dart:html';
 import 'dart:math';
 import 'dart:async';
 import 'package:provider/provider.dart';
@@ -8,14 +7,17 @@ import 'package:getup_csc450/models/challenge.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 
-
 final random = Random();
 final challenge = Challenge(
     title: 'Do something challenging',
     description:
         'Challenge yourself to do something new and difficult every day');
 
-List<Challenge> myChallenges = Challenge( title: 'Do something challenging', description: 'Challenge yourself to do something new and difficult every day').challengeList; 
+List<Challenge> myChallenges = Challenge(
+        title: 'Do something challenging',
+        description:
+            'Challenge yourself to do something new and difficult every day')
+    .challengeList;
 
 ChallengeDataState challengeDataState = ChallengeDataState();
 
@@ -24,19 +26,15 @@ class ChallengeShown extends StatefulWidget {
   final Challenge challenge;
 
   ChallengeShown({super.key, required this.challenge});
- // const ChallengeShown({super.key});
+  // const ChallengeShown({super.key});
 
   @override
   _ChallengeShownState createState() => _ChallengeShownState();
 }
 
-
 // Define the state for the challenge screen
 class _ChallengeShownState extends State<ChallengeShown> {
-
   late Timer timer;
-
-
 
   // The initState method is called when the widget is first created
   @override
@@ -45,14 +43,15 @@ class _ChallengeShownState extends State<ChallengeShown> {
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
     if (challengeDataState.challengesShown.isEmpty) {
-        challenge.generateNewChallenges();
+      challenge.generateNewChallenges();
     }
     // Set a timer to reset the completed challenges list every day at midnight
     timer = Timer.periodic(const Duration(days: 1), (timer) {
       setState(() {
         Challenge chal;
         for (chal in challengeDataState.challengesShown) {
-          challengeDataState.deleteChallengeShown(chal.challengeId);}
+          challengeDataState.deleteChallengeShown(chal.challengeId);
+        }
       });
       // Generate a new challenge at the start of each day
       challenge.generateNewChallenges();
@@ -76,14 +75,14 @@ class _ChallengeShownState extends State<ChallengeShown> {
           decoration: BoxDecoration(
             border: Border.all(
               color: isAccepted
-                ? themeProvider.completeCardBorderColor
-                : themeProvider.incompleteCardBorderColor,
+                  ? themeProvider.completeCardBorderColor
+                  : themeProvider.incompleteCardBorderColor,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(20),
             color: isAccepted
-              ? themeProvider.completeCardColor
-              : themeProvider.incompleteCardColor,
+                ? themeProvider.completeCardColor
+                : themeProvider.incompleteCardColor,
             boxShadow: [
               BoxShadow(
                 color: themeProvider.shadowColor,
@@ -117,87 +116,87 @@ class _ChallengeShownState extends State<ChallengeShown> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: isAccepted
-                      ? RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'Status:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: themeProvider.textColor,
-                                  fontFamily: 'PT-Serif',
+                        ? RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Status:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeProvider.textColor,
+                                    fontFamily: 'PT-Serif',
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' Accepted',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontFamily: 'PT-Serif',
+                                    color: themeProvider.textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(
+                                  screen.displayHeight(context) * 0.01,
+                                ),
+                                child: Text(
+                                  'Description:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'PT-Serif',
+                                    fontSize: 20,
+                                    color: themeProvider.textColor,
+                                  ),
                                 ),
                               ),
-                              TextSpan(
-                                text: ' Accepted',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontFamily: 'PT-Serif',
-                                  color: themeProvider.textColor,
+                              Padding(
+                                padding: EdgeInsets.all(
+                                  screen.displayHeight(context) * 0.01,
                                 ),
+                                child: Text(
+                                  '${widget.challenge.challengeDescription}',
+                                  style: TextStyle(
+                                    fontFamily: 'PT-Serif',
+                                    fontSize: 16,
+                                    color: themeProvider.textColor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(
+                                  screen.displayHeight(context) * 0.02,
+                                ),
+                                child: (Visibility(
+                                  visible: !isAccepted,
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      challengeDataState
+                                          .addChallenge(widget.challenge);
+                                      setState(() {
+                                        isAccepted = true;
+                                      });
+                                    },
+                                    color: themeProvider.buttonColor,
+                                    child: Text(
+                                      'Accept',
+                                      style: TextStyle(
+                                        fontFamily: 'PT-Serif',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )),
                               ),
                             ],
                           ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.01,
-                              ),
-                              child: Text(
-                                'Description:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'PT-Serif',
-                                  fontSize: 20,
-                                  color: themeProvider.textColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.01,
-                              ),
-                              child: Text(
-                                '${widget.challenge.challengeDescription}',
-                                style: TextStyle(
-                                  fontFamily: 'PT-Serif',
-                                  fontSize: 16,
-                                  color: themeProvider.textColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.02,
-                              ),
-                              child: (Visibility(
-                                visible: !isAccepted,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    challengeDataState.addChallenge(widget.challenge);
-                                    setState(() {
-                                      isAccepted = true;
-                                    });
-                                  },
-                                  color: themeProvider.buttonColor,
-                                  child: Text(
-                                    'Accept',
-                                    style: TextStyle(
-                                      fontFamily: 'PT-Serif',
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              ),
-                            ),
-                          ],
-                        ),
                   ),
                 ],
               ),

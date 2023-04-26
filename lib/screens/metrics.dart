@@ -35,35 +35,24 @@ class _MetricsPageState extends State<MetricsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      inspect(provider.goals);
+      //inspect(provider.goals);
       MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
-
-      METRICS_QUEUE.setMetrics();
+      if (METRICS_QUEUE.currentMetricsQ.length < 7) {
+        METRICS_QUEUE.loadMetrics();
+      } else {
+        METRICS_QUEUE.addMetrics();
+      }
+      inspect(METRICS_QUEUE.currentMetricsQ);
       List<DataPoints> lineData = setLineData(METRICS_QUEUE.currentMetricsQ);
       List<DataPoints> barData = setBarData(METRICS_QUEUE.currentMetricsQ);
       List pieData = setPieData(provider.goals);
 
-      // for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
-
-      // int secondCount = 0;
-      // everySecond = Timer.periodic(const Duration(seconds: 10), (Timer t) {
-      //   secondCount += 1;
-      //   if (secondCount == 5) {
-      //     setState(() {
-      //       i += 1;
-      //       if (i > longTermGoals.length) {
-      //         i = 0;
-      //       }
-      //     });
-      //   }
-      // });
       ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
       for (var goal in provider.getGoals()) {
         if (goal.isLongTerm) {
           longTermGoals.add(goal);
         }
       }
-      if (longTermGoals.isEmpty) {}
 
       return Scaffold(
         backgroundColor: Colors.white,
