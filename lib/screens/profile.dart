@@ -292,18 +292,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 }
-
-// void main() {
-//   // Create sample data for testing
-//   Profile.createSampleData();
-
-//   // Get the first profile from the list of profiles
-//   Profile profile = Profile.profiles[0];
-
-//   // Run the app and display the ProfileScreen with the sample data
-//   runApp(
-//     MaterialApp(
-//       home: ProfileScreen(profile: profile),
-//     ),
-//   );
-// }
