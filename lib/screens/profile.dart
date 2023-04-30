@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helpers/theme_provider.dart';
@@ -29,9 +30,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _getCurrentUserName();
     _bioController = TextEditingController(text: widget.profile.userBio);
     _interestsController =
         TextEditingController(text: widget.profile.userInterests);
+  }
+
+  Future<String> getCurrentUserName() async {
+    final auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference userDocRef =
+        firestore.collection('Users').doc(user!.uid);
+    final DocumentSnapshot userDocSnapshot = await userDocRef.get();
+    final String name = userDocSnapshot.get('fullname');
+    return name;
+  }
+
+  String _currentUserName = '';
+
+  void _getCurrentUserName() async {
+    final String name = await getCurrentUserName();
+
+    setState(() {
+      _currentUserName = name;
+    });
   }
 
   void logout() async {
@@ -90,11 +113,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: themeProvider.scaffoldColor,
+      appBar: AppBar(
+        shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
-        appBar: AppBar(
-          shadowColor: Colors.transparent,
-          backgroundColor: themeProvider.scaffoldColor,
-          title: Text(
+        title: Text(
           'Profile',
           style: TextStyle(
               fontFamily: 'PT-Serif',
@@ -103,153 +126,149 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 30,
               letterSpacing: 1.5),
         ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.color_lens),
-              color: themeProvider.buttonColor,
-              onPressed: () {
-                _showThemeMenu(context);
-              },
-            ),
-          ],
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.color_lens),
+            color: themeProvider.buttonColor,
             onPressed: () {
-              Navigator.pop(context);
+              _showThemeMenu(context);
             },
           ),
+        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Display user's name
-          Text(
-          '${widget.profile.user.firstName} ${widget.profile.user.lastName}',
-          style: TextStyle(
-              fontFamily: 'PT-Serif',
-              color: themeProvider.textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display user's name
+            Text(
+              _currentUserName,
+              style: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
               ),
             ),
-              const SizedBox(height: 20.0), // Space below name
-          Text(
-          'About', // User's bio
-          style: TextStyle(
-              fontFamily: 'PT-Serif',
-              color: themeProvider.textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
+            const SizedBox(height: 20.0), // Space below name
+            Text(
+              'About', // User's bio
+              style: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
               ),
             ),
-              TextField(
-                controller: _bioController,
-                decoration: InputDecoration(
-                  hintText: 'Write your bio!',
-                  hintStyle: TextStyle(
+            TextField(
+              controller: _bioController,
+              decoration: InputDecoration(
+                hintText: 'Write your bio!',
+                hintStyle: TextStyle(
+                  color: themeProvider.textColor,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
                     color: themeProvider.textColor,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: themeProvider.textColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: themeProvider.textColor,
-                    ),
-                  ),
-                  border: const OutlineInputBorder(),
                 ),
-                style: TextStyle(
-                  color: themeProvider.textColor,
-                  fontFamily: "PT-Serif"
-                ),
-              ),
-              const SizedBox(height: 20.0), // Space below bio
-              Text(
-                'Interests:', // User interests
-                style: TextStyle(
-                  color: themeProvider.textColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
-              ),
-              TextField(
-                controller: _interestsController,
-                decoration: InputDecoration(
-                  hintText: 'Add your interests here!',
-                  hintStyle: TextStyle(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
                     color: themeProvider.textColor,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: themeProvider.textColor
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: themeProvider.textColor,
-                    ),
-                  ),
-                  border: const OutlineInputBorder(),
                 ),
-                style: TextStyle(
+                border: const OutlineInputBorder(),
+              ),
+              style: TextStyle(
+                  color: themeProvider.textColor, fontFamily: "PT-Serif"),
+            ),
+            const SizedBox(height: 20.0), // Space below bio
+            Text(
+              'Interests:', // User interests
+              style: TextStyle(
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            ),
+            TextField(
+              controller: _interestsController,
+              decoration: InputDecoration(
+                hintText: 'Add your interests here!',
+                hintStyle: TextStyle(
                   color: themeProvider.textColor,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 40,
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () {
-                    logout();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(106, 172, 51, 51),
-                  ),
-                  child: const Text(
-                    'Log Out',
-                    style: TextStyle(
-                        color: Colors.red, fontWeight: FontWeight.bold),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: themeProvider.textColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: themeProvider.textColor,
                   ),
                 ),
-              )
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: themeProvider.scaffoldColor,
-          selectedItemColor: themeProvider.buttonColor,
-          unselectedItemColor: themeProvider.textColor,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+                border: const OutlineInputBorder(),
+              ),
+              style: TextStyle(
+                color: themeProvider.textColor,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Calendar',
+            const SizedBox(
+              height: 20,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.analytics),
-              label: 'Metrics',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
+            SizedBox(
+              height: 40,
+              width: 100,
+              child: ElevatedButton(
+                onPressed: () {
+                  logout();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(106, 172, 51, 51),
+                ),
+                child: const Text(
+                  'Log Out',
+                  style:
+                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: themeProvider.scaffoldColor,
+        selectedItemColor: themeProvider.buttonColor,
+        unselectedItemColor: themeProvider.textColor,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Metrics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 
