@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:getup_csc450/helpers/theme_provider.dart";
 import "package:provider/provider.dart";
 
 import "../models/goals.dart";
@@ -49,17 +50,31 @@ class _GoalAnimationState extends State<GoalAnimation>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Delete Goal"),
-          content: const Text("Are you sure you want to delete this goal?"),
+          backgroundColor: Provider.of<ThemeProvider>(context).scaffoldColor,
+          title: Text("Delete Goal",
+              style: TextStyle(
+                  fontFamily: "PT-Serif",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Provider.of<ThemeProvider>(context).textColor)),
+          content: Text("Are you sure you want to delete this goal?",
+              style: TextStyle(
+                  fontFamily: "PT-Serif",
+                  fontSize: 16,
+                  color: Provider.of<ThemeProvider>(context).textColor)),
           actions: <Widget>[
             TextButton(
-              child: const Text("No"),
+              child: Text("No",
+                  style: TextStyle(
+                      color: Provider.of<ThemeProvider>(context).buttonColor)),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: const Text("Yes"),
+              child: Text("Yes",
+                  style: TextStyle(
+                      color: Provider.of<ThemeProvider>(context).buttonColor)),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -113,5 +128,4 @@ class _GoalAnimationState extends State<GoalAnimation>
                 child: widget.goalCard,
               );
   }
-
 }

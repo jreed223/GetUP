@@ -37,7 +37,7 @@ class _FilterState extends State<Filter> {
     return Consumer(builder: (context, provider, child) {
       return Padding(
         padding: EdgeInsets.only(
-            left: 8.0, right: displayWidth(context) * .5, top: 15),
+            left: 8.0, right: displayWidth(context) * .25, top: 15),
         child: Row(
           children: [
             Text(
