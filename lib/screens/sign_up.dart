@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/screens/login.dart';
@@ -67,6 +68,12 @@ class _SignupPage extends State<SignupPage> {
           await _auth.createUserWithEmailAndPassword(
               email: emailController.text.trim(),
               password: passwordController.text.trim());
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final DocumentReference userDocRef =
+          firestore.collection('Users').doc(userCredential.user?.uid);
+
+      await userDocRef.set({'fullname': firstNameController.text});
+
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return const LoginPage();
       }));
@@ -77,22 +84,6 @@ class _SignupPage extends State<SignupPage> {
       setState(() {
         _isLoading = false;
       });
-    }
-  }
-
-  Future<void> _signUpUser() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      final auth = FirebaseAuth.instance;
-      await auth.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      _isLoading = false;
     }
   }
 
