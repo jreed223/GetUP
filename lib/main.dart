@@ -12,11 +12,21 @@ import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getup_csc450/models/challenge.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+  
+  
+  Future<void> _loadSavedTheme(ThemeProvider themeProvider) async {
+  final prefs = await SharedPreferences.getInstance();
+  final isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
+  themeProvider.toggleTheme(isDarkTheme);
+}
 
 void main() async {
   Profile.createSampleData();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final themeProvider = ThemeProvider();
+  await _loadSavedTheme(themeProvider);
   runApp(
     MultiProvider(
       providers: [
@@ -40,27 +50,33 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<User?> user;
+  late ThemeProvider _themeProvider;
   @override
   void initState() {
     super.initState();
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     user = FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
       } else {}
     });
   }
 
+
+
   @override
   void dispose() {
     user.cancel();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
