@@ -501,7 +501,9 @@ class ChallengeDataState extends ChangeNotifier {
 
   void addChallengeShown(dynamic newchallenge) {
     challengesShown.add(newchallenge);
-    notifyListeners();
+    Future.delayed(Duration.zero, () {
+      notifyListeners();
+    });
   }
 
 
