@@ -24,6 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // allows editable bio and interest
   late TextEditingController _bioController;
   late TextEditingController _interestsController;
+  late ValueNotifier<String> _bioNotifier;
+  late ValueNotifier<String> _interestsNotifier;
   // setting of the themes which can be changed
   // ThemeData _currentTheme = Themes.lightTheme;
 
@@ -31,9 +33,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _getCurrentUserName();
-    _bioController = TextEditingController(text: widget.profile.userBio);
-    _interestsController =
-        TextEditingController(text: widget.profile.userInterests);
+    _bioController = TextEditingController();
+    _interestsController = TextEditingController();
+    _bioNotifier = ValueNotifier('');
+    _interestsNotifier = ValueNotifier('');
+    _loadData();
+  }
+
+  void _loadData() async {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser!;
+    final docRef = firestore.collection('Users').doc(user.uid);
+    final docSnapshot = await docRef.get();
+    setState(() {
+      _bioController.text = docSnapshot.get('bio') ?? '';
+      _interestsController.text = docSnapshot.get('interests') ?? '';
+      _bioNotifier.value = docSnapshot.get('bio') ?? '';
+      _interestsNotifier.value = docSnapshot.get('interests') ?? '';
+    });
+  }
+
+  Future<void> _saveChanges() async {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser!;
+    final docRef = firestore.collection('Users').doc(user.uid);
+    await docRef.update({
+      'bio': _bioNotifier.value,
+      'interests': _interestsNotifier.value,
+    });
   }
 
   Future<String> getCurrentUserName() async {
@@ -68,6 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _bioController.dispose();
     _interestsController.dispose();
+    _bioNotifier.dispose();
+    _interestsNotifier.dispose();
     super.dispose();
   }
 
@@ -186,6 +215,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 border: const OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _bioNotifier.value = value;
+                });
+              },
               style: TextStyle(
                   color: themeProvider.textColor, fontFamily: "PT-Serif"),
             ),
@@ -215,6 +249,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 border: const OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _interestsNotifier.value = value;
+                });
+              },
               style: TextStyle(
                 color: themeProvider.textColor,
               ),
@@ -222,6 +261,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 20,
             ),
+          SizedBox(
+          height: 40,
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _saveChanges,
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              primary: Color.fromARGB(255, 89, 108, 216),
+              textStyle: TextStyle(
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                letterSpacing: 1.0,
+              ),
+            ),
+            child: Text(
+              'Save Changes',
+              style: TextStyle(
+                color: themeProvider.textColor,
+              ),
+            ),
+          ),
+        ),            
+        const Spacer(),
             SizedBox(
               height: 40,
               width: 100,
