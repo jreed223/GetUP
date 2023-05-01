@@ -42,21 +42,21 @@ class _ChallengeShownState extends State<ChallengeShown> {
   @override
   void initState() {
     super.initState();
-    // Generate a new challenge when the widget is first created
-    // Generate a new challenge if the list is empty
-    if (challengeDataState.challengesShown.isEmpty) {
-        challenge.generateNewChallenges();
-    }
-    // Set a timer to reset the completed challenges list every day at midnight
-    timer = Timer.periodic(const Duration(days: 1), (timer) {
-      setState(() {
-        Challenge chal;
-        for (chal in challengeDataState.challengesShown) {
-          challengeDataState.deleteChallengeShown(chal.challengeId);}
-      });
-      // Generate a new challenge at the start of each day
-      challenge.generateNewChallenges();
-    });
+    // // Generate a new challenge when the widget is first created
+    // // Generate a new challenge if the list is empty
+    // if (challengeDataState.challengesShown.isEmpty) {
+    //     challenge.generateNewChallenges();
+    // }
+    // // Set a timer to reset the completed challenges list every day at midnight
+    // timer = Timer.periodic(const Duration(days: 1), (timer) {
+    //   setState(() {
+    //     Challenge chal;
+    //     for (chal in challengeDataState.challengesShown) {
+    //       challengeDataState.deleteChallengeShown(chal.challengeId);}
+    //   });
+    //   // Generate a new challenge at the start of each day
+    //   challenge.generateNewChallenges();
+    // });
   }
 
   @override
@@ -67,12 +67,13 @@ class _ChallengeShownState extends State<ChallengeShown> {
 
   @override
   Widget build(BuildContext context) {
-    print(challenge);
     bool isAccepted = false;
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<ChallengeDataState>(
       builder: (context, provider, child) {
         return Container(
+          height: screen.displayWidth(context) / 2,
+          width: screen.displayWidth(context) / 2,
           decoration: BoxDecoration(
             border: Border.all(
               color: isAccepted
@@ -97,109 +98,123 @@ class _ChallengeShownState extends State<ChallengeShown> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(
-                      screen.displayHeight(context) * 0.005,
-                    ),
-                    child: Text(
-                      '${widget.challenge.challengeTitle}',
-                      style: TextStyle(
-                        letterSpacing: 1.5,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'PT-Serif',
-                        color: themeProvider.textColor,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(
+                          screen.displayHeight(context) * 0.005,
+                        ),
+                        child: Text(
+                          '${widget.challenge.challengeTitle}',
+                          style: TextStyle(
+                            letterSpacing: 1.5,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'PT-Serif',
+                            color: themeProvider.textColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: isAccepted
-                      ? RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'Status:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: themeProvider.textColor,
-                                  fontFamily: 'PT-Serif',
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' Accepted',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontFamily: 'PT-Serif',
-                                  color: themeProvider.textColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.01,
-                              ),
-                              child: Text(
-                                'Description:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'PT-Serif',
-                                  fontSize: 20,
-                                  color: themeProvider.textColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.01,
-                              ),
-                              child: Text(
-                                '${widget.challenge.challengeDescription}',
-                                style: TextStyle(
-                                  fontFamily: 'PT-Serif',
-                                  fontSize: 16,
-                                  color: themeProvider.textColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                screen.displayHeight(context) * 0.02,
-                              ),
-                              child: (Visibility(
-                                visible: !isAccepted,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    challengeDataState.addChallenge(widget.challenge);
-                                    setState(() {
-                                      isAccepted = true;
-                                    });
-                                  },
-                                  color: themeProvider.buttonColor,
-                                  child: Text(
-                                    'Accept',
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: isAccepted
+                          ? RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Status:',
                                     style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: themeProvider.textColor,
                                       fontFamily: 'PT-Serif',
-                                      fontSize: 16,
-                                      color: Colors.white,
                                     ),
                                   ),
-                                ),
-                              )
+                                  TextSpan(
+                                    text: ' Accepted',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontFamily: 'PT-Serif',
+                                      color: themeProvider.textColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(
+                                      screen.displayHeight(context) * 0.01,
+                                    ),
+                                    child: Text(
+                                      'Description:',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'PT-Serif',
+                                        fontSize: 20,
+                                        color: themeProvider.textColor,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                        screen.displayHeight(context) * 0.01,
+                                      ),
+                                      child: Text(
+                                        '${widget.challenge.challengeDescription}',
+                                        style: TextStyle(
+                                          fontFamily: 'PT-Serif',
+                                          fontSize: 16,
+                                          color: themeProvider.textColor,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(
+                                      screen.displayHeight(context) * 0.02,
+                                    ),
+                                    child: Visibility(
+                                      visible: !isAccepted,
+                                      child: Expanded(
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            challengeDataState.addChallenge(widget.challenge);
+                                            setState(() {
+                                              isAccepted = true;
+                                            });
+                                          },
+                                          color: themeProvider.buttonColor,
+                                          child: Text(
+                                            'Accept',
+                                            style: TextStyle(
+                                              fontFamily: 'PT-Serif',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                  ),
-                ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

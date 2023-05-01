@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
 import 'dart:async';
+import 'package:getup_csc450/models/firebase_controller.dart';
 final random = Random();
 
 
@@ -493,13 +494,27 @@ class ChallengeDataState extends ChangeNotifier {
   }
 
   /// This will add a new challenge to the list of challenges.
-  void addChallenge(dynamic newchallenge) {
+  void addChallenge(dynamic newchallenge) async {
     challenges.add(newchallenge);
+    await FirestoreController
+      .pushChallenge(
+          newchallenge,
+          FirebaseAuth
+              .instance
+              .currentUser!
+              .uid);
     notifyListeners();
   }
 
-  void addChallengeShown(dynamic newchallenge) {
+  void addChallengeShown(dynamic newchallenge) async {
     challengesShown.add(newchallenge);
+    // await FirestoreController
+    //   .pushChallengeShown(
+    //       newchallenge,
+    //       FirebaseAuth
+    //           .instance
+    //           .currentUser!
+    //           .uid);
     Future.delayed(Duration.zero, () {
       notifyListeners();
     });
