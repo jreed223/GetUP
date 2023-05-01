@@ -65,6 +65,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(
       builder: (context, provider, child) {
         return Padding(
@@ -77,14 +78,14 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                 ? provider.getStatus(widget.goal.goalId as String)!
                     ? BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 219, 255, 222),
+                          color: themeProvider.completeCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 244, 255, 245),
+                        color: themeProvider.completeCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 3,
                             offset: const Offset(
@@ -94,14 +95,14 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                       )
                     : BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 255, 236, 226),
+                          color: themeProvider.incompleteCardBorderColor,
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 255, 249, 245),
+                        color: themeProvider.incompleteCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 3,
                             offset: const Offset(
@@ -119,7 +120,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                   Expanded(
                     flex: 1,
                     child: Checkbox(
-                      activeColor: Color.fromARGB(255, 113, 216, 119),
+                      activeColor: const Color.fromARGB(255, 113, 216, 119),
                       value: provider.getStatus(widget.goal.goalId as String),
                       onChanged: (value) {
                         setState(() {
@@ -149,16 +150,13 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                                 fontFamily: 'PT-Serif',
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,
-                                color: provider.getStatus(
-                                        widget.goal.goalId as String)!
-                                    ? Colors.black26
-                                    : Colors.black54),
-                            cursorColor: Colors.orangeAccent,
+                                color: themeProvider.textColor),
+                            cursorColor: themeProvider.buttonColor,
                             controller: _titleController,
                             decoration: InputDecoration(
-                                focusedBorder: const UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.orange)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: themeProvider.buttonColor)),
                                 errorText:
                                     _showError ? 'Title cannot be empty' : null,
                                 hintText: 'Edit title'),
@@ -169,10 +167,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
                                 fontSize: 16,
                                 fontFamily: 'PT-Serif',
                                 fontWeight: FontWeight.w600,
-                                color: provider.getStatus(
-                                        widget.goal.goalId as String)!
-                                    ? Colors.black26
-                                    : Colors.black54)),
+                                color: themeProvider.textColor)),
                   ),
                   const Spacer(flex: 1),
 
@@ -459,7 +454,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         color: themeProvider.completeCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 1,
                             offset: const Offset(
@@ -476,7 +471,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                         color: themeProvider.incompleteCardColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(20, 0, 0, 0),
+                            color: themeProvider.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 1,
                             offset: const Offset(

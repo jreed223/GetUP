@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: themeProvider.scaffoldColor,
       appBar: AppBar(
+        centerTitle: true,
         shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
@@ -219,6 +220,16 @@ Widget buildGoalCards() {
     builder:
         (BuildContext context, GoalDataState goalDataState, Widget? child) {
       List<dynamic> goals = goalDataState.longTermGoals;
+      if (goals.length == 0) {
+        return Center(
+            child: Text('No long term goals have been created',
+                style: TextStyle(
+                  fontFamily: 'PT-Serif',
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Provider.of<ThemeProvider>(context).textColor,
+                )));
+      }
       return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: goals.length,

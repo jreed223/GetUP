@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/widgets/goal_display.dart';
@@ -7,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
-import 'filter.dart';
+import 'filter.dart' as filter;
 import 'package:getup_csc450/widgets/challenge_display.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -16,7 +15,6 @@ class CalendarWidget extends StatefulWidget {
 
   @override
   State<CalendarWidget> createState() => _CalendarWidgetState();
-  
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
@@ -31,8 +29,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   PageController _pageController = PageController(initialPage: 0);
 
-   int _currentPage = 0;
-  
+  int _currentPage = 0;
 
   /// This is the formatter for the selected date
   DateFormat formatter = DateFormat.yMMMMd('en_US');
@@ -77,7 +74,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Filter(),
+          filter.Filter(),
           TableCalendar(
             focusedDay: _focusedDay,
             firstDay: _firstDay,
@@ -145,37 +142,39 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
           ),
           Expanded(
-              //child: ChallengeView(selectedDate: formatter.format(_focusedDay))
-              child: PageView(
-                  controller: _pageController,
-                  children: [
-                    GoalView(selectedDate: formatter.format(_focusedDay)),
-                    ChallengeView(selectedDate: formatter.format(_focusedDay)),
-                  ],
-                  onPageChanged: (int page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-              ),
+            //child: ChallengeView(selectedDate: formatter.format(_focusedDay))
+            child: PageView(
+              controller: _pageController,
+              children: [
+                GoalView(selectedDate: formatter.format(_focusedDay)),
+                ChallengeView(selectedDate: formatter.format(_focusedDay)),
+              ],
+              onPageChanged: (int page) {
+                setState(() {
+                  _currentPage = page;
+                });
+              },
+            ),
           ),
           SizedBox(height: 10),
           Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List<Widget>.generate(
-                    2,
-                    (int index) {
-                      return Container(
-                        width: 10,
-                        height: 10,
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentPage == index ? themeProvider.buttonColor : themeProvider.textColor.withOpacity(0.4),
-                        ),
-                      );
-                    },
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List<Widget>.generate(
+              2,
+              (int index) {
+                return Container(
+                  width: 10,
+                  height: 10,
+                  margin: EdgeInsets.symmetric(horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentPage == index
+                        ? themeProvider.buttonColor
+                        : themeProvider.textColor.withOpacity(0.4),
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),
