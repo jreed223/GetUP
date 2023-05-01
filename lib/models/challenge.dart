@@ -98,11 +98,10 @@ class Challenge extends Goal {
   ChallengeDataState challengeDataState = ChallengeDataState.mainInstance;
 
   void generateNewChallenges() {
-    for (int i = 0; i < 5; i++) {
-        challengeDataState.addChallengeShown(_challenges[
-            random.nextInt(_challenges.length)]);
-    }
-
+      for (int i = 0; i < 5; i++) {
+          challengeDataState.addChallengeShown(_challenges[
+              random.nextInt(_challenges.length)]);
+      }
   }
   
 
