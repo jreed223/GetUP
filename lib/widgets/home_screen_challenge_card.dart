@@ -99,10 +99,11 @@ class _ChallengeShownState extends State<ChallengeShown> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: Column(
+                child: Column( 
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
+                  children: [ Container(
+                    height: screen.displayWidth(context) / 9.5,
+                    child: Expanded(
                       child: Padding(
                         padding: EdgeInsets.all(
                           screen.displayHeight(context) * 0.005,
@@ -111,7 +112,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
                           '${widget.challenge.challengeTitle}',
                           style: TextStyle(
                             letterSpacing: 1.5,
-                            fontSize: 26,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'PT-Serif',
                             color: themeProvider.textColor,
@@ -119,7 +120,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
+                    ),),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -148,23 +149,23 @@ class _ChallengeShownState extends State<ChallengeShown> {
                               ),
                             )
                           : Expanded(
-                              child: Column(
+                              child: SizedBox( child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(
-                                      screen.displayHeight(context) * 0.01,
-                                    ),
-                                    child: Text(
-                                      'Description:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'PT-Serif',
-                                        fontSize: 20,
-                                        color: themeProvider.textColor,
+                                    Padding(
+                                      padding: EdgeInsets.all(
+                                        screen.displayHeight(context) * 0.000000001,
+                                      ),
+                                      child: Text(
+                                        'Description:',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'PT-Serif',
+                                          fontSize: 13,
+                                          color: themeProvider.textColor,
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.all(
@@ -174,7 +175,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
                                         '${widget.challenge.challengeDescription}',
                                         style: TextStyle(
                                           fontFamily: 'PT-Serif',
-                                          fontSize: 16,
+                                          fontSize: 12,
                                           color: themeProvider.textColor,
                                         ),
                                         textAlign: TextAlign.center,
@@ -183,12 +184,13 @@ class _ChallengeShownState extends State<ChallengeShown> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(
-                                      screen.displayHeight(context) * 0.02,
+                                      screen.displayHeight(context) * 0.002,
                                     ),
                                     child: Visibility(
                                       visible: !isAccepted,
                                       child: Expanded(
                                         child: MaterialButton(
+                                          height: screen.displayWidth(context) / 15,
                                           onPressed: () {
                                             challengeDataState.addChallenge(widget.challenge);
                                             setState(() {
@@ -200,7 +202,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
                                             'Accept',
                                             style: TextStyle(
                                               fontFamily: 'PT-Serif',
-                                              fontSize: 16,
+                                              fontSize: 10,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -210,7 +212,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
                                   ),
                                 ],
                               ),
-                            ),
+                            )),
                       ),
                     ),
                   ],
