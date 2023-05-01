@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
+import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
+import 'package:getup_csc450/widgets/home_screen_metrics_card.dart';
 import 'package:provider/provider.dart';
 import '../models/goals.dart';
 import '../screens/home.dart';
@@ -93,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(),
-              child: buildItemSquareList(items),
+              child: buildItemSquareList(),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
@@ -186,31 +188,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// The widget to build the item square list.
-  Widget buildItemSquareList(List<String> items) {
+  Widget buildItemSquareList() {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
 
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          width: itemWidth,
-          height: itemWidth,
-          margin: const EdgeInsets.all(8),
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              items[index],
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    return Consumer<GoalDataState>(builder: (context, provider, child) {
+      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+
+      GeneralMetricCard overallData = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[7],
+          "Overall Progress",
+          METRICS_QUEUE.currentMetricsQ[7].overallProgressPrcnt,
+          "${METRICS_QUEUE.currentMetricsQ[7].totalGoals} Active Goals");
+
+      GeneralMetricCard longTermProgress = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[7],
+          "Long Term Progress",
+          METRICS_QUEUE.currentMetricsQ[7].durationPrcnt,
+          "${METRICS_QUEUE.currentMetricsQ[7].numLongGoals} Active Long Term Goals");
+
+      GeneralMetricCard shortTermProgress = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[7],
+          "Short Term Progress",
+          METRICS_QUEUE.currentMetricsQ[7].stCompletionPrcnt,
+          "${METRICS_QUEUE.currentMetricsQ[7].numSTcompleted}/${METRICS_QUEUE.currentMetricsQ[7].numShortGoals} Short Term Goals Completed");
+
+      List<GeneralMetricCard> metricCardList = [
+        overallData,
+        longTermProgress,
+        shortTermProgress
+      ];
+
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GoalAnimation(
+            goalCard: metricCardList[index],
+            goal: null,
+          );
+        },
+      );
+    });
   }
 }
 
