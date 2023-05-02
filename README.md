@@ -17,7 +17,7 @@ monitoring your progress and completions over time.
 -   User - Cole Roberts
 -   Goals (Goal and LongTermGoal) - Cullin Capps
 -   MetricsHandler - Jonathan Reed
--   Challenge - Cullin Capps
+-   Challenges - Lukas Becker
 -   DataPoints - Lukas Becker
 -   Database - Cullin Capps
 
@@ -103,4 +103,29 @@ Test by editing the About or Interest fields, one or the other or neither. User 
 Failure occurs if the user fails to press the save changes button after making any edits, as the information does not go to firebase.
 Deleting all text in the field results in the hint text to add information in the fields to show. User can still save changes and have no text in those fields.
 Acceptance Criteria: User has an account and goes to edit one or the other, or both text fields in the profile screen. User must press the save changes button for the information entered to persist once leaving that screen.
+
+### Lukas - Challenges
+- Testing home screen challenges accept button:
+
+    Test by pressing the accept button for a challenge card.
+    Acceptance Criteria: the challenge card turns green plus the description and accept button are replaced with the text 'status: accepted'.
+
+    Test by pressing the accept button for a challenge card. 
+    Acceptance Criteria: go to the challenge view on the calendar page, there should be a card there for the accepted challenge.
+
+- Testing challenge checkbox on calendar page:
+
+    Test by checking off the checkbox for a challenge.
+    Acceptance Criteria: The challenge card should be greyed out and the value of isCompleted should be True.
+
+    Test by unchecking the checkbox for a challenge.
+    Acceptance Criteria: The challenge card should no longer be greyed out and the value of isCompleted should be False.
+
+- Testing challenges saving in firebase:
+
+    Test by accepting a challenge and adding it to the calendar page. Now that a challenge is there close and reopen the app.
+    Acceptance Criteria: The challenge should still be displayed on the calendar page.
+
+    Test by checking off and completing a challenge on the calendar page, then close and reopen the app.
+    Acceptance Criteria: The challenge should remain checked off when you reopen the app.
 
