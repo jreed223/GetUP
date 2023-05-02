@@ -45,39 +45,55 @@ class _GeneralMetricCardState extends State<GeneralMetricCard> {
                 ),
               ],
             ),
-            margin: const EdgeInsets.all(8.0),
-            height: screen.displayWidth(context) / 2,
+            height: screen.displayWidth(context) / 3,
             width: screen.displayWidth(context) / 2,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
                   children: [
-                    Padding(
+                    Container(
                       padding: EdgeInsets.all(
-                        screen.displayHeight(context) * 0.005,
+                        screen.displayHeight(context) * 0.0005,
                       ),
-                      child: Text(widget.dataTitle,
-                          style: TextStyle(
-                              letterSpacing: 1.5,
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'PT-Serif',
-                              color: themeProvider.textColor)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RichText(
-                        text: TextSpan(
-                          style: DefaultTextStyle.of(context).style,
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: widget.dataContext,
+                      child: Container(
+                        width: screen.displayWidth(context) / 2.2,
+                        child: Expanded(
+                          child: FittedBox(
+                            alignment: Alignment.center,
+                            fit: BoxFit.scaleDown,
+                            child: Text(widget.dataTitle,
                                 style: TextStyle(
-                                    fontFamily: 'PT-Serif',
+                                    letterSpacing: 1.5,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                    fontFamily: 'PT-Serif',
                                     color: themeProvider.textColor)),
-                          ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: screen.displayWidth(context) / 2.2,
+                      padding: EdgeInsets.all(
+                          screen.displayHeight(context) * 0.0005),
+                      child: Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: widget.dataContext,
+                                    style: TextStyle(
+                                        fontFamily: 'PT-Serif',
+                                        fontWeight: FontWeight.bold,
+                                        color: themeProvider.textColor)),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),

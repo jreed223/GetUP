@@ -48,6 +48,7 @@ class _MetricsPageState extends State<MetricsPage> {
       return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: themeProvider.scaffoldColor,
           title: Text('Daily Data',
               style: TextStyle(

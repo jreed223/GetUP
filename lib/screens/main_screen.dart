@@ -87,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
           METRICS_QUEUE.currentMetricsQ[6],
           "Long Term Progress",
           METRICS_QUEUE.currentMetricsQ[6].durationPrcnt / 100,
-          "${METRICS_QUEUE.currentMetricsQ[6].numLongGoals} Active Long Term Goals");
+          "${METRICS_QUEUE.currentMetricsQ[6].numLongGoals} Active\nLong Term Goals");
 
       GeneralMetricCard shortTermProgress = GeneralMetricCard(
           METRICS_QUEUE.currentMetricsQ[6],
           "Short Term Progress",
           METRICS_QUEUE.currentMetricsQ[6].stCompletionPrcnt / 100,
-          "${METRICS_QUEUE.currentMetricsQ[6].numSTcompleted}/${METRICS_QUEUE.currentMetricsQ[6].numShortGoals} Short Term Goals Completed");
+          "${METRICS_QUEUE.currentMetricsQ[6].numSTcompleted.toInt()}/${METRICS_QUEUE.currentMetricsQ[6].numShortGoals.toInt()} Short Term\nGoals Completed");
 
       List<GeneralMetricCard> metricCardList = [
         overallData,
