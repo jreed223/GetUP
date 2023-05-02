@@ -633,7 +633,7 @@ class _HomePageState extends State<HomePage>
           elevation: 0,
           type: BottomNavigationBarType.fixed,
           backgroundColor: themeProvider.scaffoldColor,
-          selectedItemColor: themeProvider.buttonColor,
+          selectedItemColor: themeProvider.textColor,
           unselectedItemColor: themeProvider.textColor,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
