@@ -134,6 +134,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
                     child: Text(provider.getTitle(widget.challenge.challengeId as String)!,
                             style: TextStyle(
                                 fontSize: 16,
+                                fontFamily: 'PT-Serif',
                                 // TODO: use change notifier to update the text color
                                 color: provider.getStatus(
                                         widget.challenge.challengeId as String)!

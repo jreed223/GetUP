@@ -17,7 +17,7 @@ monitoring your progress and completions over time.
 -   User - Cole Roberts
 -   Goals (Goal and LongTermGoal) - Cullin Capps
 -   MetricsHandler - Jonathan Reed
--   Challenge - Cullin Capps
+-   Challenges - Lukas Becker
 -   DataPoints - Lukas Becker
 -   Database - Cullin Capps
 
@@ -104,3 +104,45 @@ Failure occurs if the user fails to press the save changes button after making a
 Deleting all text in the field results in the hint text to add information in the fields to show. User can still save changes and have no text in those fields.
 Acceptance Criteria: User has an account and goes to edit one or the other, or both text fields in the profile screen. User must press the save changes button for the information entered to persist once leaving that screen.
 
+### Lukas - Challenges
+- Testing home screen challenges accept button:
+
+    Test by pressing the accept button for a challenge card.
+    Acceptance Criteria: the challenge card turns green plus the description and accept button are replaced with the text 'status: accepted'.
+
+    Test by pressing the accept button for a challenge card. 
+    Acceptance Criteria: go to the challenge view on the calendar page, there should be a card there for the accepted challenge.
+
+- Testing challenge checkbox on calendar page:
+
+    Test by checking off the checkbox for a challenge.
+    Acceptance Criteria: The challenge card should be greyed out and the value of isCompleted should be True.
+
+    Test by unchecking the checkbox for a challenge.
+    Acceptance Criteria: The challenge card should no longer be greyed out and the value of isCompleted should be False.
+
+- Testing challenges saving in firebase:
+
+    Test by accepting a challenge and adding it to the calendar page. Now that a challenge is there close and reopen the app.
+    Acceptance Criteria: The challenge should still be displayed on the calendar page.
+
+    Test by checking off and completing a challenge on the calendar page, then close and reopen the app.
+    Acceptance Criteria: The challenge should remain checked off when you reopen the app.
+
+### Jonathan - Metrics Page/Data Points
+
+- Goal Organization Accuracy
+This was tested by submittting multiple goals through firebase. I used an inspect widget to view the instances of goal lists being passed to the Metrics Queue to ensure  goals are assigned to the correct date. 
+Acceptance Criteria: Goals that are active are organized into the correct list to have metrics calculated
+
+- Data Calculation Accuracy
+This was tested by comparing expected output to actual output. I configured the MetricsController with hard coded data initially, to ensure correct values where being returned. Using the organized goal lists I was able to inspect and goals and compare calculation to the graph results.
+Acceptance Criteria: Goal lists are calculated and returned as Metrics Data in order by date
+
+- Metrics Queue update
+This was tested by adding goals as a user and observing the results of the MetricsQueue and the the MetricsQueue Data after already being initialized. 
+Acceptance Criteria: The Metrics Queue accurately updates the data for the current day
+
+- UI testing
+Tested all widgets for tooltip responsivenes by observing the program output compare to user input
+Acceptance Criteria: Tooltip accurately represents data
