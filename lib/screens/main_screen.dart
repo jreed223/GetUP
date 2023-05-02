@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         backgroundColor: themeProvider.scaffoldColor,
-        selectedItemColor: themeProvider.buttonColor,
+        selectedItemColor: themeProvider.textColor,
         unselectedItemColor: themeProvider.textColor,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
