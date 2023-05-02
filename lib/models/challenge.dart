@@ -36,13 +36,15 @@ final random = Random();
 class Challenge extends Goal {
   ///the description of the challenge
   final String description;
+  bool isAccepted;
 
   
   Challenge({required String title, 
              required this.description, 
              bool? isCompleted, 
              String? id,
-             DateTime? dateCreated})
+             DateTime? dateCreated,
+             this.isAccepted = false})
       
       : super(title: title, 
               isCompleted: isCompleted, 
@@ -63,6 +65,8 @@ class Challenge extends Goal {
   /// Gets the id of the challenge
   String get challengeId => id;
 
+  bool? get challengeAccepted => isAccepted;
+
   /// Gets the date the challenge was accepted.
   DateTime get challengeAcceptedDate => dateCreated;
 
@@ -78,6 +82,7 @@ class Challenge extends Goal {
       'isCompleted': challengeStatus,
       'challengeId': challengeId,
       'dateCreated': challengeAcceptedDate,
+      'isAccepted': isAccepted,
     };
   }
 
@@ -90,7 +95,10 @@ class Challenge extends Goal {
         id: json['challlengId'],
 
         /// This ensures that the date is in the correct format.
-        dateCreated: (json['dateCreated'] as Timestamp).toDate());
+        dateCreated: (json['dateCreated'] as Timestamp).toDate(),
+        isAccepted: json['isAccepted']
+        );
+        
   }
 
   /// Gets the sample challenges.
