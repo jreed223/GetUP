@@ -48,6 +48,8 @@ Explore and enjoy our application. Let us know your experience and please give f
 
 
  ## --- TESTING --- ##
+ 
+### Cole - Login/signup
 - Testing user sign up:
 
     Test by creating an account, filling out all text fields, using an email with a '@' character and '.com' at the end, passwords match, press 'Sign Up' button.
@@ -86,3 +88,19 @@ Explore and enjoy our application. Let us know your experience and please give f
 
     Test by logging in with valid email and password combo, navigating to the Profile Page, tapping the Logout button, closing the app, reopening the app.
     Acceptance Criteria: User is directed to the Log In page
+    
+### Aaron - Profile Screen
+- User logout button test
+Test by pressing the log out button. User is returned to login screen and must log in to proceed
+Acceptance Criteria: User has an account and goes to the profile screen to log out.
+
+- User theme change test
+Test by pressing the theme button to bring up the theme menu. User chooses between light and dark theme freely. Ensured theme stays as chosen even when closing and re-opening the app.
+Acceptance Criteria: User has an account and goes to the profile screen to change the theme.
+
+- User bio and/or interest change test
+Test by editing the About or Interest fields, one or the other or neither. User presses the save changes button to save that data to firebase so that it persists until changed.
+Failure occurs if the user fails to press the save changes button after making any edits, as the information does not go to firebase.
+Deleting all text in the field results in the hint text to add information in the fields to show. User can still save changes and have no text in those fields.
+Acceptance Criteria: User has an account and goes to edit one or the other, or both text fields in the profile screen. User must press the save changes button for the information entered to persist once leaving that screen.
+
