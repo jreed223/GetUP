@@ -180,8 +180,10 @@ class _HomePageState extends State<HomePage>
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
+          centerTitle: true,
           shadowColor: Colors.transparent,
           backgroundColor: themeProvider.scaffoldColor,
           title: Text('Calendar',
@@ -631,7 +633,7 @@ class _HomePageState extends State<HomePage>
           elevation: 0,
           type: BottomNavigationBarType.fixed,
           backgroundColor: themeProvider.scaffoldColor,
-          selectedItemColor: themeProvider.buttonColor,
+          selectedItemColor: themeProvider.textColor,
           unselectedItemColor: themeProvider.textColor,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

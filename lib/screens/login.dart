@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                           Card(
                               elevation: 5,
-                              color: const Color.fromARGB(255, 171, 211, 250)
+                              color: const Color.fromARGB(255, 255, 247, 244)
                                   .withOpacity(0.4),
                               child: Container(
                                   width: 600,
@@ -95,22 +95,29 @@ class _LoginPageState extends State<LoginPage> {
                                           text: const TextSpan(
                                               text: 'Welcome to',
                                               style: TextStyle(
+                                                  color: Colors.black87,
                                                   fontSize: 40,
-                                                  fontWeight: FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'PT-Serif')),
                                         ),
                                         RichText(
                                             text: const TextSpan(
                                                 text: 'Get UP!',
                                                 style: TextStyle(
+                                                    color: Colors.black87,
                                                     fontSize: 40,
-                                                    fontWeight:
-                                                        FontWeight.bold))),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'PT-Serif'))),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         const Text(
                                           'Please sign in to continue',
-                                          style: TextStyle(fontSize: 20),
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'PT-Serif'),
                                         ),
                                         const SizedBox(
                                           height: 60,
@@ -125,6 +132,11 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           20)),
                                               labelText: 'Email',
+                                              labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'PT-Serif'),
                                               prefixIcon: const Icon(
                                                   Icons.email_outlined)),
                                           validator: (value) {
@@ -146,6 +158,11 @@ class _LoginPageState extends State<LoginPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(20)),
                                             labelText: 'Password',
+                                            labelStyle: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'PT-Serif'),
                                             prefixIcon: const Icon(
                                                 Icons.lock_outline_rounded),
                                             suffixIcon: IconButton(
@@ -183,21 +200,33 @@ class _LoginPageState extends State<LoginPage> {
                                                 decoration: const BoxDecoration(
                                                     gradient: LinearGradient(
                                                         colors: <Color>[
-                                                      Colors.red,
-                                                      Colors.red,
-                                                      Colors.red
+                                                      Color.fromARGB(
+                                                          255, 255, 144, 39),
+                                                      Color.fromARGB(
+                                                          255, 255, 144, 39),
+                                                      Color.fromARGB(
+                                                          255, 255, 144, 39)
                                                     ])),
                                               )),
                                               TextButton(
                                                   style: TextButton.styleFrom(
-                                                      foregroundColor:
-                                                          Colors.white,
+                                                      foregroundColor: Colors
+                                                          .white,
                                                       padding: const EdgeInsets
                                                               .fromLTRB(
                                                           75, 30, 75, 30),
                                                       textStyle:
                                                           const TextStyle(
-                                                              fontSize: 20)),
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontFamily:
+                                                                  'PT-Serif',
+                                                              letterSpacing:
+                                                                  1.25)),
                                                   onPressed: _isLoading
                                                       ? null
                                                       : _signInWithEmailAndPassword,
@@ -216,8 +245,11 @@ class _LoginPageState extends State<LoginPage> {
                                             },
                                             child: const Text(
                                               'Don\'t have an account? Sign up.',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 255, 144, 39),
+                                                fontFamily: 'PT-Serif',
+                                              ),
                                             )),
                                         const SizedBox(
                                           height: 20,

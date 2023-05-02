@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
-import 'package:getup_csc450/widgets/filter.dart' as Filter;
+import 'filter.dart' as filter;
 import 'package:getup_csc450/widgets/challenge_display.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -74,7 +74,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Filter.Filter(),
+          filter.Filter(),
           TableCalendar(
             focusedDay: _focusedDay,
             firstDay: _firstDay,
