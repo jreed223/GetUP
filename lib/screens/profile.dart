@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
 import '../screens/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 /// The [ProfileScreen] widget displays the user's profile information and allows them to edit their bio and interests.
 class ProfileScreen extends StatefulWidget {
@@ -112,23 +114,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 title: const Text('Light Theme'),
                 onTap: () {
-                  setState(() {
-                    final themeProvider =
-                        Provider.of<ThemeProvider>(context, listen: false);
-                    themeProvider.toggleTheme(false);
-                  });
-                  Navigator.of(context).pop();
+                final themeProvider =
+                    Provider.of<ThemeProvider>(context, listen: false);
+                themeProvider.toggleTheme(false);
+                _saveThemeSelectionToPrefs(false);
+                Navigator.of(context).pop();
                 },
               ),
               ListTile(
                 title: const Text('Dark Theme'),
                 onTap: () {
-                  setState(() {
-                    final themeProvider =
-                        Provider.of<ThemeProvider>(context, listen: false);
-                    themeProvider.toggleTheme(true);
-                  });
-                  Navigator.of(context).pop();
+                final themeProvider =
+                Provider.of<ThemeProvider>(context, listen: false);
+                themeProvider.toggleTheme(true);
+                _saveThemeSelectionToPrefs(true);
+                Navigator.of(context).pop();
                 },
               ),
             ],
@@ -137,6 +137,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+
+  Future<void> _saveThemeSelectionToPrefs(bool isDarkTheme) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('isDarkTheme', isDarkTheme);
+}
 
   @override
   Widget build(BuildContext context) {
