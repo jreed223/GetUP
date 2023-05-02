@@ -129,3 +129,20 @@ Acceptance Criteria: User has an account and goes to edit one or the other, or b
     Test by checking off and completing a challenge on the calendar page, then close and reopen the app.
     Acceptance Criteria: The challenge should remain checked off when you reopen the app.
 
+### Jonathan - Metrics Page/Data Points
+
+- Goal Organization Accuracy
+This was tested by submittting multiple goals through firebase. I used an inspect widget to view the instances of goal lists being passed to the Metrics Queue to ensure  goals are assigned to the correct date. 
+Acceptance Criteria: Goals that are active are organized into the correct list to have metrics calculated
+
+- Data Calculation Accuracy
+This was tested by comparing expected output to actual output. I configured the MetricsController with hard coded data initially, to ensure correct values where being returned. Using the organized goal lists I was able to inspect and goals and compare calculation to the graph results.
+Acceptance Criteria: Goal lists are calculated and returned as Metrics Data in order by date
+
+- Metrics Queue update
+This was tested by adding goals as a user and observing the results of the MetricsQueue and the the MetricsQueue Data after already being initialized. 
+Acceptance Criteria: The Metrics Queue accurately updates the data for the current day
+
+- UI testing
+Tested all widgets for tooltip responsivenes by observing the program output compare to user input
+Acceptance Criteria: Tooltip accurately represents data
