@@ -74,26 +74,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
 
       GeneralMetricCard overallData = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[6],
+          METRICS_QUEUE.getMetricsData()[6],
           "Overall Progress",
-          METRICS_QUEUE.currentMetricsQ[6].overallProgressPrcnt / 100,
-          "${METRICS_QUEUE.currentMetricsQ[6].totalGoals} Active Goals");
+          METRICS_QUEUE.getMetricsData()[6].overallProgressPrcnt / 100,
+          "${METRICS_QUEUE.getMetricsData()[6].totalGoals} Active Goals");
 
       GeneralMetricCard longTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[6],
+          METRICS_QUEUE.getMetricsData()[6],
           "Long Term Progress",
-          METRICS_QUEUE.currentMetricsQ[6].durationPrcnt / 100,
-          "${METRICS_QUEUE.currentMetricsQ[6].numLongGoals} Active\nLong Term Goals");
+          METRICS_QUEUE.getMetricsData()[6].durationPrcnt / 100,
+          "${METRICS_QUEUE.getMetricsData()[6].numLongGoals} Active\nLong Term Goals");
 
       GeneralMetricCard shortTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[6],
+          METRICS_QUEUE.getMetricsData()[6],
           "Short Term Progress",
-          METRICS_QUEUE.currentMetricsQ[6].stCompletionPrcnt / 100,
-          "${METRICS_QUEUE.currentMetricsQ[6].numSTcompleted.toInt()}/${METRICS_QUEUE.currentMetricsQ[6].numShortGoals.toInt()} Short Term\nGoals Completed");
+          METRICS_QUEUE.getMetricsData()[6].stCompletionPrcnt / 100,
+          "${METRICS_QUEUE.getMetricsData()[6].numSTcompleted.toInt()}/${METRICS_QUEUE.getMetricsData()[6].numShortGoals.toInt()} Short Term\nGoals Completed");
 
       List<GeneralMetricCard> metricCardList = [
         overallData,

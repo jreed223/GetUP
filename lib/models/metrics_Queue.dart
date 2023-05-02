@@ -15,7 +15,7 @@ class MetricsQueue {
   static final MetricsQueue _instance = MetricsQueue._internal();
 
   late List<dynamic> goalList;
-  late List<MetricsData> currentMetricsQ = [];
+  final List<MetricsData> _currentMetricsQ = [];
   List goalQueue = [[], [], [], [], [], [], []];
 
   List initialMetrics = [];
@@ -38,7 +38,7 @@ class MetricsQueue {
 
   factory MetricsQueue(goalList) {
     _instance.goalList = goalList;
-    if (_instance.currentMetricsQ.length < 7) {
+    if (_instance._currentMetricsQ.length < 7) {
       _instance.loadMetrics();
     } else {
       _instance.addMetrics();
@@ -50,7 +50,7 @@ class MetricsQueue {
   MetricsQueue._internal();
 
   List<MetricsData> getMetricsData() {
-    return currentMetricsQ;
+    return _instance._currentMetricsQ;
   }
 
   //----Methods for saving and loading Json data----//
@@ -79,7 +79,7 @@ class MetricsQueue {
       cachedData.dataCollectionDate = dataDateTime;
       cachedData.dayOfWeek = DateFormat('EEEE').format(dataDateTime);
       // return cachedData;
-      currentMetricsQ.add(cachedData);
+      _currentMetricsQ.add(cachedData);
       return;
     } else {
       return;
@@ -140,12 +140,12 @@ class MetricsQueue {
         MetricsData newMetrics = calcData(goalQueue[listInc]);
         newMetrics.dataCollectionDate =
             todaysDate.subtract(Duration(days: dayDec));
-        newMetrics.dayOfWeek = DateFormat('EEEE')
-            .format(todaysDate.subtract(Duration(days: dayDec)));
-        currentMetricsQ.add(newMetrics);
+        newMetrics.dayOfWeek =
+            DateFormat.E().format(todaysDate.subtract(Duration(days: dayDec)));
+        _currentMetricsQ.add(newMetrics);
         saveData(newMetrics);
       }
-      inspect(currentMetricsQ);
+      // inspect(_currentMetricsQ);
       dayDec--;
       listInc++;
     }
@@ -153,16 +153,16 @@ class MetricsQueue {
 
   void sizeMetrics() {
     //inspect(currentMetricsQ);
-    while (currentMetricsQ.length > 7) {
-      if (currentMetricsQ[6]
+    while (_currentMetricsQ.length > 7) {
+      if (_currentMetricsQ[6]
           .dataCollectionDate
-          .isAtSameMomentAs(currentMetricsQ[7].dataCollectionDate)) {
-        currentMetricsQ.removeAt(6);
-      } else if (currentMetricsQ[6]
+          .isAtSameMomentAs(_currentMetricsQ[7].dataCollectionDate)) {
+        _currentMetricsQ.removeAt(6);
+      } else if (_currentMetricsQ[6]
           .dataCollectionDate
-          .isBefore(currentMetricsQ[7].dataCollectionDate)) {
+          .isBefore(_currentMetricsQ[7].dataCollectionDate)) {
         //deleteData(currentMetricsQ[0].dataCollectionDate);
-        currentMetricsQ.removeAt(0);
+        _currentMetricsQ.removeAt(0);
       }
     }
   }
@@ -179,9 +179,9 @@ class MetricsQueue {
         todaysGoals.add(currentGoal);
       } else if (currentGoal.goalCompletionDate != null) {
         DateTime completionDate = DateTime(
-            currentGoal.goalCompletionDate.year,
-            currentGoal.goalCompletionDate.month,
-            currentGoal.goalCompletionDate.day);
+            currentGoal?.goalCompletionDate.year,
+            currentGoal?.goalCompletionDate.month,
+            currentGoal?.goalCompletionDate.day);
         if (completionDate.isAtSameMomentAs(todaysDate)) {
           todaysGoals.add(currentGoal);
         }
@@ -189,8 +189,8 @@ class MetricsQueue {
     }
     var currentMetrics = calcData(todaysGoals);
     currentMetrics.dataCollectionDate = todaysDate;
-    currentMetrics.dayOfWeek = DateFormat('EEEE').format(todaysDate);
-    currentMetricsQ.add(currentMetrics);
+    currentMetrics.dayOfWeek = DateFormat.E().format(todaysDate);
+    _currentMetricsQ.add(currentMetrics);
     saveData(currentMetrics);
     sizeMetrics();
     // automatic removal

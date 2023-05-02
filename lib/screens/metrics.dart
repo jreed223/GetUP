@@ -33,8 +33,8 @@ class _MetricsPageState extends State<MetricsPage> {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
       MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
 
-      List<DataPoints> lineData = setLineData(METRICS_QUEUE.currentMetricsQ);
-      List<DataPoints> barData = setBarData(METRICS_QUEUE.currentMetricsQ);
+      List<DataPoints> lineData = setLineData(METRICS_QUEUE.getMetricsData());
+      List<DataPoints> barData = setBarData(METRICS_QUEUE.getMetricsData());
       List pieData = setPieData(provider.goals);
 
       for (var goal in provider.getGoals()) {
