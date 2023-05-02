@@ -108,7 +108,7 @@ class _LineEchartState extends State<LineEchart> {
         
         label: 
          {
-          position: 'insideStartBottom',
+          position: 'insideStartTop',
           formatter: '{b} ({c}%)',
           textStyle: {
           color: '${widget.chartTextColor}',

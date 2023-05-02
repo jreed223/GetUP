@@ -74,74 +74,101 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      backgroundColor: themeProvider.scaffoldColor,
-      appBar: AppBar(
-        shadowColor: Colors.transparent,
+    return Consumer<GoalDataState>(builder: (context, provider, child) {
+      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+
+      GeneralMetricCard overallData = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[6],
+          "Overall Progress",
+          METRICS_QUEUE.currentMetricsQ[6].overallProgressPrcnt / 100,
+          "${METRICS_QUEUE.currentMetricsQ[6].totalGoals} Active Goals");
+
+      GeneralMetricCard longTermProgress = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[6],
+          "Long Term Progress",
+          METRICS_QUEUE.currentMetricsQ[6].durationPrcnt / 100,
+          "${METRICS_QUEUE.currentMetricsQ[6].numLongGoals} Active Long Term Goals");
+
+      GeneralMetricCard shortTermProgress = GeneralMetricCard(
+          METRICS_QUEUE.currentMetricsQ[6],
+          "Short Term Progress",
+          METRICS_QUEUE.currentMetricsQ[6].stCompletionPrcnt / 100,
+          "${METRICS_QUEUE.currentMetricsQ[6].numSTcompleted}/${METRICS_QUEUE.currentMetricsQ[6].numShortGoals} Short Term Goals Completed");
+
+      List<GeneralMetricCard> metricCardList = [
+        overallData,
+        longTermProgress,
+        shortTermProgress
+      ];
+      return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Home',
-          style: TextStyle(
-              fontFamily: 'PT-Serif',
-              color: themeProvider.textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              letterSpacing: 1.5),
+        appBar: AppBar(
+          shadowColor: Colors.transparent,
+          backgroundColor: themeProvider.scaffoldColor,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Home',
+            style: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                letterSpacing: 1.5),
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildItemSquareList(),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(),
+                child: buildItemSquareList(metricCardList),
+              ),
             ),
-          ),
-          const SizedBox(height: 10), // Add some space between the containers
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildChallengeCards(),
+            const SizedBox(height: 10), // Add some space between the containers
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(),
+                child: buildChallengeCards(),
+              ),
             ),
-          ),
-          const SizedBox(height: 10), // Add some space between the containers
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildGoalCards(),
+            const SizedBox(height: 10), // Add some space between the containers
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(),
+                child: buildGoalCards(),
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: themeProvider.scaffoldColor,
-        selectedItemColor: themeProvider.buttonColor,
-        unselectedItemColor: themeProvider.textColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Metrics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: themeProvider.scaffoldColor,
+          selectedItemColor: themeProvider.buttonColor,
+          unselectedItemColor: themeProvider.textColor,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Metrics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
+      );
+    });
   }
 
 // Setting up Profile
@@ -188,48 +215,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// The widget to build the item square list.
-  Widget buildItemSquareList() {
+  Widget buildItemSquareList(itemList) {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
 
-    return Consumer<GoalDataState>(builder: (context, provider, child) {
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
-
-      GeneralMetricCard overallData = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[7],
-          "Overall Progress",
-          METRICS_QUEUE.currentMetricsQ[7].overallProgressPrcnt,
-          "${METRICS_QUEUE.currentMetricsQ[7].totalGoals} Active Goals");
-
-      GeneralMetricCard longTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[7],
-          "Long Term Progress",
-          METRICS_QUEUE.currentMetricsQ[7].durationPrcnt,
-          "${METRICS_QUEUE.currentMetricsQ[7].numLongGoals} Active Long Term Goals");
-
-      GeneralMetricCard shortTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.currentMetricsQ[7],
-          "Short Term Progress",
-          METRICS_QUEUE.currentMetricsQ[7].stCompletionPrcnt,
-          "${METRICS_QUEUE.currentMetricsQ[7].numSTcompleted}/${METRICS_QUEUE.currentMetricsQ[7].numShortGoals} Short Term Goals Completed");
-
-      List<GeneralMetricCard> metricCardList = [
-        overallData,
-        longTermProgress,
-        shortTermProgress
-      ];
-
-      return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GoalAnimation(
-            goalCard: metricCardList[index],
-            goal: null,
-          );
-        },
-      );
-    });
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: itemList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GoalAnimation(
+          goalCard: itemList[index],
+          goal: null,
+        );
+      },
+    );
   }
 }
 
@@ -283,9 +282,8 @@ Widget buildChallengeCards() {
   );
 }
 
-
 // void main() {
 //   runApp(const MaterialApp(
 //     home: HomeScreen(),
 //   ));
-// }
+

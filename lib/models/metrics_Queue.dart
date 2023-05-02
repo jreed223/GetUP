@@ -14,8 +14,8 @@ late MetricsData currentMetrics;
 class MetricsQueue {
   static final MetricsQueue _instance = MetricsQueue._internal();
 
-  late List goalList;
-  List<MetricsData> currentMetricsQ = [];
+  late List<dynamic> goalList;
+  late List<MetricsData> currentMetricsQ = [];
   List goalQueue = [[], [], [], [], [], [], []];
 
   List initialMetrics = [];
@@ -36,8 +36,14 @@ class MetricsQueue {
     overallProgressPrcnt: 0,
   );
 
-  factory MetricsQueue(List goalList) {
+  factory MetricsQueue(goalList) {
     _instance.goalList = goalList;
+    if (_instance.currentMetricsQ.length < 7) {
+      _instance.loadMetrics();
+    } else {
+      _instance.addMetrics();
+    }
+
     return _instance;
   }
 
@@ -65,15 +71,18 @@ class MetricsQueue {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
 
-    String? json = pref.getString(dataDate);
-    json == null ? _dataSaved = false : _dataSaved = true;
-    if (_dataSaved) {
+    if (pref.containsKey(dataDate)) {
+      _dataSaved = true;
+      String? json = pref.getString(dataDate);
       Map<String, dynamic> data = jsonDecode(json!);
       MetricsData cachedData = MetricsData.fromJson(data);
       cachedData.dataCollectionDate = dataDateTime;
       cachedData.dayOfWeek = DateFormat('EEEE').format(dataDateTime);
       // return cachedData;
       currentMetricsQ.add(cachedData);
+      return;
+    } else {
+      return;
     }
   }
 
@@ -83,16 +92,16 @@ class MetricsQueue {
     if (pref.containsKey(dataDate)) {
       pref.remove(dataDate);
     }
-
+    return;
     print("data deleted");
   }
 
-  void loadMetrics() {
+  void loadMetrics() async {
     int dayDec = 6;
     int dayInc = 0;
     int listInc = 0;
     while (dayDec >= 0) {
-      loadData(todaysDate.subtract(Duration(days: dayDec)));
+      await loadData(todaysDate.subtract(Duration(days: dayDec)));
 
       if (_dataSaved == true) {
         //Do nothing
