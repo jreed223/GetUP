@@ -169,7 +169,8 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                   ],
                 ),
               ],
-            ));
+            )
+        );
       },
     );
   }
