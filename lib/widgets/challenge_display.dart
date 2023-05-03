@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:getup_csc450/models/challenge.dart';
 import '../models/goals.dart';
 import 'filter.dart';
+import '../helpers/theme_provider.dart';
+
 
 class ChallengeView extends StatelessWidget {
   /// This is the date that is passed in from the calendar view
@@ -17,6 +19,7 @@ class ChallengeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<ChallengeDataState>(
       builder: (context, provider, child) {
         List<dynamic> filteredChallengesBySelectedDate = [];
@@ -29,7 +32,12 @@ class ChallengeView extends StatelessWidget {
 
         if (challenges.isEmpty) {
           return Center(
-            child: Text('No challenges for selected date'),
+            child: Text('No challenges for selected date',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'PT-Serif',
+                    color: themeProvider.textColor)),
           );
         }
 

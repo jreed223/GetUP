@@ -1,5 +1,4 @@
 import 'package:getup_csc450/models/goals.dart';
-import 'package:getup_csc450/screens/challenge_screen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -514,6 +513,7 @@ class ChallengeDataState extends ChangeNotifier {
     notifyListeners();
   }
 
+  
   void addChallengeShown(dynamic newchallenge) async {
     challengesShown.add(newchallenge);
     // await FirestoreController
