@@ -44,7 +44,7 @@ class ChallengeView extends StatelessWidget {
         return ListView.builder(
             itemCount: challenges.length,
             itemBuilder: (context, index) {
-              /// if the filter is set to all, display all goals
+              /// if the filter is set to all, display all challenges
               if (Provider.of<FilterState>(context).getFilterSelection() ==
                   'All') {
                 return ChallengeCard(challenge: challenges[index]);
