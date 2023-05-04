@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
-import 'package:getup_csc450/models/metrics_Queue.dart';
+import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -12,6 +12,7 @@ import '../models/goals.dart';
 
 class LineEchart extends StatefulWidget {
   List<DataPoints> data;
+  late String chartTextColor;
   LineEchart({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -23,43 +24,70 @@ class _LineEchartState extends State<LineEchart> {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
-    inspect(widget.data);
+    if (themeProvider.isDarkMode) {
+      widget.chartTextColor = "#FFFFFF";
+    } else {
+      widget.chartTextColor = "#000000";
+    }
 
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 3.5,
+      height: MediaQuery.of(context).size.height / 3.8,
       child: Echarts(
         option: '''
     {
 
       title: {
         left: 'center',
-        top: 'top',
-        text: 'Overall Progress'
+        top: 5,
+        text: 'Overall Progress',
+        textStyle: {
+      color: '${widget.chartTextColor}',
+      fontFamily: 'serif'
+    }
       },
-       tooltip: {
-      trigger: 'axis'
+      tooltip: {
+        
     },
 
-      xAxis: {
+    
+
+      grid: {
+    left: 38,
+    right: 20,
+    bottom: 25,
+    top: 35 
+  },
+
+      xAxis: [{
         type: 'category',
-        data: ['${widget.data.elementAt(0).day}', 
+        data: ['${widget.data.elementAt(0).day}',
         '${widget.data.elementAt(1).day}', 
         '${widget.data.elementAt(2).day}', 
         '${widget.data.elementAt(3).day}', 
         '${widget.data.elementAt(4).day}', 
         '${widget.data.elementAt(5).day}',
-        '${widget.data.elementAt(6).day}']
+        {value :'${widget.data.elementAt(6).day}', 
+        textStyle: {
+          color: '${widget.chartTextColor}',
+          
+          }
+        }],
         
-      },
+        
+      }],
       yAxis: [{
         type: 'value',
-        max: 100
+        max: 100,
+        axisLabel: {
+    formatter: "{value}%"
+  }
       }],
       series: [{
+        
         data: [ ${double.parse(widget.data[0].val.toStringAsFixed(2))},
         ${double.parse(widget.data[1].val.toStringAsFixed(2))}, 
         ${double.parse(widget.data[2].val.toStringAsFixed(2))}, 
@@ -67,6 +95,32 @@ class _LineEchartState extends State<LineEchart> {
         ${double.parse(widget.data[4].val.toStringAsFixed(2))}, 
         ${double.parse(widget.data[5].val.toStringAsFixed(2))}, 
         ${double.parse(widget.data[6].val.toStringAsFixed(2))}], 
+
+        markLine: {
+        data: [{ name: "Today's Target Short Term Completion", 
+        value: ${double.parse(widget.data[6].val2!.toStringAsFixed(2))}, 
+        yAxis: ${double.parse(widget.data[6].val2!.toStringAsFixed(2))} }],
+
+        silent: true,
+
+        
+
+        
+        label: 
+         {
+          position: 'insideStartTop',
+          formatter: '{b} ({c}%)',
+          textStyle: {
+          color: '${widget.chartTextColor}',
+          fontFamily: 'serif'
+          }
+        },
+      
+      
+       emphasis: {
+        disabled: true
+      },
+      },
         type: 'line',
         smooth: true,
         showSymbol: true,
@@ -76,7 +130,11 @@ class _LineEchartState extends State<LineEchart> {
         itemStyle: {
         color: '#FF7D02'
       }
-      }],
+      
+      }
+
+
+    ]
 
     }
   ''',
