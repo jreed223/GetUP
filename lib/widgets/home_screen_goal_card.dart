@@ -83,8 +83,8 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
               ),
               Padding(
                 padding: widget.goal.goalTitle.length > 16
-                    ? EdgeInsets.all(screen.displaySize(context).width * 0.004)
-                    : EdgeInsets.all(screen.displaySize(context).width * 0.035),
+                    ? EdgeInsets.all(screen.displaySize(context).width * 0.003)
+                    : EdgeInsets.all(screen.displaySize(context).width * 0.03),
                 child: widget.goal.goalStatus
                     ? RichText(
                         text: TextSpan(
