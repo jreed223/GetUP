@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
+import 'package:getup_csc450/models/metrics_controller.dart';
 import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
 import 'package:getup_csc450/widgets/home_screen_metrics_card.dart';
 import 'package:provider/provider.dart';
+import '../constants.dart';
 import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
@@ -49,9 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
-    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
     Provider.of<ChallengeDataState>(context, listen: false)
         .loadChallengeFromFirebase();
+    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
 
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
@@ -76,31 +78,28 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+      List<MetricsData> metricsQueue =
+          MetricsQueue().setMetricsQ(provider.goals);
 
-      GeneralMetricCard overallData = GeneralMetricCard(
-          METRICS_QUEUE.getMetricsData()[6],
-          "Overall Progress",
-          METRICS_QUEUE.getMetricsData()[6].overallProgressPrcnt / 100,
-          "${METRICS_QUEUE.getMetricsData()[6].totalGoals} Active Goals");
+      GeneralMetricCard overallData =
+          GeneralMetricCard("Overall Progress", .35, "4 Active Goals");
 
       GeneralMetricCard longTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.getMetricsData()[6],
-          "Long Term Progress",
-          METRICS_QUEUE.getMetricsData()[6].durationPrcnt / 100,
-          "${METRICS_QUEUE.getMetricsData()[6].numLongGoals} Active\nLong Term Goals");
+          "Long Term Progress", .21, "6 Active\nLong Term Goals");
 
       GeneralMetricCard shortTermProgress = GeneralMetricCard(
-          METRICS_QUEUE.getMetricsData()[6],
-          "Short Term Progress",
-          METRICS_QUEUE.getMetricsData()[6].stCompletionPrcnt / 100,
-          "${METRICS_QUEUE.getMetricsData()[6].numSTcompleted.toInt()}/${METRICS_QUEUE.getMetricsData()[6].numShortGoals.toInt()} Short Term\nGoals Completed");
+          "Short Term Progress", .21, "1/4 Short Term\nGoals Completed");
 
-      List<GeneralMetricCard> metricCardList = [
+      List<GeneralMetricCard> _metricCardList = [
         overallData,
         longTermProgress,
         shortTermProgress
       ];
+
+      List<GeneralMetricCard> getMetricsCardList(goalList) {
+        return _metricCardList;
+      }
+
       return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
         appBar: AppBar(
@@ -122,8 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(),
-                child: buildItemSquareList(metricCardList),
+                child: buildItemSquareList(getMetricsCardList(provider.goals)),
               ),
             ),
             const SizedBox(height: 10), // Add some space between the containers

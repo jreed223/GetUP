@@ -15,8 +15,8 @@ class MetricsData {
   double overallCmpltPrcnt;
   double overallProgressPrcnt; // percent of progress of all goals
 
-  late DateTime dataCollectionDate;
-  late String dayOfWeek;
+  DateTime? dataCollectionDate;
+  String? dayOfWeek;
 
   ///initializes data
   MetricsData(
@@ -45,25 +45,22 @@ class MetricsData {
       'totalGoals': totalGoals,
       'overallCmpltPrcnt': overallCmpltPrcnt,
       'overallProgressPrcnt': overallProgressPrcnt,
-      // 'dataCollectionDate': dataCollectionDate,
-      // 'dayOfWeek': dayOfWeek
     };
   }
 
   factory MetricsData.fromJson(dynamic json) {
     return MetricsData(
-      durationPrcnt: json['durationPrcnt'] as double,
-      numLongGoals: json['numLongGoals'] as double,
-      numOverallCmplt: json['numOverallCmplt'] as double,
-      numSTcompleted: json['numSTcompleted'] as double,
-      numShortGoals: json['numShortGoals'] as double,
-      overallCmpltPrcnt: json['overallCmpltPrcnt'] as double,
-      overallProgressPrcnt: json['overallProgressPrcnt'] as double,
-      stCompletionPrcnt: json['stCompletionPrcnt'] as double,
-      totalDuration: json['totalDuration'] as double,
-      totalGoals: json['totalGoals'] as double,
-      totalLTprogress: json['totalLTprogress'] as double,
-    );
+        durationPrcnt: json['durationPrcnt'] as double,
+        numLongGoals: json['numLongGoals'] as double,
+        numOverallCmplt: json['numOverallCmplt'] as double,
+        numSTcompleted: json['numSTcompleted'] as double,
+        numShortGoals: json['numShortGoals'] as double,
+        overallCmpltPrcnt: json['overallCmpltPrcnt'] as double,
+        overallProgressPrcnt: json['overallProgressPrcnt'] as double,
+        stCompletionPrcnt: json['stCompletionPrcnt'] as double,
+        totalDuration: json['totalDuration'] as double,
+        totalGoals: json['totalGoals'] as double,
+        totalLTprogress: json['totalLTprogress'] as double);
   }
 }
 
@@ -211,6 +208,10 @@ class MetricsController {
       }
     }
     overallPrcnt = (completedGoalPrcnt / goalCount) * 100;
+
+    if (overallPrcnt.isNaN) {
+      return 0;
+    }
 
     return overallPrcnt;
   }

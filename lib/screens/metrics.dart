@@ -3,6 +3,7 @@ import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
 import '../helpers/theme_provider.dart';
+import '../models/metrics_controller.dart';
 import '../screens/home.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import '../screens/profile.dart';
@@ -29,12 +30,18 @@ class _MetricsPageState extends State<MetricsPage> {
   //var chartTextColor;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+      List<MetricsData> metricsQueue =
+          MetricsQueue().setMetricsQ(provider.goals);
 
-      List<DataPoints> lineData = setLineData(METRICS_QUEUE.getMetricsData());
-      List<DataPoints> barData = setBarData(METRICS_QUEUE.getMetricsData());
+      List<DataPoints> lineData = setLineData(metricsQueue);
+      List<DataPoints> barData = setBarData(metricsQueue);
       List pieData = setPieData(provider.goals);
 
       for (var goal in provider.getGoals()) {
