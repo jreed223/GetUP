@@ -14,13 +14,13 @@ import 'package:provider/provider.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 
 
-/// This will be holding the state of all the goals
-/// This will be used to update the goals in the database
-/// This will be used to update the goals in the UI
-ChallengeDataState goalDataState = ChallengeDataState.mainInstance;
+/// This will be holding the state of all the challenges
+/// This will be used to update the challenges in the database
+/// This will be used to update the challenges in the UI
+ChallengeDataState challengeDataState = ChallengeDataState.mainInstance;
 
 class ChallengeCard extends StatefulWidget {
-  /// This is the goal that will be displayed
+  /// This is the challenge that will be displayed
   final Challenge challenge;
 
   ChallengeCard({super.key, required this.challenge});
@@ -36,7 +36,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
   /// Whether or not the error text should be shown
   bool _showError = false;
 
-  /// Whether or not the goal is completed
+  /// Whether or not the challenge is completed
   bool _isCompleted = false;
 
   late TextEditingController _titleController;
@@ -80,8 +80,8 @@ class _ChallengeCardState extends State<ChallengeCard> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             height: screen.displayHeight(context) * 0.075,
-            decoration: provider.getStatus(widget.challenge.goalId as String) != null
-                ? provider.getStatus(widget.challenge.goalId as String)!
+            decoration: provider.getStatus(widget.challenge.challengeId as String) != null
+                ? provider.getStatus(widget.challenge.challengeId as String)!
                     ? BoxDecoration(
                         border: Border.all(
                           color: themeProvider.completeCardBorderColor,
@@ -127,14 +127,14 @@ class _ChallengeCardState extends State<ChallengeCard> {
                     flex: 1,
                     child: Checkbox(
                       activeColor: const Color.fromARGB(255, 113, 216, 119),
-                      value: provider.getStatus(widget.challenge.goalId as String),
+                      value: provider.getStatus(widget.challenge.challengeId as String),
                       onChanged: (value) {
                         setState(() {
                           _isCompleted = !_isCompleted;
                         });
                         provider.setStatus(
-                            widget.challenge.goalId as String, value!);
-                        provider.updateStatus(widget.challenge.goalId as String);
+                            widget.challenge.challengeId as String, value!);
+                        provider.updateStatus(widget.challenge.challengeId as String);
                       },
                     ),
                   ),
@@ -146,7 +146,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
 
                     /// The title of the challenge
                     /// If the challenge is in edit mode, a text field is shown
-                    child: Text(provider.getTitle(widget.challenge.goalId as String)!,
+                    child: Text(provider.getTitle(widget.challenge.challengeId as String)!,
                             style: TextStyle(
                                 letterSpacing: 1.25,
                                 fontSize: 16,
