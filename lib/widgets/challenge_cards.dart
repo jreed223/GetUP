@@ -11,14 +11,16 @@ import 'dart:math';
 import 'dart:async';
 import 'package:getup_csc450/models/challenge.dart';
 import 'package:provider/provider.dart';
+import 'package:getup_csc450/helpers/theme_provider.dart';
 
-/// This will be holding the state of all the goals
-/// This will be used to update the goals in the database
-/// This will be used to update the goals in the UI
-ChallengeDataState goalDataState = ChallengeDataState.mainInstance;
+
+/// This will be holding the state of all the challenges
+/// This will be used to update the challenges in the database
+/// This will be used to update the challenges in the UI
+ChallengeDataState challengeDataState = ChallengeDataState.mainInstance;
 
 class ChallengeCard extends StatefulWidget {
-  /// This is the goal that will be displayed
+  /// This is the challenge that will be displayed
   final Challenge challenge;
 
   ChallengeCard({super.key, required this.challenge});
@@ -34,7 +36,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
   /// Whether or not the error text should be shown
   bool _showError = false;
 
-  /// Whether or not the goal is completed
+  /// Whether or not the challenge is completed
   bool _isCompleted = false;
 
   late TextEditingController _titleController;
@@ -69,6 +71,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<ChallengeDataState>(
       builder: (context, provider, child) {
         return Padding(
@@ -77,31 +80,43 @@ class _ChallengeCardState extends State<ChallengeCard> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             height: screen.displayHeight(context) * 0.075,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: provider.getStatus(widget.challenge.challengeId as String)!
-                  ? Color.fromARGB(255, 234, 233, 233)
-                  : Colors.white,
-              boxShadow: provider.getStatus(widget.challenge.challengeId as String)!
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset:
-                            const Offset(0, 0), // changes position of shadow
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: .1,
-                        blurRadius: .5,
-                        offset:
-                            const Offset(0, 2), // changes position of shadow
-                      ),
-                    ],
-            ),
+            decoration: provider.getStatus(widget.challenge.challengeId as String) != null
+                ? provider.getStatus(widget.challenge.challengeId as String)!
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: themeProvider.completeCardBorderColor,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: themeProvider.completeCardColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: themeProvider.shadowColor,
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                    : BoxDecoration(
+                        border: Border.all(
+                          color: themeProvider.incompleteCardBorderColor,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: themeProvider.incompleteCardColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: themeProvider.shadowColor,
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: const Offset(
+                                1, 2), // changes position of shadow
+                          ),
+                        ],
+                      )
+                : null,
             child: Padding(
               padding: const EdgeInsets.only(right: 10.0, left: 4),
               child: Row(
@@ -111,7 +126,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
                   Expanded(
                     flex: 1,
                     child: Checkbox(
-                      activeColor: Colors.orange,
+                      activeColor: const Color.fromARGB(255, 113, 216, 119),
                       value: provider.getStatus(widget.challenge.challengeId as String),
                       onChanged: (value) {
                         setState(() {
@@ -125,21 +140,19 @@ class _ChallengeCardState extends State<ChallengeCard> {
                   ),
                   const Spacer(flex: 1),
 
-                  /// The goal title
+                  /// The challenge title
                   Expanded(
                     flex: 5,
 
-                    /// The title of the goal
-                    /// If the goal is in edit mode, a text field is shown
+                    /// The title of the challenge
+                    /// If the challenge is in edit mode, a text field is shown
                     child: Text(provider.getTitle(widget.challenge.challengeId as String)!,
                             style: TextStyle(
+                                letterSpacing: 1.25,
                                 fontSize: 16,
                                 fontFamily: 'PT-Serif',
-                                // TODO: use change notifier to update the text color
-                                color: provider.getStatus(
-                                        widget.challenge.challengeId as String)!
-                                    ? Colors.black26
-                                    : Colors.black)),
+                                fontWeight: FontWeight.w600,
+                                color: themeProvider.textColor)),
                   ),
             
                 ],

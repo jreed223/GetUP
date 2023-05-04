@@ -13,11 +13,6 @@ import '../screens/profile.dart';
 
 class DoubleBarEchart extends StatefulWidget {
   List<DataPoints> data;
-
-  //bool isDarkMode;
-
-  late String chartTextColor;
-
   DoubleBarEchart({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -29,104 +24,99 @@ class _DoubleBarEchartState extends State<DoubleBarEchart> {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
-    if (themeProvider.isDarkMode) {
-      widget.chartTextColor = "#FFFFFF";
-    } else {
-      widget.chartTextColor = "#000000";
-    }
-
     return Container(
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 3.9,
+      height: MediaQuery.of(context).size.height / 3.5,
       child: Echarts(
         option: '''
 {
   title: {
         left: 'center',
         top: 'top',
-        text: 'Short-Term Goal Completion',
-        textStyle: {
-      color: '${widget.chartTextColor}',
-      fontFamily: 'serif'
-
-    }
+        text: 'Short-Term Goal Completion'
       },
   legend: {
-    top: 25,
-    textStyle: {
-      color: '${widget.chartTextColor}',
-      fontFamily: 'serif'
-    }
+    top: 20
   },
   tooltip: {
-    
-    
-  },
-  grid: {
-    left: 30,
-    bottom: 25,
-    right: 15
+    position: 'top',
   },
   
-
-  xAxis: [{ type: 'category',
-  position: 'bottom',
-    data: ['${widget.data[0].day}',
-'${widget.data[1].day}',
-'${widget.data[2].day}',
-'${widget.data[3].day}',
-'${widget.data[4].day}',
-'${widget.data[5].day}',
-{value: '${widget.data[6].day}', 
-      textStyle: {
-        color: '${widget.chartTextColor}'
-      }
-      }],
-        
-        
-  }],
-  yAxis: [{
-    type: 'value'
+  dataset: {
+    source: [
+      ['Date', 'Total Goals', 'Goals Completed' ],
+      ['${widget.data[0].day}', ${widget.data[0].val}, ${widget.data[0].val2}],
+      ['${widget.data[1].day}', ${widget.data[1].val}, ${widget.data[1].val2}],
+      ['${widget.data[2].day}', ${widget.data[2].val}, ${widget.data[2].val2}],
+      ['${widget.data[3].day}', ${widget.data[3].val}, ${widget.data[3].val2}],
+      ['${widget.data[4].day}', ${widget.data[4].val}, ${widget.data[4].val2}],
+      ['${widget.data[5].day}', ${widget.data[5].val}, ${widget.data[5].val2}],
+      ['${widget.data[6].day}', ${widget.data[6].val}, ${widget.data[6].val2}],
+    ]
   },
-  {
-    type: 'value'
-  }],
+  xAxis: { type: 'category',
+  position: 'top' 
+  },
+  yAxis: {
+  },
 
   // Declare several bar series, each will be mapped
   // to a column of dataset.source by default.
   series: [{ 
-    name: 'Total Goals',
-    data : [ ${widget.data[0].val},
- ${widget.data[1].val},
- ${widget.data[2].val},
- ${widget.data[3].val},
- ${widget.data[4].val},
- ${widget.data[5].val},
- ${widget.data[6].val}],
     type: 'bar',  
- itemStyle: {
+    itemStyle: {
       color: '#F7AD19'
-      }
-      },
-  { name: 'ST Goals Completed',
-  data : [ ${widget.data[0].val2},
-       ${widget.data[1].val2},
-       ${widget.data[2].val2},
-       ${widget.data[3].val2},
-       ${widget.data[4].val2},
-       ${widget.data[5].val2},
-       ${widget.data[6].val2}],
-    type: 'bar',
-      itemStyle: {
+      }}, 
+  { type: 'bar',
+    itemStyle: {
       color: '#F27F0C'
-      }, 
+      } 
   }]
 }
   ''',
       ),
     );
+  }
+
+  // Setting up Profile
+  Profile profile = Profile.profiles[0];
+  int _selectedIndex = 0;
+
+  /// The function to call when a navigation bar item is tapped.
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MetricsPage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileScreen(profile: profile)),
+        );
+        break;
+    }
   }
 }

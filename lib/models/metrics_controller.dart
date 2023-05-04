@@ -1,19 +1,25 @@
+import "dart:developer";
+
+import "package:flutter/widgets.dart";
+
+import "goals.dart";
+
 ///Class holds data needed to create visualizations for goal Data
 class MetricsData {
   //short term data
-  double numSTcompleted; // total completed short term goals
-  double numShortGoals; //total short term goals
-  double stCompletionPrcnt; //percent of completed short term goals
+  double numSTcompleted = 0; // total completed short term goals
+  double numShortGoals = 0; //total short term goals
+  double stCompletionPrcnt = 0; //percent of completed short term goals
   //long term data
-  double totalLTprogress; //total long term goal progress
-  double totalDuration; //total long term goal duration
-  double numLongGoals;
-  double durationPrcnt; //percent of duration completed for long term goals
+  double totalLTprogress = 0; //total long term goal progress
+  double totalDuration = 0; //total long term goal duration
+  double numLongGoals = 0;
+  double durationPrcnt = 0; //percent of duration completed for ong term goals
   //overall data
-  double numOverallCmplt;
-  double totalGoals;
-  double overallCmpltPrcnt;
-  double overallProgressPrcnt; // percent of progress of all goals
+  double numOverallCmplt = 0;
+  double totalGoals = 0;
+  double overallCmpltPrcnt = 0;
+  double overallProgressPrcnt = 0; // percent of progress of all goals
 
   DateTime? dataCollectionDate;
   String? dayOfWeek;
@@ -44,7 +50,7 @@ class MetricsData {
       'numOverallCmplt': numOverallCmplt,
       'totalGoals': totalGoals,
       'overallCmpltPrcnt': overallCmpltPrcnt,
-      'overallProgressPrcnt': overallProgressPrcnt,
+      'overallProgressPrcnt': overallProgressPrcnt
     };
   }
 
@@ -78,7 +84,7 @@ class MetricsController {
     double completionPrcnt = 0;
 
     // for loop iterates through the goalList
-    for (var i = 0; i < goalList.length; i++) {
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       //if statement targets each short term goal
       if (currentGoal.isLongTerm == false) {
@@ -118,7 +124,7 @@ class MetricsController {
     double durationPrcnt = 0;
 
     // for loop iterates through the goalList
-    for (var i = 0; i < goalList.length; i++) {
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       //if statement targets each long term goal
       if (currentGoal.isLongTerm == true) {
@@ -143,6 +149,7 @@ class MetricsController {
       numLongGoals = 0;
       durationPrcnt = 0;
     }
+    print("Goal List accessed length =  ${goalList.length}");
 
     return [
       totalTime,
@@ -160,7 +167,7 @@ class MetricsController {
     double overallCmpltCnt = 0;
     double overallCompltPrcnt = 0;
 
-    for (var i = 0; i < goalList.length; i++) {
+    for (var i = 0; i < goalList.length - 1; i++) {
       var currentGoal = goalList[i];
       totalGoals = totalGoals + 1;
       //if statement targets each long term goal
@@ -176,13 +183,14 @@ class MetricsController {
         }
       }
     }
-    overallCompltPrcnt = (overallCmpltCnt / totalGoals) * 100;
 
     if (goalList.isEmpty) {
       overallCmpltCnt = 0;
       totalGoals = 0;
       overallCompltPrcnt = 0;
     }
+    print("Goal List accessed length =  ${goalList.length}");
+    overallCompltPrcnt = (overallCmpltCnt / totalGoals) * 100;
 
     if (overallCompltPrcnt.isNaN) {
       overallCompltPrcnt = 0;
@@ -192,19 +200,15 @@ class MetricsController {
 
 //Method calculates percentage of all goals completed using the prcntComplete and prcntDuration methods
   double prcntOverallProgress() {
-    int goalCount = 0;
-    double completedGoalPrcnt = 0;
-
-    //averages the the values
+    int numSTgoals = 0;
+    int numLTgoals = 0;
+    //averages the the values of the two function calls
     double overallPrcnt = 0;
     for (var goal in goalList) {
-      goalCount += 1;
-      if (goal.isCompleted) {
-        completedGoalPrcnt += 1;
-      } else {
-        if (goal.isLongTerm == true) {
-          completedGoalPrcnt += goal.goalProgress;
-        }
+      if (goal.isLongTerm == false) {
+        numSTgoals += 1;
+      } else if (goal.isLongTerm == true) {
+        numLTgoals += 1;
       }
     }
     overallPrcnt = (completedGoalPrcnt / goalCount) * 100;
@@ -217,6 +221,17 @@ class MetricsController {
   }
 }
 
+// final List<Goal> _sampleGoals = [
+//   LongTermGoal(title: 'Learn Flutter', duration: '20'),
+//   Goal(title: 'Go to grocery store'),
+//   LongTermGoal(title: 'Read', duration: '5'),
+//   Goal(title: 'Go to the gym'),
+//   LongTermGoal(title: 'Learn Dart', duration: '10'),
+//   Goal(title: 'Go to the dentist'),
+//   LongTermGoal(title: 'Learn Python', duration: '15'),
+// ];
+
+//Need to create a method that returns goals in a list by day
 MetricsData calcData(List sampleList) {
   final sampleController = MetricsController(goalList: sampleList);
   final sampleData = MetricsData(

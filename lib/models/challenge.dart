@@ -1,5 +1,4 @@
 import 'package:getup_csc450/models/goals.dart';
-import 'package:getup_csc450/screens/challenge_screen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +178,7 @@ class Challenge extends Goal {
         title: 'Organize your desk',
         description: 'Declutter and organize your workspace.'),
     Challenge(
-        title: 'Listen to a  podcast',
+        title: 'Listen to a podcast',
         description: 'Listen to a podcast on a subject you are unfamiliar with.'),
     Challenge(
         title: 'Try a new hobby',
@@ -204,13 +203,13 @@ class Challenge extends Goal {
         description: 'Write down everything you\'re grateful for.'),
     Challenge(
         title: 'Visit a new place in your town/city',
-        description: 'Discover a new spot in your local area, could be a shop or a restaurrant or a park or anything.'),
+        description: 'Discover a new spot in your local area, could be a shop or a restaurant or a park or anything.'),
     Challenge(
         title: 'Spend a day without complaining',
         description: 'Practice gratitude by not complaining for a day.'),
     Challenge(
         title: 'Learn a language',
-        description: 'Take time to practice learning a langueage, you could start with Duolingo or ask a friend who knows another language.'),
+        description: 'Take time to practice learning a language, you could start with Duolingo or ask a friend who knows another language.'),
     Challenge(
         title: 'Draw or paint a picture',
         description: 'Get creative and make a work of art, look up a tutorial online.'),
@@ -225,7 +224,7 @@ class Challenge extends Goal {
         description: 'Learn how to protect yourself, if you don\'t have access to something in-person, watch a youtube video.'),
     Challenge(
         title: 'Make a homemade gift for someone',
-        description: 'Show someone you care by making them a gift. i.e. a bouquet of flowers, a card, a drawing it could be anything.'),
+        description: 'Show someone you care by making them a gift. i.e. a bouquet of flowers, a card, a drawing... it could be anything.'),
     Challenge(
         title: 'Try a new type of exercise',
         description: 'Explore a new type of physical activity, i.e. lift, run, swim, or even rockclimb.'),
@@ -237,7 +236,7 @@ class Challenge extends Goal {
         description: 'Reflect on your thoughts and feelings in a daily journal, you don\'t have to write much, but look back on the day.'),
     Challenge(
         title: 'Have a picnic',
-        description: 'Pack a basket and enjoy a meal outside, I reccomend inviting a friend.'),
+        description: 'Pack a basket and enjoy a meal outside, I recommend inviting a friend.'),
     Challenge(
         title: 'Try a new hair or makeup style',
         description: 'Experiment with a new look, maybe wear hat if you don\'t normally.'),
@@ -276,10 +275,10 @@ class Challenge extends Goal {
         description: 'Start learning to play a new instrument, there is a lot of software online where you can practice virtual instruments.'),
     Challenge(
         title: 'Volunteer at a local organization',
-        description: 'Pick a local organization that does good for the comunity and spend a couple hours volunteering.'),
+        description: 'Pick a local organization that does good for the community and spend a couple hours volunteering.'),
     Challenge(
         title: 'Catch-up with an old friend', 
-        description: 'Message or cal a friend you haven\'t heard from in a while.'),
+        description: 'Message or call a friend you haven\'t heard from in a while.'),
     Challenge(
         title: 'Plank for 5 minutes', 
         description: 'Can be split up throughout the day and between side planks, front planks and other variations.'),
@@ -303,7 +302,7 @@ class Challenge extends Goal {
         description: 'Watch a documentary on a new topic.'),
     Challenge(
         title: 'Clean your bathroom', 
-        description: 'Clean and santizie your bathroom.'),
+        description: 'Clean and sanitize your bathroom.'),
     Challenge(
         title: 'Play a boardgame', 
         description: 'Relax and play a boardgame or cardgame with some friends.'),
@@ -311,14 +310,29 @@ class Challenge extends Goal {
         title: 'Go to the beach', 
         description: 'Go get some sun at the beach.'),
     Challenge(
-        title: '', 
-        description: ''),
+        title: 'Have a no-waste day', 
+        description: 'Have a no-waste day and find ways to reduce your environmental impact.'),
     Challenge(
         title: 'Make a family tree', 
         description: 'Ask your family about your family tree and see how far back you can trace it.'),
     Challenge(
+        title: "Save your coins", 
+        description: "Put all your coins you may have laying around in a piggy bank or jar"),
+    Challenge(
+        title: "Don't curse today", 
+        description: "Keep it PG today and use other words for emphasis"),
+    Challenge(
+        title: "Have a spa day at home", 
+        description: "Have a DIY spa day at home and treat yourself with some self care"),
+    Challenge(
+        title: "Don't spend any money", 
+        description: "Have a no-spend day and find free activities to do"),
+    Challenge(
+        title: "Make a mixtape", 
+        description: "Make a playlist or cd of your favorite songs and share it with a friend."),
+    Challenge(
         title: 'Invest in the stock market', 
-        description: 'Research about the stock market and invest in a stock, you can buy some stucks for under a dollar.'),
+        description: 'Research about the stock market and invest in a stock, you can buy some stocks for under a dollar.'),
     Challenge(
         title: 'Start a garden', 
         description: 'Plant something or add a potted plant to your home.'),
@@ -333,7 +347,7 @@ class Challenge extends Goal {
         description: 'Take a picture of something ordinary or mundane that doesn\'t get much attention and romanticize it.'),
     Challenge(
         title: 'Play chess or checkers', 
-        description: 'PLay on a board with a freind or battle an AI online.'),
+        description: 'Play on a board with a friend or battle an AI online.'),
     Challenge(
         title: 'Organize your files', 
         description: 'Organize and declutter the files on your computer.'),
@@ -345,19 +359,19 @@ class Challenge extends Goal {
         description: 'Spend at least 20 minutes or however long you have and join a yoga class online or in-person.'),
     Challenge(
         title: 'Go to a  museum', 
-        description: 'Go to a museum and learn some history. You might be able to find a local one with fre admission.'),
+        description: 'Go to a museum and learn some history. You might be able to find a local one with free admission.'),
     Challenge(
         title: 'Take a break from caffeine', 
         description: 'Take a break from your normal coffee, tea, or energy drink routine and stay hyrdrated with water instead.'),
     Challenge(
-        title: 'Clean you bed sheets', 
+        title: 'Wash your bed sheets', 
         description: 'Nothings better than fresh warm sheets.'),
     Challenge(
         title: 'Eat a salad', 
         description: 'Replace your normal diet with something a little fresher.'),
     Challenge(
         title: 'Go vegetarian or vegan for the day', 
-        description: 'Experiment with subtracting the meat and/or dairy prodcuts from your life.'),
+        description: 'Experiment with subtracting the meat and/or dairy products from your life.'),
     Challenge(
         title: 'Watch the sunset', 
         description: 'Find a nice view of the horizon and watch the sunset.'),
@@ -390,13 +404,13 @@ class Challenge extends Goal {
         description: 'Take a vow of silence today and find other ways to communicate.'),
     Challenge(
         title: 'Ask for advice', 
-        description: 'Ask peer or mentor for advice or feedback.'),
+        description: 'Ask a peer or mentor for advice or feedback.'),
     Challenge(
         title: 'Dress up today', 
         description: 'Dress to impress even if your just going to the grocery store or post office. Put on a suit or a nice dress.'),
     Challenge(
         title: 'Dress down today', 
-        description: 'Ignore social expectation and confidently rock your sweats and other comfy clothes out.'),
+        description: 'Ignore social norms and confidently rock your sweats and other comfy clothes out.'),
     Challenge(
         title: 'Talk to a stranger', 
         description: 'Introduce yourself to someone you\'ve never seen or met before.'),
@@ -410,8 +424,8 @@ class Challenge extends Goal {
         title: 'Take public transportation', 
         description: 'Hitch a ride on your cities train or bus.'),
     Challenge(
-        title: 'Do 50 squats', 
-        description: 'Tone your legs and get 50 total squats in today.'),
+        title: 'Do 100 squats', 
+        description: 'Tone your legs and get 100 total squats in today.'),
     Challenge(
         title: 'Sleep for 8 hours', 
         description: 'Get a minimum of 8 hours rest tonight.'),
@@ -514,6 +528,7 @@ class ChallengeDataState extends ChangeNotifier {
     notifyListeners();
   }
 
+  
   void addChallengeShown(dynamic newchallenge) async {
     challengesShown.add(newchallenge);
     // await FirestoreController
@@ -535,8 +550,8 @@ class ChallengeDataState extends ChangeNotifier {
       if (challenge.challengeId == challengeId) {
         challenges.remove(challenge);
 
-        /// This is the reference to the goals collection in Firebase
-        /// This is used to delete the goal from Firebase
+        /// This is the reference to the challenges collection in Firebase
+        /// This is used to delete the challenge from Firebase
         final CollectionReference challengesCollection = FirebaseFirestore.instance
             .collection('Users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -556,8 +571,8 @@ class ChallengeDataState extends ChangeNotifier {
       if (challenge.challengeId == challengeId) {
         challengesShown.remove(challenge);
 
-        /// This is the reference to the goals collection in Firebase
-        /// This is used to delete the goal from Firebase
+        /// This is the reference to the challengesShown collection in Firebase
+        /// This is used to delete the chalellenges Shown from Firebase
         final CollectionReference challengesShownCollection = FirebaseFirestore.instance
             .collection('Users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -583,18 +598,9 @@ class ChallengeDataState extends ChangeNotifier {
   }
 
 
-  /// This will set the new date completed of the goal that is being edited.
-  // void setDateCompleted(String goalId, DateTime newDateCompleted) {
-  //   for (Goal goal in _shortTermGoals) {
-  //     if (goal.goalId == goalId) {
-  //       goal.dateCompleted = newDateCompleted;
-  //       notifyListeners();
-  //       break;
-  //     }
-  //   }
-  // }
+  
 
-  /// This will return the title of the goal that is being edited.
+  /// This will return the title of the challenge that is being edited.
   String? getTitle(String challengeId) {
     String title = '';
     for (dynamic challenge in challenges) {

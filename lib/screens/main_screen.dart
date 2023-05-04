@@ -5,7 +5,6 @@ import 'package:getup_csc450/models/metrics_controller.dart';
 import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
-import 'package:getup_csc450/widgets/home_screen_metrics_card.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../models/goals.dart';
@@ -102,19 +101,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
-        appBar: AppBar(
-          centerTitle: true,
-          shadowColor: Colors.transparent,
-          backgroundColor: themeProvider.scaffoldColor,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Home',
-            style: TextStyle(
-                fontFamily: 'PT-Serif',
-                color: themeProvider.textColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                letterSpacing: 1.5),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Home',
+          style: TextStyle(
+              fontFamily: 'PT-Serif',
+              color: themeProvider.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              letterSpacing: 1.5),
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(),
+              child: buildItemSquareList(items),
+            ),
           ),
         ),
         body: Column(
@@ -124,51 +128,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: buildItemSquareList(getMetricsCardList(provider.goals)),
               ),
             ),
-            const SizedBox(height: 10), // Add some space between the containers
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(),
-                child: buildChallengeCards(),
-              ),
+          ),
+          const SizedBox(height: 10), // Add some space between the containers
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(),
+              child: buildGoalCards(),
             ),
-            const SizedBox(height: 10), // Add some space between the containers
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(),
-                child: buildGoalCards(),
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: themeProvider.scaffoldColor,
-          selectedItemColor: themeProvider.textColor,
-          unselectedItemColor: themeProvider.textColor,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Calendar',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.analytics),
-              label: 'Metrics',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: themeProvider.scaffoldColor,
+        selectedItemColor: themeProvider.textColor,
+        unselectedItemColor: themeProvider.textColor,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Metrics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
   }
 
 // Setting up Profile
@@ -215,17 +212,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// The widget to build the item square list.
-  Widget buildItemSquareList(itemList) {
+  Widget buildItemSquareList(List<String> items) {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: itemList.length,
+      itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        return GoalAnimation(
-          goalCard: itemList[index],
-          goal: null,
+        return Container(
+          width: itemWidth,
+          height: itemWidth,
+          margin: const EdgeInsets.all(8),
+          color: Colors.white,
+          child: Center(
+            child: Text(
+              items[index],
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         );
       },
     );
@@ -292,8 +300,9 @@ Widget buildChallengeCards() {
   );
 }
 
+
 // void main() {
 //   runApp(const MaterialApp(
 //     home: HomeScreen(),
 //   ));
-
+// }
