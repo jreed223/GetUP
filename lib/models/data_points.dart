@@ -5,7 +5,7 @@ import 'metrics_controller.dart';
 
 //import 'goal_organizer.dart';
 import 'goals.dart';
-import 'metrics_queue.dart';
+import 'metrics_Queue.dart';
 
 // final List _sampleGoalsM = [
 //   LongTermGoal(
@@ -33,46 +33,25 @@ class DataPoints {
 List<DataPoints> setLineData(List<MetricsData> weeklyMetrics) {
   DataPoints lineData1 = DataPoints(
       day: weeklyMetrics[0].dayOfWeek,
-      val: weeklyMetrics[0].overallProgressPrcnt,
-      val2: ((weeklyMetrics[0].durationPrcnt * weeklyMetrics[0].numLongGoals) +
-              (weeklyMetrics[0].numShortGoals * 100)) /
-          weeklyMetrics[0].totalGoals);
+      val: weeklyMetrics[0].overallProgressPrcnt);
   DataPoints lineData2 = DataPoints(
       day: weeklyMetrics[1].dayOfWeek,
-      val: weeklyMetrics[1].overallProgressPrcnt,
-      val2: ((weeklyMetrics[1].durationPrcnt * weeklyMetrics[6].numLongGoals) +
-              (weeklyMetrics[1].numShortGoals * 100)) /
-          weeklyMetrics[1].totalGoals);
+      val: weeklyMetrics[1].overallProgressPrcnt);
   DataPoints lineData3 = DataPoints(
       day: weeklyMetrics[2].dayOfWeek,
-      val: weeklyMetrics[2].overallProgressPrcnt,
-      val2: ((weeklyMetrics[2].durationPrcnt * weeklyMetrics[2].numLongGoals) +
-              (weeklyMetrics[2].numShortGoals * 100)) /
-          weeklyMetrics[2].totalGoals);
+      val: weeklyMetrics[2].overallProgressPrcnt);
   DataPoints lineData4 = DataPoints(
       day: weeklyMetrics[3].dayOfWeek,
-      val: weeklyMetrics[3].overallProgressPrcnt,
-      val2: ((weeklyMetrics[3].durationPrcnt * weeklyMetrics[3].numLongGoals) +
-              (weeklyMetrics[3].numShortGoals * 100)) /
-          weeklyMetrics[3].totalGoals);
+      val: weeklyMetrics[3].overallProgressPrcnt);
   DataPoints lineData5 = DataPoints(
       day: weeklyMetrics[4].dayOfWeek,
-      val: weeklyMetrics[4].overallProgressPrcnt,
-      val2: ((weeklyMetrics[4].durationPrcnt * weeklyMetrics[4].numLongGoals) +
-              (weeklyMetrics[4].numShortGoals * 100)) /
-          weeklyMetrics[4].totalGoals);
+      val: weeklyMetrics[4].overallProgressPrcnt);
   DataPoints lineData6 = DataPoints(
       day: weeklyMetrics[5].dayOfWeek,
-      val: weeklyMetrics[5].overallProgressPrcnt,
-      val2: ((weeklyMetrics[5].durationPrcnt * weeklyMetrics[5].numLongGoals) +
-              (weeklyMetrics[5].numShortGoals * 100)) /
-          weeklyMetrics[5].totalGoals);
+      val: weeklyMetrics[5].overallProgressPrcnt);
   DataPoints lineData7 = DataPoints(
       day: weeklyMetrics[6].dayOfWeek,
-      val: weeklyMetrics[6].overallProgressPrcnt,
-      val2: ((weeklyMetrics[6].durationPrcnt * weeklyMetrics[6].numLongGoals) +
-              (weeklyMetrics[6].numShortGoals * 100)) /
-          weeklyMetrics[6].totalGoals);
+      val: weeklyMetrics[6].overallProgressPrcnt);
   return [
     lineData1,
     lineData2,

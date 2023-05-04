@@ -1,14 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
 import 'package:getup_csc450/models/data_points.dart';
-import 'package:provider/provider.dart';
-
-import '../helpers/theme_provider.dart';
 
 class PieEchart extends StatefulWidget {
   List data;
-
-  late String chartTextColor;
   PieEchart({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -18,13 +13,6 @@ class PieEchart extends StatefulWidget {
 class _PieEchartState extends State<PieEchart> {
   @override
   Widget build(BuildContext context) {
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-
-    if (themeProvider.isDarkMode) {
-      widget.chartTextColor = "#FFFFFF";
-    } else {
-      widget.chartTextColor = "#000000";
-    }
     return Container(
       padding: const EdgeInsets.all(0),
       alignment: const Alignment(1, 0),
@@ -52,11 +40,7 @@ class _PieEchartState extends State<PieEchart> {
 
    title: {
     text: 'Long-Term Goal Progress',
-    left: 10,
-    textStyle: {
-      color: '${widget.chartTextColor}',
-      fontFamily: 'serif'
-    }
+    left: 10
   },
     
 
