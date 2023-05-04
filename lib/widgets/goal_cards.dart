@@ -73,7 +73,7 @@ class _ShortTermGoalCardState extends State<ShortTermGoalCard> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            height: screen.displayHeight(context) * 0.075,
+            height: screen.displayHeight(context) * 0.08,
             decoration: provider.getStatus(widget.goal.goalId as String) != null
                 ? provider.getStatus(widget.goal.goalId as String)!
                     ? BoxDecoration(
@@ -276,7 +276,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
   Timer? _timer;
 
   /// The height of the goal card
-  late double _height = screen.displayHeight(context) * 0.08;
+  late double _height = screen.displayHeight(context) * 0.085;
 
   /// The number of hours the user has worked on the goal
   var _hours = 0;
@@ -532,10 +532,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                                       fontFamily: 'PT-Serif',
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
-                                      color: provider.getStatus(
-                                              widget.goal.goalId as String)!
-                                          ? Colors.black12
-                                          : Colors.black12),
+                                      color: themeProvider.textColor),
                                   cursorColor: Colors.orangeAccent,
                                   controller: _titleController,
                                   decoration: InputDecoration(
@@ -580,14 +577,14 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                               _isEditing = !_isEditing;
                               if (_isEditing) {
                                 menuButtonController.forward();
-                                _height = screen.displayHeight(context) * 0.325;
+                                _height = screen.displayHeight(context) * 0.35;
                                 _titleController.clear();
                               } else {
                                 setState(() {
                                   _isEditingCancelled = true;
                                 });
                                 menuButtonController.reverse();
-                                _height = screen.displayHeight(context) * 0.08;
+                                _height = screen.displayHeight(context) * 0.085;
                                 _titleController.clear();
                                 Future.delayed(
                                     const Duration(milliseconds: 300), () {
@@ -942,7 +939,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                     children: [
                       const Spacer(flex: 1),
                       Expanded(
-                        flex: 1,
+                        flex: 2,
 
                         /// Cancel button
                         child: ElevatedButton(
@@ -986,7 +983,7 @@ class _LongTermGoalCardState extends State<LongTermGoalCard>
                       ),
                       const Spacer(flex: 1),
                       Expanded(
-                        flex: 1,
+                        flex: 2,
 
                         /// Save button
                         child: ElevatedButton(
