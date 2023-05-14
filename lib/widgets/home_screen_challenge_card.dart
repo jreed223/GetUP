@@ -34,8 +34,9 @@ class ChallengeShown extends StatefulWidget {
 
 // Define the state for the challenge screen
 class _ChallengeShownState extends State<ChallengeShown> {
-  //late Timer timer;
-  // bool isAccepted = false;
+
+  late Timer timer;
+ // bool isAccepted = false;
 
   // The initState method is called when the widget is first created
   @override
@@ -61,7 +62,7 @@ class _ChallengeShownState extends State<ChallengeShown> {
   @override
   void dispose() {
     super.dispose();
-    //timer.cancel();
+    timer.cancel();
   }
 
   @override
