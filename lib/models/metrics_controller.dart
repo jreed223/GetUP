@@ -21,8 +21,8 @@ class MetricsData {
   double overallCmpltPrcnt = 0;
   double overallProgressPrcnt = 0; // percent of progress of all goals
 
-  late DateTime dataCollectionDate;
-  late String dayOfWeek;
+  DateTime? dataCollectionDate;
+  String? dayOfWeek;
 
   ///initializes data
   MetricsData(
@@ -58,11 +58,11 @@ class MetricsData {
     return MetricsData(
         durationPrcnt: json['durationPrcnt'] as double,
         numLongGoals: json['numLongGoals'] as double,
-        numOverallCmplt: json['numOverallPrcnt'] as double,
+        numOverallCmplt: json['numOverallCmplt'] as double,
         numSTcompleted: json['numSTcompleted'] as double,
         numShortGoals: json['numShortGoals'] as double,
         overallCmpltPrcnt: json['overallCmpltPrcnt'] as double,
-        overallProgressPrcnt: json['overallProgressPrct'] as double,
+        overallProgressPrcnt: json['overallProgressPrcnt'] as double,
         stCompletionPrcnt: json['stCompletionPrcnt'] as double,
         totalDuration: json['totalDuration'] as double,
         totalGoals: json['totalGoals'] as double,
@@ -211,17 +211,11 @@ class MetricsController {
         numLTgoals += 1;
       }
     }
+    overallPrcnt = (completedGoalPrcnt / goalCount) * 100;
 
-    if ((numSTgoals == 0) & (numLTgoals > 0)) {
-      return prcntDuration().elementAt(3);
-    } else if ((numLTgoals == 0) & (numSTgoals > 0)) {
-      return shortPrcntCmplt().elementAt(2);
-    } else if ((numSTgoals == 0) & (numLTgoals == 0)) {
+    if (overallPrcnt.isNaN) {
       return 0;
     }
-
-    overallPrcnt =
-        (shortPrcntCmplt().elementAt(2) + prcntDuration().elementAt(3)) / 2;
 
     return overallPrcnt;
   }

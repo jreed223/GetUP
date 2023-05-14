@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:getup_csc450/models/metrics_Queue.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
+import 'package:getup_csc450/widgets/challenge_cards.dart';
 import 'package:getup_csc450/widgets/filter.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -13,9 +16,8 @@ import 'package:getup_csc450/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getup_csc450/models/challenge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-  
-  
-  Future<void> _loadSavedTheme(ThemeProvider themeProvider) async {
+
+Future<void> _loadSavedTheme(ThemeProvider themeProvider) async {
   final prefs = await SharedPreferences.getInstance();
   final isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
   themeProvider.toggleTheme(isDarkTheme);
@@ -27,6 +29,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final themeProvider = ThemeProvider();
   await _loadSavedTheme(themeProvider);
+
   runApp(
     MultiProvider(
       providers: [
@@ -50,7 +53,7 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
-  
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -66,17 +69,15 @@ class _MyAppState extends State<MyApp> {
       if (user == null) {
       } else {}
     });
+    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
+    List initGoals = GOAL_STATES.goals;
   }
-
-
 
   @override
   void dispose() {
     user.cancel();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {

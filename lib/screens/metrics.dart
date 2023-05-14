@@ -7,6 +7,7 @@ import 'package:getup_csc450/widgets/line_echart.dart';
 import 'package:getup_csc450/widgets/pie_echart.dart';
 import 'package:getup_csc450/widgets/doubleBar_echart.dart';
 import '../helpers/theme_provider.dart';
+import '../models/metrics_controller.dart';
 import '../screens/home.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import '../screens/profile.dart';
@@ -33,14 +34,18 @@ class _MetricsPageState extends State<MetricsPage> {
   int i = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      inspect(provider.goals);
-      MetricsQueue METRICS_QUEUE = MetricsQueue(provider.goals);
+      List<MetricsData> metricsQueue =
+          MetricsQueue().setMetricsQ(provider.goals);
 
-      METRICS_QUEUE.setMetrics();
-      List<DataPoints> lineData = setLineData(METRICS_QUEUE.currentMetricsQ);
-      List<DataPoints> barData = setBarData(METRICS_QUEUE.currentMetricsQ);
+      List<DataPoints> lineData = setLineData(metricsQueue);
+      List<DataPoints> barData = setBarData(metricsQueue);
       List pieData = setPieData(provider.goals);
 
       // for (MetricsData data in METRICS_QUEUE.getMetricsData()) {}
