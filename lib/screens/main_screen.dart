@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
-import 'package:getup_csc450/models/metrics_controller.dart';
-import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
 import 'package:provider/provider.dart';
-import '../constants.dart';
 import '../models/goals.dart';
 import '../screens/home.dart';
 import '../screens/metrics.dart';
@@ -50,9 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
+    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
     Provider.of<ChallengeDataState>(context, listen: false)
         .loadChallengeFromFirebase();
-    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
 
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
@@ -75,31 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-
-    return Consumer<GoalDataState>(builder: (context, provider, child) {
-      List<MetricsData> metricsQueue =
-          MetricsQueue().setMetricsQ(provider.goals);
-
-      GeneralMetricCard overallData =
-          GeneralMetricCard("Overall Progress", .35, "4 Active Goals");
-
-      GeneralMetricCard longTermProgress = GeneralMetricCard(
-          "Long Term Progress", .21, "6 Active\nLong Term Goals");
-
-      GeneralMetricCard shortTermProgress = GeneralMetricCard(
-          "Short Term Progress", .21, "1/4 Short Term\nGoals Completed");
-
-      List<GeneralMetricCard> _metricCardList = [
-        overallData,
-        longTermProgress,
-        shortTermProgress
-      ];
-
-      List<GeneralMetricCard> getMetricsCardList(goalList) {
-        return _metricCardList;
-      }
-
-      return Scaffold(
+    return Scaffold(
+      backgroundColor: themeProvider.scaffoldColor,
+      appBar: AppBar(
+        centerTitle: true,
+        shadowColor: Colors.transparent,
         backgroundColor: themeProvider.scaffoldColor,
         automaticallyImplyLeading: false,
         title: Text(
@@ -120,13 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: buildItemSquareList(items),
             ),
           ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                child: buildItemSquareList(getMetricsCardList(provider.goals)),
-              ),
+          const SizedBox(height: 10), // Add some space between the containers
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(),
+              child: buildChallengeCards(),
             ),
           ),
           const SizedBox(height: 10), // Add some space between the containers
