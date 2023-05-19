@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import "package:getup_csc450/models/metrics_controller.dart";
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +8,6 @@ DateTime todaysDate =
     DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 String dayOfWeek = DateFormat('EEE').format(DateTime.now());
 late MetricsData currentMetrics;
-
 
 class MetricsQueue {
   static final MetricsQueue _instance = MetricsQueue._internal();
@@ -56,46 +57,46 @@ class MetricsQueue {
 
   //----Methods for saving and loading Json data----//
 
-  // saveData(MetricsData metricsData) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  saveData(MetricsData metricsData) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
 
-  //   String json = jsonEncode(metricsData);
-  //   String dataDate =
-  //       DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate!);
-  //   if (pref.containsKey(dataDate)) {
-  //     deleteData(metricsData.dataCollectionDate!);
-  //   }
-  //   pref.setString(dataDate, json);
-  // }
+    String json = jsonEncode(metricsData);
+    String dataDate =
+        DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate!);
+    if (pref.containsKey(dataDate)) {
+      deleteData(metricsData.dataCollectionDate!);
+    }
+    pref.setString(dataDate, json);
+  }
 
-  // loadData(DateTime dataDateTime) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+  loadData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
 
-  //   if (pref.containsKey(dataDate)) {
-  //     _dataSaved = true;
-  //     String? json = pref.getString(dataDate);
-  //     Map<String, dynamic> data = jsonDecode(json!);
-  //     MetricsData cachedData = MetricsData.fromJson(data);
-  //     cachedData.dataCollectionDate = dataDateTime;
-  //     cachedData.dayOfWeek = DateFormat('EEEE').format(dataDateTime);
-  //     // return cachedData;
-  //     currentMetricsQ.add(cachedData);
-  //     return;
-  //   } else {
-  //     return;
-  //   }
-  // }
+    if (pref.containsKey(dataDate)) {
+      _dataSaved = true;
+      String? json = pref.getString(dataDate);
+      Map<String, dynamic> data = jsonDecode(json!);
+      MetricsData cachedData = MetricsData.fromJson(data);
+      cachedData.dataCollectionDate = dataDateTime;
+      cachedData.dayOfWeek = DateFormat('EEEE').format(dataDateTime);
+      // return cachedData;
+      currentMetricsQ.add(cachedData);
+      return;
+    } else {
+      return;
+    }
+  }
 
-  // deleteData(DateTime dataDateTime) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
-  //   if (pref.containsKey(dataDate)) {
-  //     pref.remove(dataDate);
-  //   }
-  //   return;
-  //   print("data deleted");
-  // }
+  deleteData(DateTime dataDateTime) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String dataDate = DateFormat('yyyy-MM-dd').format(dataDateTime);
+    if (pref.containsKey(dataDate)) {
+      pref.remove(dataDate);
+    }
+    return;
+    print("data deleted");
+  }
 
   // void goalListOrganizer() {
   //   for (var currentGoal in goalList) {
@@ -133,53 +134,54 @@ class MetricsQueue {
     int dayInc = 0;
     int listInc = 0;
     while (dayDec >= 0) {
-      //  loadData(todaysDate.subtract(Duration(days: dayDec)));
+      loadData(todaysDate.subtract(Duration(days: dayDec)));
 
-      // if (_dataSaved == true) {
-      //   //Do nothing
-      // } else if (_dataSaved == false) {
-      for (var currentGoal in goalList) {
-        DateTime creationDate = DateTime(
-            currentGoal.goalCreationDate.year,
-            currentGoal.goalCreationDate.month,
-            currentGoal.goalCreationDate.day);
+      if (_dataSaved == true) {
+        //Do nothing
+      } else if (_dataSaved == false) {
+        for (var currentGoal in goalList) {
+          DateTime creationDate = DateTime(
+              currentGoal.goalCreationDate.year,
+              currentGoal.goalCreationDate.month,
+              currentGoal.goalCreationDate.day);
 
-        if (creationDate
-            .isAtSameMomentAs(todaysDate.subtract(Duration(days: dayDec)))) {
-          goalQueue[listInc].add(currentGoal);
-        } else if ((currentGoal.isLongTerm == true) &
-            (currentGoal.isCompleted == false)) {
           if (creationDate
-              .isBefore(todaysDate.subtract(Duration(days: dayDec)))) {
+              .isAtSameMomentAs(todaysDate.subtract(Duration(days: dayDec)))) {
             goalQueue[listInc].add(currentGoal);
-          }
-        } else if ((currentGoal.isLongTerm == true) &
-            (currentGoal.isCompleted = true)) {
-          if (currentGoal.goalCompletionDate != null) {
-            DateTime completionDate = DateTime(
-                currentGoal.goalCompletionDate.year,
-                currentGoal.goalCompletionDate.month,
-                currentGoal.goalCompletionDate.day);
-
-            if (completionDate.isAtSameMomentAs(
-                todaysDate.subtract(Duration(days: dayDec)))) {
+          } else if ((currentGoal.isLongTerm == true) &
+              (currentGoal.isCompleted == false)) {
+            if (creationDate
+                .isBefore(todaysDate.subtract(Duration(days: dayDec)))) {
               goalQueue[listInc].add(currentGoal);
             }
+          } else if ((currentGoal.isLongTerm == true) &
+              (currentGoal.isCompleted = true)) {
+            if (currentGoal.goalCompletionDate != null) {
+              DateTime completionDate = DateTime(
+                  currentGoal.goalCompletionDate.year,
+                  currentGoal.goalCompletionDate.month,
+                  currentGoal.goalCompletionDate.day);
+
+              if (completionDate.isAtSameMomentAs(
+                  todaysDate.subtract(Duration(days: dayDec)))) {
+                goalQueue[listInc].add(currentGoal);
+              }
+            }
           }
+
+          MetricsData newMetrics = calcData(goalQueue[listInc]);
+          newMetrics.dataCollectionDate =
+              todaysDate.subtract(Duration(days: dayDec));
+          newMetrics.dayOfWeek = DateFormat.E()
+              .format(todaysDate.subtract(Duration(days: dayDec)));
+          currentMetricsQ.add(newMetrics);
+          saveData(newMetrics);
         }
 
-        MetricsData newMetrics = calcData(goalQueue[listInc]);
-        newMetrics.dataCollectionDate =
-            todaysDate.subtract(Duration(days: dayDec));
-        newMetrics.dayOfWeek =
-            DateFormat.E().format(todaysDate.subtract(Duration(days: dayDec)));
-        currentMetricsQ.add(newMetrics);
-        // saveData(newMetrics);
+        // inspect(_currentMetricsQ);
+        dayDec--;
+        listInc++;
       }
-
-      // inspect(_currentMetricsQ);
-      dayDec--;
-      listInc++;
     }
   }
 

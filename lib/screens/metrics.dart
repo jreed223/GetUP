@@ -46,7 +46,11 @@ class _MetricsPageState extends State<MetricsPage> {
 
       for (var goal in provider.getGoals()) {
         if (goal.isLongTerm) {
-          longTermGoals.add(goal);
+          if(goal.isCompleted == false) {
+            longTermGoals.add(goal);
+          }else if(goal?.dateCompleted.isAfter( todaysDate.subtract(const Duration(days: 7)))){
+            longTermGoals.add(goal);
+          }
         }
       }
 
