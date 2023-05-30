@@ -62,9 +62,9 @@ class MetricsQueue {
 
     String json = jsonEncode(metricsData);
     String dataDate =
-        DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate!);
+        DateFormat('yyyy-MM-dd').format(metricsData.dataCollectionDate);
     if (pref.containsKey(dataDate)) {
-      deleteData(metricsData.dataCollectionDate!);
+      deleteData(metricsData.dataCollectionDate);
     }
     pref.setString(dataDate, json);
   }
@@ -189,12 +189,12 @@ class MetricsQueue {
     //inspect(currentMetricsQ);
     while (currentMetricsQ.length > 7) {
       if (currentMetricsQ[6]
-          .dataCollectionDate!
-          .isAtSameMomentAs(currentMetricsQ[7].dataCollectionDate!)) {
+          .dataCollectionDate
+          .isAtSameMomentAs(currentMetricsQ[7].dataCollectionDate)) {
         currentMetricsQ.removeAt(6);
       } else if (currentMetricsQ[6]
-          .dataCollectionDate!
-          .isBefore(currentMetricsQ[7].dataCollectionDate!)) {
+          .dataCollectionDate
+          .isBefore(currentMetricsQ[7].dataCollectionDate)) {
         //deleteData(currentMetricsQ[0].dataCollectionDate);
         currentMetricsQ.removeAt(0);
       }

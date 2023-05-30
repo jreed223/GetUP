@@ -5,7 +5,7 @@ import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:getup_csc450/models/metrics_Queue.dart';
+import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
 import 'package:getup_csc450/widgets/challenge_cards.dart';
 import 'package:getup_csc450/widgets/filter.dart';

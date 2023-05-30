@@ -6,7 +6,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/goals.dart';
-import '../models/metrics_Queue.dart';
+import '../models/metrics_queue.dart';
 
 class GeneralMetricCard extends StatefulWidget {
   double data;
