@@ -205,7 +205,7 @@ class LongTermGoal extends Goal {
   /// This returns the goal in a JSON format.
   @override
   Map<String, dynamic> toJson() {
-    MetricsQueue().setMetricsQ(GOAL_STATES.goals);
+MetricsQueue().setMetricsQ(GOAL_STATES.goals);
     final json = super.toJson();
     json.addAll({
       'duration': goalDuration,

@@ -43,7 +43,7 @@ class _MetricsPageState extends State<MetricsPage> {
       List<DataPoints> barData = setBarData(metricsQueue);
       List pieData = setPieData(GOAL_STATES.longTermGoals);
 
-      for (var goal in provider.getGoals()) {
+      for (var goal in GOAL_STATES.goals) {
         if (goal.isLongTerm) {
           if(goal.isCompleted == false) {
             longTermGoals.add(goal);
