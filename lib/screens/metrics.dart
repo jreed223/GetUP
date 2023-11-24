@@ -37,12 +37,11 @@ class _MetricsPageState extends State<MetricsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      List<MetricsData> metricsQueue =
-          MetricsQueue().setMetricsQ(provider.goals);
+      List<MetricsData> metricsQueue = MetricsQueue().currentMetricsQ;
 
       List<DataPoints> lineData = setLineData(metricsQueue);
       List<DataPoints> barData = setBarData(metricsQueue);
-      List pieData = setPieData(provider.goals);
+      List pieData = setPieData(GOAL_STATES.longTermGoals);
 
       for (var goal in provider.getGoals()) {
         if (goal.isLongTerm) {

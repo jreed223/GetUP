@@ -23,6 +23,7 @@ Future<void> _loadSavedTheme(ThemeProvider themeProvider) async {
   themeProvider.toggleTheme(isDarkTheme);
 }
 
+
 void main() async {
   Profile.createSampleData();
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +72,7 @@ class _MyAppState extends State<MyApp> {
     });
     Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
     List initGoals = GOAL_STATES.goals;
+    MetricsQueue().setMetricsQ(initGoals);
   }
 
   @override

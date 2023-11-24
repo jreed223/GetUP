@@ -33,7 +33,7 @@ class MetricsQueue {
     overallCmpltPrcnt: 0,
     overallProgressPrcnt: 0,
   );
-
+  
   factory MetricsQueue() {
     // if (_instance.currentMetricsQ.length < 7) {
     //   _instance.loadMetrics(goalList);
