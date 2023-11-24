@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/metrics_controller.dart';
@@ -50,9 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
+        MetricsQueue().setMetricsQ(GOAL_STATES.goals);
     Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
     Provider.of<ChallengeDataState>(context, listen: false)
         .loadChallengeFromFirebase();
+
+
+
 
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
@@ -74,20 +79,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-      List<MetricsData> metricsQueue =
           MetricsQueue().setMetricsQ(provider.goals);
+      MetricsData currentMetrics = MetricsQueue().currentMetricsQ[6];
+
 
       GeneralMetricCard overallData =
-          GeneralMetricCard("Overall Progress", .35, "4 Active Goals");
+          GeneralMetricCard("Overall Progress", currentMetrics.overallProgressPrcnt/100, "${currentMetrics.totalGoals.toInt().toString()} Active Goals");
 
       GeneralMetricCard longTermProgress = GeneralMetricCard(
-          "Long Term Progress", .21, "6 Active\nLong Term Goals");
+          "Long Term Progress", currentMetrics.totalLTprogress/100, "${currentMetrics.numLongGoals.toInt().toString()} Active\nLong Term Goals");
 
       GeneralMetricCard shortTermProgress = GeneralMetricCard(
-          "Short Term Progress", .21, "1/4 Short Term\nGoals Completed");
+          "Short Term Progress", currentMetrics.stCompletionPrcnt/100, "${currentMetrics.numSTcompleted.toInt().toString()}/${currentMetrics.numShortGoals.toInt().toString()} Short Term\nGoals Completed");
 
       List<GeneralMetricCard> _metricCardList = [
         overallData,
