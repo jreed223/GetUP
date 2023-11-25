@@ -115,7 +115,7 @@ class _MetricsPageState extends State<MetricsPage> {
                                     vertical: 0, horizontal: 5),
                                 child: TextScroll(
                                   fadedBorderWidth: .05,
-                                  fadedBorder: true,
+                                  fadedBorder: false,
                                   pauseBetween: const Duration(seconds: 3),
                                   velocity: const Velocity(
                                       pixelsPerSecond: Offset(50, 0)),

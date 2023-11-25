@@ -30,6 +30,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final themeProvider = ThemeProvider();
   await _loadSavedTheme(themeProvider);
+  MetricsQueue().setMetricsQ(GOAL_STATES.goals);
+
+
 
 
 
@@ -72,9 +75,7 @@ class _MyAppState extends State<MyApp> {
       if (user == null) {
       } else {}
     });
-    Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
-    List initGoals = GOAL_STATES.goals;
-    MetricsQueue().setMetricsQ(initGoals);
+  
   }
 
   @override

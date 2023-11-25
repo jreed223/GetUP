@@ -3,6 +3,7 @@ import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../models/goals.dart';
 
@@ -70,13 +71,26 @@ class _GeneralGoalCardState extends State<GeneralGoalCard> {
                       padding: EdgeInsets.all(
                         screen.displayHeight(context) * 0.005,
                       ),
-                      child: Text('${widget.goal.goalTitle}',
-                          style: TextStyle(
-                              letterSpacing: 1.5,
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'PT-Serif',
-                              color: themeProvider.textColor)),
+                      child: Container( 
+                        width: screen.displayWidth(context) / 2.3,
+                        padding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 5),
+                                  child: TextScroll(
+                                  fadedBorderWidth: .015,
+                                  fadedBorder: false,
+                                  pauseBetween: const Duration(seconds: 3),
+                                  velocity: const Velocity(
+                                      pixelsPerSecond: Offset(50, 0)),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      letterSpacing: 1.5,
+                                      color: themeProvider.textColor,
+                                      fontFamily: 'PT-Serif',
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                  '${widget.goal.goalTitle}',
+                                ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
