@@ -303,4 +303,3 @@ Widget buildChallengeCards() {
 //   runApp(const MaterialApp(
 //     home: HomeScreen(),
 //   ));
-
