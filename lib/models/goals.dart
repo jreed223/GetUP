@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/models/data_points.dart';
+import 'package:getup_csc450/models/metrics_Queue.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -203,6 +205,7 @@ class LongTermGoal extends Goal {
   /// This returns the goal in a JSON format.
   @override
   Map<String, dynamic> toJson() {
+MetricsQueue().setMetricsQ(GOAL_STATES.goals);
     final json = super.toJson();
     json.addAll({
       'duration': goalDuration,

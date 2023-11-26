@@ -4,6 +4,7 @@ import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:getup_csc450/models/goals.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/screens/main_screen.dart';
 import 'package:getup_csc450/widgets/filter.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +22,19 @@ import 'package:shared_preferences/shared_preferences.dart';
   themeProvider.toggleTheme(isDarkTheme);
 }
 
+
 void main() async {
   Profile.createSampleData();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final themeProvider = ThemeProvider();
   await _loadSavedTheme(themeProvider);
+  MetricsQueue().setMetricsQ(GOAL_STATES.goals);
+
+
+
+
+
   runApp(
     MultiProvider(
       providers: [
@@ -66,6 +74,7 @@ class _MyAppState extends State<MyApp> {
       if (user == null) {
       } else {}
     });
+  
   }
 
 

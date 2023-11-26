@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:getup_csc450/constants.dart';
 import 'package:getup_csc450/helpers/goal_animation.dart';
 import 'package:getup_csc450/helpers/theme_provider.dart';
+import 'package:getup_csc450/models/metrics_controller.dart';
+import 'package:getup_csc450/models/metrics_queue.dart';
 import 'package:getup_csc450/models/profile_controller.dart';
 import 'package:getup_csc450/widgets/home_screen_goal_card.dart';
+import 'package:getup_csc450/widgets/home_screen_metrics_card.dart';
 import 'package:provider/provider.dart';
 import '../models/goals.dart';
 import '../screens/home.dart';
@@ -47,9 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
+        MetricsQueue().setMetricsQ(GOAL_STATES.goals);
     Provider.of<GoalDataState>(context, listen: false).loadGoalsFromFirebase();
     Provider.of<ChallengeDataState>(context, listen: false)
         .loadChallengeFromFirebase();
+
+
+
 
     // Generate a new challenge when the widget is first created
     // Generate a new challenge if the list is empty
@@ -71,76 +79,102 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      backgroundColor: themeProvider.scaffoldColor,
-      appBar: AppBar(
-        centerTitle: true,
-        shadowColor: Colors.transparent,
+    
+    return Consumer<GoalDataState>(builder: (context, provider, child) {
+      MetricsQueue().setMetricsQ(provider.goals);
+      MetricsData currentMetrics = MetricsQueue().currentMetricsQ[6];
+
+
+      GeneralMetricCard overallData =
+          GeneralMetricCard("Overall Progress", currentMetrics.overallProgressPrcnt/100, "${currentMetrics.totalGoals.toInt().toString()} Active Goals");
+
+      GeneralMetricCard longTermProgress = GeneralMetricCard(
+          "Long Term Progress", currentMetrics.totalLTprogress/100, "${currentMetrics.numLongGoals.toInt().toString()} Active\nLong Term Goals");
+
+      GeneralMetricCard shortTermProgress = GeneralMetricCard(
+          "Short Term Progress", currentMetrics.stCompletionPrcnt/100, "${currentMetrics.numSTcompleted.toInt().toString()}/${currentMetrics.numShortGoals.toInt().toString()} Short Term\nGoals Completed");
+
+      List<GeneralMetricCard> _metricCardList = [
+        overallData,
+        longTermProgress,
+        shortTermProgress
+      ];
+
+      List<GeneralMetricCard> getMetricsCardList(goalList) {
+        return _metricCardList;
+      }
+
+      return Scaffold(
         backgroundColor: themeProvider.scaffoldColor,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Home',
-          style: TextStyle(
-              fontFamily: 'PT-Serif',
-              color: themeProvider.textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              letterSpacing: 1.5),
+        appBar: AppBar(
+          centerTitle: true,
+          shadowColor: Colors.transparent,
+          backgroundColor: themeProvider.scaffoldColor,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Home',
+            style: TextStyle(
+                fontFamily: 'PT-Serif',
+                color: themeProvider.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                letterSpacing: 1.5),
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildItemSquareList(items),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                child: buildItemSquareList(getMetricsCardList(provider.goals)),
+              ),
             ),
-          ),
-          const SizedBox(height: 10), // Add some space between the containers
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildChallengeCards(),
+            const SizedBox(height: 10), // Add some space between the containers
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(),
+                child: buildChallengeCards(),
+              ),
             ),
-          ),
-          const SizedBox(height: 10), // Add some space between the containers
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(),
-              child: buildGoalCards(),
+            const SizedBox(height: 10), // Add some space between the containers
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(),
+                child: buildGoalCards(),
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: themeProvider.scaffoldColor,
-        selectedItemColor: themeProvider.textColor,
-        unselectedItemColor: themeProvider.textColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Metrics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: themeProvider.scaffoldColor,
+          selectedItemColor: themeProvider.textColor,
+          unselectedItemColor: themeProvider.textColor,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Metrics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
+      );
+    });
   }
 
 // Setting up Profile
@@ -187,28 +221,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// The widget to build the item square list.
-  Widget buildItemSquareList(List<String> items) {
+  Widget buildItemSquareList(itemList) {
     // Calculate the width of each item square based on the device screen size
     final double itemWidth = MediaQuery.of(context).size.width / 2;
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: items.length,
+      itemCount: itemList.length,
       itemBuilder: (BuildContext context, int index) {
-        return Container(
-          width: itemWidth,
-          height: itemWidth,
-          margin: const EdgeInsets.all(8),
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              items[index],
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+        return GoalAnimation(
+          goalCard: itemList[index],
+          goal: null,
         );
       },
     );
@@ -280,4 +303,3 @@ Widget buildChallengeCards() {
 //   runApp(const MaterialApp(
 //     home: HomeScreen(),
 //   ));
-// }

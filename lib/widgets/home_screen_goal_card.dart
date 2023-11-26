@@ -3,6 +3,7 @@ import 'package:getup_csc450/helpers/screen_size.dart' as screen;
 import 'package:getup_csc450/helpers/theme_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../models/goals.dart';
 
