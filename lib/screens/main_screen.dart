@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     
     return Consumer<GoalDataState>(builder: (context, provider, child) {
-          MetricsQueue().setMetricsQ(provider.goals);
+      MetricsQueue().setMetricsQ(provider.goals);
       MetricsData currentMetrics = MetricsQueue().currentMetricsQ[6];
 
 
