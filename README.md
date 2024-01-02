@@ -18,7 +18,7 @@ monitoring your progress and completions over time.
 -   Goals (Goal and LongTermGoal) - Cullin Capps
 -   MetricsHandler - Jonathan Reed
 -   Challenges - Lukas Becker
--   DataPoints - Lukas Becker
+-   DataPoints - Jonathan Reed
 -   Database - Cullin Capps
 
 ### Getting Started
